@@ -1,0 +1,88 @@
+
+Action items:
+-------------
+HZ -- Create github project and invite me and Dave (soon)
+
+HZ -- Get on Zotero group and refresh yourself on how to use Zotero
+
+
+
+Tools/environment:
+------------------
+
+
+
+
+
+Background knowledge:
+---------------------
+
+Kolaczyk/Csardi book
+
+Sentiment Analysis -- Jurafsky MOOC (unit 3)
+https://class.coursera.org/nlp/lecture
+
+
+
+
+Lit search:
+-----------
+(Always search on (1) ProQuest, (2) EBSCOhost Academic Search Complete, and
+(3) Google Scholar.)
+
+
+"Cornerstones":
+
+Dynamic (evolving) networks. How are they represented? What graph invariants
+are used for them?
+
+Sentiment analysis: auto-classifying text as "liberal" or "conservative."
+(There's just got to be stuff for this. Maybe there's even stuff for Tweets
+specifically??)
+
+
+
+"Competitors":
+
+Find everything you can on measuring political polarization (or, if nothing
+specific to that, *any* kind of polarization / attribute assortativity) in
+social networks
+
+Find everything you can on the effect of "crusader nodes"; i.e., how much
+effect can nodes have that are deliberately introduced into a social network?
+(Tough to know in advance what the terms will be, but I would think there has
+to be stuff on this. Basically, the degree of influence of particular nodes,
+and estimating how much a graph would change by the presence of a new node
+with particular properties.)
+
+
+
+Synthetic data:
+---------------
+
+Start to play with RDPGs.
+
+
+
+
+Real data:
+----------
+
+Load and explore Dave's political blog graphs (see github data folder)
+
+
+Do a reboot in your mind about "what are all the ways we can get data from
+Twitter?" (e.g., all tweets from user X? all followers/followees of user X?
+all tweets with certain text match? streaming API? is there a time frame
+(like, any tweets older than t won't be available)?
+
+
+Do a reboot in your mind of "what are all the interpretations we might assign
+to an edge in a Twitter graph?" follower/followee? mentions? something else?
+
+
+Do some thinking and Googling and exploring Twitter, and consider the
+question: "what's the best way for us to get a manageable but 'real' subset of
+Twitter users who are reasonably well-connected to each other and who can
+reliably be judged as 'liberal' or 'conservative'?"
+
