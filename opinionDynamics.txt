@@ -1,0 +1,40 @@
+
+There are two extensively studied models that explore continuous opinion
+dynamics under bounded confidence, the Deffuant-Weisbuch (DW) model (Deffuant
+et al. 2000) and the Hegselmann-Krause (HK) model (Hegselmann and Krause
+2002). 
+
+The DW and HK models are very similar in their use of bounded confidence on a
+continuous opinion scale. Differences arise in how an agent aggregates the
+opinions around them for consideration in their own opinion shift. With the DW
+model, agents aggregate opinions through pairwise evaluations, slightly
+shifting an agent’s opinion after looping through all possible pairings within
+the population. In the HK model, an agent aggregates all other agent opinions
+within their confidence bound and considers the group average for shifting
+their opinion (Lorenz 2007)
+
+The HK model is described in Fu, Zhang, and Li (2015).
+
+One of the research conclusions by Fu, Zhang, and Li (2015) through the use of
+their MHK model was that closed-minded agents dominated the formation of
+opinion consensus. This was supported by simulation results that indicated as
+the proportion of closed-minded agents in the population increased (with the
+difference being open-minded), so did the number of final opinion clusters
+after reaching a period of steady state.
+
+
+Deffuant, G., D. Neau, F. Amblard, and G. Weisbuch. 2000. "Mixing Beliefs
+among Interacting Agents." _Advances in Complex Systems_ 3:87-98. doi: 10.1142/S0219525900000078
+
+Fu, G., W. Zhang, and Z. Li. 2015. "Opinion Dynamics of Modified Hegselmann -
+Krause Model in a Group-Based Population with Heterogeneous Bounded
+Confidence." Physica A: Statistical Mechanics and Its Applications
+419:558-565. doi:10.1016/j.physa.2014.10.045
+
+Hegselmann, R., and U. Krause.  2002. "Opinion Dynamics and Bounded
+Confidence Models, Analysis, and Simulation." _Journal of Artificial Societies
+and Social Simulation_ 5. http://jasss.soc.surrey.ac.uk/5/3/2/2.pdf
+
+Lorenz, J. 2007. "Continuous Opinion Dynamics under Bounded Confidence: A
+Survey." International Journal of Modern Physics C 18:1819-1838.
+doi:10.1142/S0129183107011789 .
