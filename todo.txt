@@ -35,6 +35,9 @@ Sentiment analysis: auto-classifying text as "liberal" or "conservative."
 (There's just got to be stuff for this. Maybe there's even stuff for Tweets
 specifically??)
 
+"opinion dynamics." Also, "bounds of confidence," which seems to mean "agents
+being influenced by other agents only to the degree that they have some level
+of confidence in them."
 
 
 "Competitors":
