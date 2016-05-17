@@ -23,6 +23,10 @@ Sentiment Analysis -- Jurafsky MOOC (unit 3)
 https://class.coursera.org/nlp/lecture
 
 
+Play with data mining classification. (wait for Stephen on this)
+
+
+
 
 
 Lit search:
@@ -72,6 +76,10 @@ Real data:
 ----------
 
 Load and explore Dave's political blog graphs (see github data folder)
+
+Here's a good task: compute the attribute assortativity on both graphs, using
+"value" as the attribute, to get an estimate of the "polarization" of the
+graph.
 
 
 Do a reboot in your mind about "what are all the ways we can get data from
