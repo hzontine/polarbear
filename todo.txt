@@ -1,16 +1,11 @@
 
 Action items:
 -------------
-HZ -- Create github project and invite me and Dave (soon)
-
-HZ -- Get on Zotero group and refresh yourself on how to use Zotero
-
+- twitter sentiment API
 
 
 Tools/environment:
 ------------------
-
-
 
 
 
