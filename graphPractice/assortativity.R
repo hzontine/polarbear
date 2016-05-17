@@ -1,8 +1,8 @@
 
 # Run this code, look at the graph, and inspect the contents of students.csv.
-# Then ask yourself: which attribute do you think will have the highest
-# assortativity between gender, major, and hairLength? Which do you think will
-# have the lowest?
+# Then ask yourself: of gender, major, and hairLength, which attribute do you
+# think will have the highest assortativity? Which do you think will have the
+# lowest?
 
 library(igraph)
 
