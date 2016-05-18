@@ -20,6 +20,6 @@ plot(friends,
 
 
 # Uncomment this once you think you have the answer. :)
-# cat("hair length assortativity =", assortativity(friends, types1=V(friends)$hairLength),"\n")
-# cat("gender assortativity =", assortativity.nominal(friends, types=as.factor(V(friends)$gender)),"\n")
-# cat("major assortativity =", assortativity.nominal(friends, types=as.factor(V(friends)$major)),"\n")
+cat("hair length assortativity =", assortativity(friends, types1=V(friends)$hairLength),"\n")
+cat("gender assortativity =", assortativity.nominal(friends, types=as.factor(V(friends)$gender)),"\n")
+cat("major assortativity =", assortativity.nominal(friends, types=as.factor(V(friends)$major)),"\n")
