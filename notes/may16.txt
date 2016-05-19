@@ -1,0 +1,12 @@
+Notes on Monday May 16, first day!
+
+Buzz Words: political polarization, dynamic networks, measuring attribute assortativity, opinion dynamics
+	- sentiment analysis: support for political candidates
+	- Vocabulary Words
+		○ latent: hidden attributes we can infer based on neighbors
+		○ homophile: similarities bring people together
+		○ training data: labeled examples
+		○ test data: labeled examples reserved (“vault”)
+		○ real data: unlabeled examples
+		○ classifier: types include Naive Bayes, Random Forests, dec trees, neural nets, SUM, KNN
+

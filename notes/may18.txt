@@ -1,0 +1,25 @@
+Notes on Wednesday May 18
+
+- Lit Review Help
+	○ Political polarization from a graph point of view / social network of a Twitter graph / degree of the polarization
+	○ How to characterize the amount of political polarization // over time
+	○ Dynamic network as it changes
+	○ Point of no return?
+	○ Sentiment analysis: classic algorithms and well established results determining if tweets are positive or negative (only tweets with specific keywords)
+	○ Is polarization real?
+		§ We have to prove it is not a myth!
+		§ Find articles that discuss both arguments
+- People to talk to: Elizabeth and Jessica
+	○ Fellow path: PhD, 5 years, school paid for, small stipend
+- Dynamical system: similar to system dynamics, but not
+- Scale Free Network: degree distribution follows a power law
+	○ Exponential - assumes the probability will hit 0, discounts wild-cards
+	○ Power law- allows for outliers
+		§ little cities, medium, some big ones, and [New York / Tokyo]
+		§ Fat tail: Justin Biebers of the world
+- Preferential Attachment: theory about how social networks grow
+	○ As nodes are added to a network, they will attach themselves in a way that the probability of connecting to any existing node in the graph is proportional to that node's degree
+	○ Success to the successful, rich get richer
+	○ Erdos-Renyi: leads to the power rule, Biebers make up the fat tail
+	○ Preferential attachment can lead to the power law but not backwards
+
