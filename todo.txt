@@ -76,6 +76,9 @@ Start to play with RDPGs.
 Real data:
 ----------
 
+Write down unambiguously "what our precise Twitter data needs are."
+(HZ take a first cut.)
+
 Load and explore Dave's political blog graphs (see github data folder)
 
 Here's a good task: compute the attribute assortativity on both graphs, using
