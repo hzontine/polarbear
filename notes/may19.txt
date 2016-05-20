@@ -1,0 +1,81 @@
+Notes on May 19
+Dave was here!
+
+- We need a  way to get a data set from Twitter
+	○ Some number of twitter users that is cross-pollinated with both parties
+- We need a way to talk about how the graph has evolved over time
+	○ Graph has become more or less polarized
+	○ Ways to characterize an evolving graph
+	○ But the connections between people can change
+- Can you find out someone's followers at a previous point in time
+	○ Who were the followers of a person a year ago?
+	○ Bail out: mentions graph?
+		§ Do mentions denote friendship?
+		§ Dynamic network visualization
+- Gathering a Twitter data set:
+	○ What we want
+		§ A data set of appropriate size (hundred of nodes)
+		§ Not too sparse
+		§ Can get attributes
+			§ How do we label vertices with political views?
+				® Well-known vertices (Limbaugh) hand label
+				® Hand tag based on human-reading tweets
+				® Infer through tweets (classifier)
+				® Infer through graph (assortativity)
+				® Need a political detector!!!
+	○ Start with House of representatives or presidential candidates
+		§ How easy is it to get all the twitter handles for members of Congress?
+		§ All their followers
+		§ Look only at non-isolates
+	○ Or people present at an event (like a debate?)
+	○ A bipartisan political organization?
+	○ Attendees at an academic political conference?
+	○ By geographic region
+		§ Start with a month's worth of geo-located tweets
+		§ Cut it down to just a bidirectional mentions graph
+		§ Get rid of all isolates (lone wolves)
+		§ Filter it through to remove all the people who don’t tweet about politics
+		§ Then send it through a classifier to see red vs blue 
+	○ Winnow out anybody who doesn’t pass the political detector 
+	○ Through political hashtags
+- What is the graph?
+		§ Open questions:
+			□ Are they dense enough?
+			□ Can we get them over time?
+			□ Are people always mentioning celebrities?
+			□ Having potentially past twitter names and trying to get the twitter ID
+	○ Mentions graph 
+		§ Unidirectional or bidirectional
+		§ Who are you dialoging with?
+	○ Followers
+		§ Unidirectional or bidirectional
+		§ Can we get past data?
+		§ Who are you listening to?
+	○ Bipartite projection with common hashtags
+- A polarized country is bad. People should talk and collaborate. If a graph is reflective of a high polarization, can we inject crusader nodes to reverse the polarization effect. Point of no return.
+- The graph model assumes that you are more likely to form new connections with people who are close to you on the political spectrum.
+	○ The probability of forming an edge depends on how close you are
+	○ Crusader nodes: 0.5 on the political spectrum
+		§ Introduced to a graph to gravitate people towards the middle
+		§ How many are necessary to restore equilibrium
+			□ Where is the point of no return
+		§ Instead of adding mediators, add edges instead??
+			□ Not equivalent!
+		§ Fixed vs. variable mediators?
+		§ How to introduce connections?
+			□ Uniformly random? Choose more extreme? Choose less extreme?
+		§ Does repeated exposure to opposite views help to chip away at the more extreme views on the political spectrum?
+		§ Do edges get "re-rolled" periodically?
+			□ Dynamic (morphing graph) vs time-series (almost different graphs each week/month)
+				® How do you know when to remove an edge? [follow/unfollow]
+				® How important is the initial condition?
+		§ What to type into lit review: *****
+			□ Random dynamic graph models, set of parameters and attributes, diffusion!, epidemiology related: either you diffuse through one graph OR have a dynamic graph that is not controlled by the disease (the disease is external), opinion dynamics
+				® "Mixing beliefs among interacting systems": Introduction. Problem is that the graph is most likely fixed
+					◊ Look through its Works Cited!
+				® Randomly meeting is an edge?? When two people meet they either are or are not going to influence
+	○ Abortion vs Minimum Wage: not related, but big correlation
+		§ The people who are pro choice only talk to another pro choice people and begin to share opinions in other not related issues
+		§ "Mixing Beliefs among interactive systems"
+		§ When two people meet, if their difference of opinion is smaller in magnitude that a threshold, delta, their opinions may adjust.
+			

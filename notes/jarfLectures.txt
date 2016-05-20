@@ -1,0 +1,41 @@
+- Sentiment Analysis (aka opinion extraction, opinion mining, sentiment mining, subjectivity analysis)
+	○ attributes / aspects & sentiment
+	○ definition: detection of attitudes, enduring colored beliefs dispositions towards objects or persons
+		§ holder (source) of attitude
+		§ target (aspect) of attitude
+		§ types of
+			□ from a set of types (like, love, hate, desire etc)
+			□ weighed polarity (positive, negative, neutral)
+		§ text containing the attitude which can be a sentence or an entire document
+	○ Baseline algorithm
+		§ tokenization
+		§ feature extraction
+		§ using different classifiers
+			□ Naive Bayes: how likely are we to see a positive movie review X for each position in the document, how likely is that word to have been expressed by a positive movie review
+			□ Logistic regression, support vector machines SVM
+- Text Classification
+	○ Hand written rules based on combinations of words
+	○ Expensive to build and maintain even though can be super accurate
+	○ Machine Learning: maps a document to a class
+- Naive Bayes
+	○ Bag of words assumption: assume position doesn’t matter
+	○ conditional independence: assume the feature probabilities are independent given the class c   [  P(x ^i | c ^j )
+	○ Add 1 smoothing
+- Precision: of the things you are selecting what % of them are correct? 
+	○ # of true positives / true pos + false pos
+- Recall: of the things that are correct, what % of them did you find?
+	○ # of true positives / true positives + false neg
+
+	Correct	Not Correct
+selected	True Positive	False Positive
+Not selected	False Negative	True Negative
+
+- Precision vs Recall: opposites, trade off / balances
+	○ If you increase recall, you'll make more mistakes which will drop your precision
+	○ How important is precision vs having a high recall?
+- F measure : weighted harmonic mean
+	○ Take the reciprocal of two quantities, add them and then take the reciprocal of that
+	○ Very conservative average
+	○ Balanced F1 measure: Beta = 1 and alpha = 1/2
+	○ F = 2PR/(P+R)
+

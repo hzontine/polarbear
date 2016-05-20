@@ -1,12 +1,8 @@
 
 Action items:
 -------------
-- 2 hours doing lit search
 - 1 hour left for Jurafsky MOOC
 - 1 hour thinking about getting Twitter data
-
-
-
 - twitter sentiment API
 
 

@@ -1,0 +1,41 @@
+Notes on Tuesday May 17
+
+Vocab Words
+
+  deductive reasoning: follow a path of true facts, Sherlock Holmes style
+• inductive reasoning: general knowledge that is learned from experience
+• feature: a particular thing we are tracking on a data point
+• feature engineering: 
+• prior probability: base line default probability before you see the data
+• binary classification: yes or no, defaulted or not defaulted
+• bigram: any pair of words that occur together in order in a text
+
+Students Graph Assignment
+	- Dataset
+		○ Hannah    F    14    CPSC
+		○ Ruth      F    12    CPSC
+		○ Alex      M    4     CPSC
+		○ Anna      F    12    BUAD
+		○ Liv       F    14    MATH
+		○ James     M    6     CPSC
+	- Edges
+		○ Liv & Hannah: long hair and female
+		○ Anna  & Hannah: female and hair diff = 2
+		○ Ruth & Hannah: female and CPSC and hair diff = 2
+		○ Ruth & Alex: CPSC
+		○ Ruth & James: CPSC
+		○ Alex & James: CPSC and male and hair diff = 2
+	- Vertex characteristic
+		○ Gender
+			§ categorical
+			§ 0.25
+			§ the mixing is somewhat better from that obtained through random assignment
+		○ Major
+			§ categorical
+			§ -0.142
+			§ the mixing is no different from that obtained through random assignment of edges that preserves the marginal degree distribution.
+		○ Hair Length
+			§ continuous
+			§ 0.3868
+			§ While there is a tendency for vertices of high degrees to link with similar vertices, vertices of lower degree tend to link with vertices of both lower and higher degrees
+
