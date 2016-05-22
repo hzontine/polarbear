@@ -4,11 +4,21 @@ Action items:
 - 1 hour left for Jurafsky MOOC
 - 1 hour thinking about getting Twitter data
 - twitter sentiment API
+- check out synthetic.R
+	tcltk doesn't download!
+- read Al Zamal all the way through
+- lit search:
+	- "Mixing Beliefs among interacting systems": check out
+	Works Cites section
+- need to find a political classifier
+- how easy is it to get the twitter handles for all members of Congress?
+- is there a tool where you can input a past twitter names and the output
+	is their twitter ID number?
+
 
 
 Tools/environment:
 ------------------
-
 
 
 Background knowledge:
