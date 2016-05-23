@@ -7,14 +7,12 @@ Action items:
 - check out synthetic.R
 	tcltk doesn't download!
 - lit search:
-	- "Mixing Beliefs among interacting systems": check out
-	Works Cites section
+	- "Mixing Beliefs Among Interacting Systems": check out
+	Works Cited section
 - need to find a political classifier
 - how easy is it to get the twitter handles for all members of Congress?
 - is there a tool where you can input a past twitter names and the output
 	is their twitter ID number?
-
-
 
 Tools/environment:
 ------------------
