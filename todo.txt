@@ -93,6 +93,12 @@ Add code for vertex ideology update, appropriately parameterized.
 
 Add code for edge deletion, appropriately parameterized.
 
+Add code to make encounters influenced by current neighbors. (i.e., don't just
+choose encounter partners randomly from overall pop)
+
+Start the sim with initial condition = Dave's political blog graph (and book
+graph)
+
 
 
 Real data:
