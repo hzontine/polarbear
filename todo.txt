@@ -35,8 +35,15 @@ Play with data mining classification. (wait for Stephen on this)
 
 Lit search:
 -----------
-(Always search on (1) ProQuest, (2) EBSCOhost Academic Search Complete, and
-(3) Google Scholar.)
+
+Begin a hierarchical outline in which you concisely describe all the lit
+you've found. This is essentially the main product of all the searching and
+reading you've done, and will become the seed of a Related Work section. This
+outline is probably already partially reflected in the Zotero folder hierarchy
+we've created as we've worked on this. The main difference is that now it will
+be explicitly articulated rather than implicit in the organizational structure
+of the documents. It should answer the questions, "so, what work has been done
+in this area? What are the main findings? Where are the gaps?"
 
 
 "Cornerstones":
@@ -71,7 +78,18 @@ with particular properties.)
 Synthetic data:
 ---------------
 
-Start to play with RDPGs.
+Get the baseline version of Stephen's code running.
+
+Do a parameter sweep of final assortativity vs. (a) closeness.threshold, (b)
+num.encounters.per.iter, and (b) number of vertices.
+
+Analyze other things besides assortativity. (Clustering coefficient comes to
+mind, as does figuring out which nodes have highest centrality at the end --
+are they the most moderate, or the most extreme, or is this unrelated?)
+
+Add code for vertex ideology update, appropriately parameterized.
+
+Add code for edge deletion, appropriately parameterized.
 
 
 
