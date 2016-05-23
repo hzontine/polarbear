@@ -1,6 +1,5 @@
 
 library(igraph)
-library(tcltk)
 
 
 set.seed(1234)
@@ -42,17 +41,11 @@ num.encounters.per.iter=3, closeness.threshold=.2) {
 
     graphs <- list(length=num.iter)
 
-    pb <- tkProgressBar(title=paste0("n=",length(init.vals),", ",
-        num.encounters.per.iter," encs/iter"),min=0,max=num.iter)
-
     # For now, vanilla random graph.
     graphs[[1]] <- erdos.renyi.game(length(init.vals), p=.1)
     V(graphs[[1]])$ideology <- init.vals
     
     for (iter in 2:num.iter) {
-        setTkProgressBar(pb,iter,label=paste0("Simulating: ",
-            round(100*iter/num.iter,0),"%"))
-
         cat("Computing iteration",iter,"...\n")
 
         graphs[[iter]] <- graphs[[iter-1]]
@@ -67,7 +60,6 @@ num.encounters.per.iter=3, closeness.threshold=.2) {
                 encountered.vertices[diffs < closeness.threshold]] <- 1
         }
     }
-    close(pb)
     graphs
 }
 
