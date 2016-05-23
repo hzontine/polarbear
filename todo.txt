@@ -6,7 +6,6 @@ Action items:
 - twitter sentiment API
 - check out synthetic.R
 	tcltk doesn't download!
-- read Al Zamal all the way through
 - lit search:
 	- "Mixing Beliefs among interacting systems": check out
 	Works Cites section
