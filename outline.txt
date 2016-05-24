@@ -11,8 +11,12 @@ II. Lit search
 			4) Only a small minority of elites have the ability or education to deeply understand.
 			5) Political and cultural divisions within the American public have deepened considerably since the 1970s.
 		ii. Saunders and Abramowitz: Polarization is real!
+SD: Find a definition of "elite."
+SD: Find a definition of "polarization." Are there competing definitions, or does everyone agree?
+SD: Big picture -- what kinds of techniques are they using to determine "how polarized a group is"; does this have anything to do with social networks
 			1) Wrote "Is Polarization a Myth?" (2008), ""Ideological realignment in the U.S. Electorate" (1998) and more
 			2) Growing elite polarization has led to an increase in ideological awareness and polarization among the public
+SD: Any impact of WWW and social networks here?
 				a) Cited in their 1998 article
 				b) Findings backed by Hetherington 2001, Layman and Carsey 2002
 			3) Such political divisions reflect differences in religious beliefs and practices as well as deep-seated psychological orientations
@@ -35,8 +39,11 @@ II. Lit search
 	b. Political Polarization on Twitter
 		i. Predicting polarization
 			1) Inferring ideology based on connectedness on the graph
+SD: What are the main techniques used to infer this? What are the main conclusions that have been drawn?
 			2) Determining ideology based on Sentiment Analysis of the words in a user's tweets
+SD: What are the main techniques used to infer this? What are the main conclusions that have been drawn?
 		ii. Measuring polarization through dynamic social network graphs
+SD: What are the main techniques used to infer this? What are the main conclusions that have been drawn?
 III. Synthetic Data
 	a. What does it represent?
 	b. Adding edges/nodes
