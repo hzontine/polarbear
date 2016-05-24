@@ -144,7 +144,7 @@ plot.polarization <- function(graphs) {
 
 
 main <- function() {
-    polar.graphs <- run.polar()
+    polar.graphs <<- run.polar()
     plot.animation(polar.graphs)
     plot.polarization(polar.graphs)
 }
