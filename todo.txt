@@ -82,6 +82,15 @@ Synthetic data:
 
 Get the baseline version of Stephen's code running.
 
+Reproduce (what we believe are) canonical results:
+    - binary ideology
+        - each interaction, some probability of flipping to interacting
+          agent's opinion
+            a) interact uniformly with all other agents: converge to uniform
+            opinion
+            b) interact on social network only with neighbors: converge to
+            clustered opinions
+
 Do a parameter sweep of final assortativity vs. (a) closeness.threshold, (b)
 num.encounters.per.iter, and (b) number of vertices.
 
