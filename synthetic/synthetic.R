@@ -69,8 +69,9 @@ num.encounters.per.iter=3, closeness.threshold=.2) {
 #
 # graphs -- a list of igraph objects as produced by run.polar.
 #
-# keep.vertex.positions -- if TRUE, ensure that each vertex is plotted in the
-# same x,y position from frame to frame.
+# try.to.keep.vertex.positions -- if TRUE, try to plot each vertex in a
+# similar x,y position from frame to frame. If FALSE, layout each frame of the
+# animation anew, with new relation to the old.
 #
 # interactive -- if TRUE, display the animation within R. If FALSE, create an
 # animation file in the current directory with the name specified.
@@ -82,7 +83,7 @@ num.encounters.per.iter=3, closeness.threshold=.2) {
 # overwrite.animation.file -- controls whether to overwrite or error out if
 # file already exists. Only relevant if interactive is FALSE.
 #
-plot.animation <- function(graphs, keep.vertex.positions=FALSE,
+plot.animation <- function(graphs, try.to.keep.vertex.positions=TRUE,
     delay.between.frames=.5, interactive=TRUE, animation.filename="polar.gif",
     overwrite.animation.file=FALSE) {
 
@@ -92,19 +93,24 @@ plot.animation <- function(graphs, keep.vertex.positions=FALSE,
         }
     }
 
-    vertex.coords <- layout_(graphs[[1]],nicely())
+    vertex.coords <- layout_with_kk(graphs[[1]])
     for (i in 1:length(graphs)) {
-        if (keep.vertex.positions) {
-            V(graphs[[i]])$x <- vertex.coords[,1]
-            V(graphs[[i]])$y <- vertex.coords[,2]
+        if (try.to.keep.vertex.positions) {
+            vertex.coords <- layout_with_kk(graphs[[i]],coords=vertex.coords)
+        } else {
+            vertex.coords <- layout_with_kk(graphs[[i]],coords=NULL)
         }
         V(graphs[[i]])$color <- 
             colorRampPalette(c("blue","white","red"))(100)[
                 ceiling(V(graphs[[i]])$ideology * 100)]
         if (!interactive) {
-            png(paste0("plot",rep(0,floor(log10(i)+1)),i,".png"))
+            png(paste0("plot",paste0(rep(0,3-floor(log10(i)+1)),collapse=""),
+                i,".png"))
+            cat("Building frame",i,"of",length(graphs),"...\n")
         }
-        plot(graphs[[i]], main=paste("Iteration",i,"of",length(graphs)))
+        plot(graphs[[i]],
+            layout=vertex.coords,
+            main=paste("Iteration",i,"of",length(graphs)))
         legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
             fill=c("blue","white","red"))
         if (interactive) {
@@ -114,9 +120,11 @@ plot.animation <- function(graphs, keep.vertex.positions=FALSE,
         }
     }
     if (!interactive) {
+        cat("Assembling animation...\n")
         system(paste0("convert -delay ",delay.between.frames*100,
             " plot*.png ", animation.filename))
         system("rm plot*.png")
+        cat("Animation in file ",animation.filename,".\n",sep="")
     }
 }
 
