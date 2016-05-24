@@ -73,6 +73,8 @@ to be stuff on this. Basically, the degree of influence of particular nodes,
 and estimating how much a graph would change by the presence of a new node
 with particular properties.)
 
+Simulations of evolving graphs which form and delete edges based on homophily.
+What are the principal findings here?
 
 
 Synthetic data:
@@ -91,6 +93,11 @@ Add code for vertex ideology update, appropriately parameterized.
 
 Add code for edge deletion, appropriately parameterized.
 
+Add code to make encounters influenced by current neighbors. (i.e., don't just
+choose encounter partners randomly from overall pop)
+
+Start the sim with initial condition = Dave's political blog graph (and book
+graph)
 
 
 
@@ -122,3 +129,19 @@ question: "what's the best way for us to get a manageable but 'real' subset of
 Twitter users who are reasonably well-connected to each other and who can
 reliably be judged as 'liberal' or 'conservative'?"
 
+
+Combining synthetic and real:
+-----------------------------
+
+1) Is the current Twitter graph sufficiently polarized to be hopeless (based
+on what we know counts as 'hopeless' from the synthetic sim.)
+
+2) Calibrate the initial conditions of the synthetic sim to match today's
+Twitter graph, and then simulate from there. What is our forecast for the
+actual Twitter graph "going polar," etc.?
+
+3) Snapshot the real Twitter graph at two points in time, then simulate
+starting from the first, and see what parameter settings (if any) produce
+something like the second. That would tell us something about the underlying
+data generating process (i.e., that would tell us something about how Twitter
+users actually act.)
