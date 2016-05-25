@@ -7,18 +7,18 @@ set.seed(1234)
 
 binary.ideologies <- function(num.nodes=50, ideo.prob=.45, iter=40, encounters.per.iter=3, probInitialEdge=0.35){
 	nodes=rbinom(num.nodes, 1, ideo.prob)
-	plots <- list(length=iter)
-	plots[[1]] <- sample_gnp(length(nodes), probInitialEdge)
-	V(plots[[1]])$ideology = nodes
+	graphs <- list(length=iter)
+	graphs[[1]] <- sample_gnp(length(nodes), probInitialEdge)
+	V(graphs[[1]])$ideology = nodes
 	for (i in 2:iter){
 		cat ("On iteration ",i,"...\n")
-		plots[[i]] = plots[[i-1]]
-		for (v in 1:gorder(plots[[i]])){
-			vertices = sample(1:gorder(plots[[i]]),encounters.per.iter) 	
+		graphs[[i]] = graphs[[i-1]]
+		for (v in 1:gorder(graphs[[i]])){
+			vertices = sample(1:gorder(graphs[[i]]),encounters.per.iter) 	
 			vert <- vertices[vertices != v]
 			for(b in vert){
-				ideo = V(plots[[i]])[b]$ideology
-				my.ideo = V(plots[[i]])[v]$ideology
+				ideo = V(graphs[[i]])[b]$ideology
+				my.ideo = V(graphs[[i]])[v]$ideology
 				diff = my.ideo - ideo
 				if(ideo != my.ideo){
 				     x = rbinom(1,1,0.5)        # if there will be influencing
@@ -26,15 +26,15 @@ binary.ideologies <- function(num.nodes=50, ideo.prob=.45, iter=40, encounters.p
 					y = rbinom(1,1,0.5)     # who will influence who
 					if ( y == 0 ){  	# v influences b
 						if (diff == 1){
-							V(plots[[i]])[b]$ideology <- 1
+							V(graphs[[i]])[b]$ideology <- 1
 						}else{  if (diff == -1){
-							V(plots[[i]])[b]$ideology <- 0
+							V(graphs[[i]])[b]$ideology <- 0
 						}}
 			     		}else{ 			# b influences v
 						if (diff == 1){
-							V(plots[[i]])[v]$ideology <- 0
+							V(graphs[[i]])[v]$ideology <- 0
 						}else{ if (diff == -1){
-							V(plots[[i]])[v]$ideology <- 1
+							V(graphs[[i]])[v]$ideology <- 1
 						}}
 			     		}
 				    }
