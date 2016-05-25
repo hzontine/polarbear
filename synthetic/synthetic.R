@@ -93,6 +93,13 @@ plot.animation <- function(graphs, try.to.keep.vertex.positions=TRUE,
         }
     }
 
+    # Detect binary ideology graphs so we can plot colors differently.
+    if (all(V(graphs[[1]])$ideology %in% c(0,1))) {
+        binary <- TRUE
+    } else {
+        binary <- FALSE
+    }
+
     vertex.coords <- layout_with_kk(graphs[[1]])
     for (i in 1:length(graphs)) {
         if (try.to.keep.vertex.positions) {
@@ -100,9 +107,14 @@ plot.animation <- function(graphs, try.to.keep.vertex.positions=TRUE,
         } else {
             vertex.coords <- layout_with_kk(graphs[[i]],coords=NULL)
         }
-        V(graphs[[i]])$color <- 
-            colorRampPalette(c("blue","white","red"))(100)[
-                ceiling(V(graphs[[i]])$ideology * 100)]
+        if (binary) {
+            V(graphs[[i]])$color <- ifelse(V(graphs[[i]])$ideology == 0,
+                "blue","red")
+        } else {
+            V(graphs[[i]])$color <- 
+                colorRampPalette(c("blue","white","red"))(100)[
+                    ceiling(V(graphs[[i]])$ideology * 100)]
+        }
         if (!interactive) {
             png(paste0("plot",paste0(rep(0,3-floor(log10(i)+1)),collapse=""),
                 i,".png"))
