@@ -2,37 +2,41 @@
 # With each random interaction, there is a probability of an agent flipping 
 # ideologies to attractor agent's opinion.
 
-
-
 library(igraph)
-
 set.seed(1234)
 
-bin <- function(nodes=rbinom(num.nodes=50, 1, ideo.prob=.45), iter=40,
-	encounters.per.iter=3){
+binary.ideologies <- function(num.nodes=50, ideo.prob=.45, iter=40, encounters.per.iter=3, probInitialEdge=0.35){
+	nodes=rbinom(num.nodes, 1, ideo.prob)
 	plots <- list(length=iter)
-	plots[[1]] <- sample_gnp(length(nodes), probInitialEdge=0.35)
+	plots[[1]] <- sample_gnp(length(nodes), probInitialEdge)
 	V(plots[[1]]$ideology) = nodes
 	for (i in 2:iter){
 		cat ("On iteration ",i,"...\n")
 		plots[[i]] = plots[[i-1]]
 		for (v in 1:gorder(plots[[i]])){
-			vertices = sample(1:gorder(plots[[i]],encounters.per.iter) 	
-			vertices = vertices[vertices != v]
-			ideo = V(plots[[i]])[vertices]$ideology
-			diff = abs(ideo - V(plots[[i]])[v]$ideology)
-			if(V(plots[[i]])[v]$ideology != ideo[vals[s]]){
-			     if(rbinom(1,1,probConvert=0.5) == 1){
-				#Probability who will influence who
-				#	plots[[i]][v, verticies[diff == 1]] <- 1
+			vertices = sample(1:gorder(plots[[i]],encounters.per.iter)) 	
+			vert <- vertices[vertices != v]
+			ideo = V(plots[[i]])[vert]$ideology
+			diff = ideo - V(plots[[i]])[v]$ideology
+
+			# for loop ?     can't compare one ideo with many ideos
+			if(V(plots[[i]])[v]$ideology != V(plots[[i]])[vert]$ideology){
+			     x = floor(runif(1,min=1,max=5))
+			     if(x == 1){ # v converts vert
+				plots[[i]][v, vert[diff == 1]] <- 1
+				plots[[i]][v, vert[diff == -1]] <- 0
 			     }
+			     if(x == 2){ # vert convert v
+				plots[[i]][v, vert[diff == 1]] <- 0
+				plots[[i]][v, vert[diff == -1]] <- 1
+			     }
+			     # if x == 3 or 4, no converting
 			}
-		
 		}
 	}
 }
 
-main <- function(graphs){
+plot.graph <- function(graphs){
     assortativities <- sapply(graphs, function(graph) {
         assortativity(graph,types1=V(graph)$ideology)
     })
@@ -40,4 +44,8 @@ main <- function(graphs){
         main="Polarization over time", xlab="time (iteration)",
         ylab="Assortativity of ideology")
 }
+
+main <- function(){
+	binary.graph <- binary.ideologies()
+	plot.graph(binary.graph)
 }

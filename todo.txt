@@ -72,7 +72,6 @@ effect can nodes have that are deliberately introduced into a social network?
 to be stuff on this. Basically, the degree of influence of particular nodes,
 and estimating how much a graph would change by the presence of a new node
 with particular properties.)
-
 Simulations of evolving graphs which form and delete edges based on homophily.
 What are the principal findings here?
 
@@ -88,6 +87,7 @@ Reproduce (what we believe are) canonical results:
           agent's opinion
             a) interact uniformly with all other agents: converge to uniform
             opinion
+		- who converges to who? is that random too?
             b) interact on social network only with neighbors: converge to
             clustered opinions
 
