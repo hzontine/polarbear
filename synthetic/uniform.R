@@ -9,12 +9,12 @@ binary.ideologies <- function(num.nodes=50, ideo.prob=.45, iter=40, encounters.p
 	nodes=rbinom(num.nodes, 1, ideo.prob)
 	plots <- list(length=iter)
 	plots[[1]] <- sample_gnp(length(nodes), probInitialEdge)
-	V(plots[[1]]$ideology) = nodes
+	V(plots[[1]])$ideology = nodes
 	for (i in 2:iter){
 		cat ("On iteration ",i,"...\n")
 		plots[[i]] = plots[[i-1]]
 		for (v in 1:gorder(plots[[i]])){
-			vertices = sample(1:gorder(plots[[i]],encounters.per.iter)) 	
+			vertices = sample(1:gorder(plots[[i]]),encounters.per.iter) 	
 			vert <- vertices[vertices != v]
 			ideo = V(plots[[i]])[vert]$ideology
 			diff = ideo - V(plots[[i]])[v]$ideology
