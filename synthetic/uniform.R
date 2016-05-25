@@ -9,28 +9,36 @@ binary.ideologies <- function(num.nodes=50, ideo.prob=.45, iter=40, encounters.p
 	nodes=rbinom(num.nodes, 1, ideo.prob)
 	plots <- list(length=iter)
 	plots[[1]] <- sample_gnp(length(nodes), probInitialEdge)
-	V(plots[[1]]$ideology) = nodes
+	V(plots[[1]])$ideology = nodes
 	for (i in 2:iter){
 		cat ("On iteration ",i,"...\n")
 		plots[[i]] = plots[[i-1]]
 		for (v in 1:gorder(plots[[i]])){
-			vertices = sample(1:gorder(plots[[i]],encounters.per.iter)) 	
+			vertices = sample(1:gorder(plots[[i]]),encounters.per.iter) 	
 			vert <- vertices[vertices != v]
-			ideo = V(plots[[i]])[vert]$ideology
-			diff = ideo - V(plots[[i]])[v]$ideology
-
-			# for loop ?     can't compare one ideo with many ideos
-			if(V(plots[[i]])[v]$ideology != V(plots[[i]])[vert]$ideology){
-			     x = floor(runif(1,min=1,max=5))
-			     if(x == 1){ # v converts vert
-				plots[[i]][v, vert[diff == 1]] <- 1
-				plots[[i]][v, vert[diff == -1]] <- 0
-			     }
-			     if(x == 2){ # vert convert v
-				plots[[i]][v, vert[diff == 1]] <- 0
-				plots[[i]][v, vert[diff == -1]] <- 1
-			     }
-			     # if x == 3 or 4, no converting
+			for(b in vert){
+				ideo = V(plots[[i]])[b]$ideology
+				my.ideo = V(plots[[i]])[v]$ideology
+				diff = my.ideo - ideo
+				if(ideo != my.ideo){
+				     x = rbinom(1,1,0.5)        # if there will be influencing
+				     if ( x == 0 ) {
+					y = rbinom(1,1,0.5)     # who will influence who
+					if ( y == 0 ){  	# v influences b
+						if (diff == 1){
+							V(plots[[i]])[b]$ideology <- 1
+						}else{  if (diff == -1){
+							V(plots[[i]])[b]$ideology <- 0
+						}}
+			     		}else{ 			# b influences v
+						if (diff == 1){
+							V(plots[[i]])[v]$ideology <- 0
+						}else{ if (diff == -1){
+							V(plots[[i]])[v]$ideology <- 1
+						}}
+			     		}
+				    }
+				}
 			}
 		}
 	}
