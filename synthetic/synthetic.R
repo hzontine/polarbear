@@ -1,6 +1,10 @@
 
+# First polarization simulation of synthesized data.
+# Stephen and Hannah
+
 library(igraph)
 
+source("plotting.R")
 
 set.seed(1234)
 
@@ -35,7 +39,7 @@ set.seed(1234)
 # Returns: a list of num.iter igraph objects, one per iteration of time.
 #
 run.polar <- function(init.vals=runif(50), num.iter=20, num.mediators=0,
-num.encounters.per.iter=3, closeness.threshold=.2) {
+    num.encounters.per.iter=3, closeness.threshold=.2) {
 
     stopifnot(num.encounters.per.iter < length(init.vals))
 
@@ -61,97 +65,6 @@ num.encounters.per.iter=3, closeness.threshold=.2) {
         }
     }
     graphs
-}
-
-
-# Given a list of graphs, plot them, ensuring that vertices are plotted in the
-# same location from graph to graph.
-#
-# graphs -- a list of igraph objects as produced by run.polar.
-#
-# try.to.keep.vertex.positions -- if TRUE, try to plot each vertex in a
-# similar x,y position from frame to frame. If FALSE, layout each frame of the
-# animation anew, with new relation to the old.
-#
-# interactive -- if TRUE, display the animation within R. If FALSE, create an
-# animation file in the current directory with the name specified.
-#
-# delay.between.frames -- the delay, in seconds, between graph displays.
-#
-# animation.filename -- only relevant if interactive is FALSE.
-#
-# overwrite.animation.file -- controls whether to overwrite or error out if
-# file already exists. Only relevant if interactive is FALSE.
-#
-plot.animation <- function(graphs, try.to.keep.vertex.positions=TRUE,
-    delay.between.frames=.5, interactive=TRUE, animation.filename="polar.gif",
-    overwrite.animation.file=FALSE) {
-
-    if (!interactive && !overwrite.animation.file) {
-        if (file.exists(animation.filename)) {
-            stop(paste0("File ",animation.filename, " already exists!"))
-        }
-    }
-
-    # Detect binary ideology graphs so we can plot colors differently.
-    if (all(V(graphs[[1]])$ideology %in% c(0,1))) {
-        binary <- TRUE
-    } else {
-        binary <- FALSE
-    }
-
-    vertex.coords <- layout_with_kk(graphs[[1]])
-    for (i in 1:length(graphs)) {
-        if (try.to.keep.vertex.positions) {
-            vertex.coords <- layout_with_kk(graphs[[i]],coords=vertex.coords)
-        } else {
-            vertex.coords <- layout_with_kk(graphs[[i]],coords=NULL)
-        }
-        if (binary) {
-            V(graphs[[i]])$color <- ifelse(V(graphs[[i]])$ideology == 0,
-                "blue","red")
-        } else {
-            V(graphs[[i]])$color <- 
-                colorRampPalette(c("blue","white","red"))(100)[
-                    ceiling(V(graphs[[i]])$ideology * 100)]
-        }
-        if (!interactive) {
-            png(paste0("plot",paste0(rep(0,3-floor(log10(i)+1)),collapse=""),
-                i,".png"))
-            cat("Building frame",i,"of",length(graphs),"...\n")
-        }
-        plot(graphs[[i]],
-            layout=vertex.coords,
-            main=paste("Iteration",i,"of",length(graphs)))
-        legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
-            fill=c("blue","white","red"))
-        if (interactive) {
-            Sys.sleep(delay.between.frames)
-        } else {
-            dev.off()
-        }
-    }
-    if (!interactive) {
-        cat("Assembling animation...\n")
-        system(paste0("convert -delay ",delay.between.frames*100,
-            " plot*.png ", animation.filename))
-        system("rm plot*.png")
-        cat("Animation in file ",animation.filename,".\n",sep="")
-    }
-}
-
-
-# Plot the polarization vs. time for the list of graphs passed.
-#
-# graphs -- a list of igraph objects, presumably created from run.polar().
-#
-plot.polarization <- function(graphs) {
-    assortativities <- sapply(graphs, function(graph) {
-        assortativity(graph,types1=V(graph)$ideology)
-    })
-    plot(1:length(graphs),assortativities, type="l",ylim=c(-1,1),
-        main="Polarization over time", xlab="time (iteration)",
-        ylab="Assortativity of ideology")
 }
 
 
