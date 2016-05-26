@@ -42,11 +42,12 @@ binary.ideologies <- function(num.nodes=50, ideo.prob=.45, iter=40, encounters.p
 			}
 		}
 	}
+    return(graphs)
 }
 
 plot.graphs <- function(graphs){
     assortativities <- sapply(graphs, function(graph) {
-        assortativity(graph,types1=V(graph)$ideology)
+        assortativity.nominal(graph,types=as.factor(V(graph)$ideology))
     })
     plot(1:length(graphs),assortativities, type="l",ylim=c(-1,1),
         main="Polarization over time", xlab="time (iteration)",
