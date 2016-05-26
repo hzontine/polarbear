@@ -1,0 +1,31 @@
+
+model variations:
+-----------------
+
+data:
+    - binary, or weighted opinions?
+    - univariate, or vector opinions? (Deffuant 2000)
+
+encounters:
+    - chosen globally (uniformly), or from graph neighbors?
+    - SD/HZ variant: weighted probability from each group
+
+conversions:
+    - bi-directional (both encountering agents influence each other), or
+      uni-directional?
+
+    - total (outright copy attribute value from influencing node to
+      influenced) or partial (drift towards mean)
+
+    - always successful, or only sometimes?
+
+
+
+parameters:
+-----------
+
+probability of converting at each step
+
+number of encounters per step
+
+initial condition (opinion distribution within population)
