@@ -1,11 +1,20 @@
 
+Big picture:
+------------
+every day
+1-2 hours on K&C book
+write sim code for synthetic graphs
+    - analysis of mean-field (uniform.R) -- plot percentage of opinions v time
+    - write social-net influence (clusters.R)
+lit review
+    - continue to write outline (this will help discover gaps)
+
+
 Action items:
 -------------
 - 1 hour left for Jurafsky MOOC
 - 1 hour thinking about getting Twitter data
 - twitter sentiment API
-- check out synthetic.R
-	tcltk doesn't download!
 - lit search:
 	- "Mixing Beliefs Among Interacting Systems": check out
 	Works Cited section
