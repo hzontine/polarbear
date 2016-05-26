@@ -15,9 +15,10 @@ conversions:
       uni-directional?
 
     - total (outright copy attribute value from influencing node to
-      influenced) or partial (drift towards mean)
+      influenced) or partial (drift towards mean)  (maybe binary is always the
+      first and weighted is always the second)
 
-    - always successful, or only sometimes?
+    - always successful, or only sometimes? (see "prob of converting," below)
 
 
 
