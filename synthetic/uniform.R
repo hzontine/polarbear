@@ -20,31 +20,31 @@ binary.ideologies <- function(num.nodes=50, ideo.prob=.45, iter=40, encounters.p
 				ideo = V(graphs[[i]])[b]$ideology
 				my.ideo = V(graphs[[i]])[v]$ideology
 				diff = my.ideo - ideo
-				if(ideo != my.ideo){
-				     x = rbinom(1,1,0.5)        # if there will be influencing
-				     if ( x == 0 ) {
-					y = rbinom(1,1,0.5)     # who will influence who
-					if ( y == 0 ){  	# v influences b
-						if (diff == 1){
-							V(graphs[[i]])[b]$ideology <- 1
-						}else{  if (diff == -1){
-							V(graphs[[i]])[b]$ideology <- 0
-						}}
-			     		}else{ 			# b influences v
-						if (diff == 1){
-							V(graphs[[i]])[v]$ideology <- 0
-						}else{ if (diff == -1){
-							V(graphs[[i]])[v]$ideology <- 1
-						}}
-			     		}
-				    }
-				}
+                if(ideo != my.ideo){
+                    x = rbinom(1,1,0.5)        # if there will be influencing
+                        if ( x == 0 ) {
+                            y = rbinom(1,1,0.5)     # who will influence who
+                                if ( y == 0 ){  	# v influences b
+                                    if (diff == 1){
+                                        V(graphs[[i]])[b]$ideology <- 1
+                                    }else{  if (diff == -1){
+                                        V(graphs[[i]])[b]$ideology <- 0
+                                    }}
+                                }else{ 			# b influences v
+                                    if (diff == 1){
+                                        V(graphs[[i]])[v]$ideology <- 0
+                                    }else{ if (diff == -1){
+                                        V(graphs[[i]])[v]$ideology <- 1
+                                    }}
+                                }
+                        }
+                }
 			}
 		}
 	}
 }
 
-plot.graph <- function(graphs){
+plot.graphs <- function(graphs){
     assortativities <- sapply(graphs, function(graph) {
         assortativity(graph,types1=V(graph)$ideology)
     })
@@ -54,6 +54,6 @@ plot.graph <- function(graphs){
 }
 
 main <- function(){
-	binary.graph <- binary.ideologies()
-	plot.graph(binary.graph)
+	binary.graphs <<- binary.ideologies(iter=20)
+	plot.graphs(binary.graphs)
 }
