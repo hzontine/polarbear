@@ -39,11 +39,28 @@ SD: Any impact of WWW and social networks here?
 	b. Political Polarization on Twitter
 		i. Predicting polarization
 			1) Inferring ideology based on connectedness on the graph
-SD: What are the main techniques used to infer this? What are the main conclusions that have been drawn?
+				a) What are the main techniques used to infer this? 
+					- Pennebaker, Chung, and Ireland 2007
+						1) They collected all tweets that contained the names of either the 6 parties (German study) or selected 
+						prominent politicians of these parties.
+						2) LIWC2007 (Linguistic Inquiry and Word Count): a text analysis software developed to assess emotional, cognitive, 
+						and structural components of text samples using a psychometrically validated internal dictionary. 
+					- 
+				b) What are the main conclusions that have been drawn?
+					- Many classifiers report accuracy rates 30% higher than can be expected in populations of general Twitter users.	
+						("Classifying Political Orientation on Twitter")
+					- 
+
 			2) Determining ideology based on Sentiment Analysis of the words in a user's tweets
-SD: What are the main techniques used to infer this? What are the main conclusions that have been drawn?
+				a) What are the main techniques used to infer this? 
+				
+				b) What are the main conclusions that have been drawn?
+
 		ii. Measuring polarization through dynamic social network graphs
-SD: What are the main techniques used to infer this? What are the main conclusions that have been drawn?
+				a) What are the main techniques used to infer this? 
+
+				b) What are the main conclusions that have been drawn?
+
 III. Synthetic Data
 	a. What does it represent?
 	b. Adding edges/nodes

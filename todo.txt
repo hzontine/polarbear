@@ -12,14 +12,7 @@ lit review
 
 Action items:
 -------------
-- 1 hour left for Jurafsky MOOC
-- 1 hour thinking about getting Twitter data
-- twitter sentiment API
-- lit search:
-	- "Mixing Beliefs Among Interacting Systems": check out
-	Works Cited section
 - need to find a political classifier
-- how easy is it to get the twitter handles for all members of Congress?
 - is there a tool where you can input a past twitter names and the output
 	is their twitter ID number?
 
@@ -31,9 +24,6 @@ Background knowledge:
 ---------------------
 
 Kolaczyk/Csardi book
-
-Sentiment Analysis -- Jurafsky MOOC (unit 3)
-https://class.coursera.org/nlp/lecture
 
 
 Play with data mining classification. (wait for Stephen on this)
