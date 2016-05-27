@@ -37,7 +37,13 @@ SD: Any impact of WWW and social networks here?
 		iv. Saunders and Abramowitz vs. Fiorina
 			1) Other opinions?
 	b. Political Polarization on Twitter
-		i. Predicting polarization
+		i. Methods for Collecting Data
+			1) "Classifying Political Orientation on Twitter"
+				a) Researchers surveyed In surveying such lists, 
+				They observed that a majority of the Twitter users were, in fact, politicians. To mimic this design, they populated their dataset 
+				entirely with state governors, federal-level senators, and federal-level representatives 
+ 
+		ii. Predicting polarization
 			1) Inferring ideology based on connectedness on the graph
 				a) What are the main techniques used to infer this? 
 					- Pennebaker, Chung, and Ireland 2007
@@ -45,18 +51,32 @@ SD: Any impact of WWW and social networks here?
 						prominent politicians of these parties.
 						2) LIWC2007 (Linguistic Inquiry and Word Count): a text analysis software developed to assess emotional, cognitive, 
 						and structural components of text samples using a psychometrically validated internal dictionary. 
-					- 
+					-"Classifying Political Orientation on Twitter"
+						1) SVM Classifier: based on (Zamal, Liu, and Ruths 2012) which primarily focuses on gender
+							- SVM is better than BT bec SVM is 95% accurate
+							- Superset of users features: 2 for each (1 for Conservative and 1 for Liberal) 
+								k-top words, k-top stems, k-top co-stems, k-top digrams and trigrams, k-top hashtags, 
+								k-top mentions, tweet/retweet/hashtag/link/mention frequencies, and out/in-neighborhood size 
+							- It was "considered to be more fair representation of all existing systems proposed to date. 
+							Following prior work, a radial basis function was used as the SVM kernel. The cost and γ parameters were 
+							chosen using a grid search technique. The SVM itself was implemented using the library libSV"								    2) LLDA Classifier: "employs all words present in the corpus"
+							- Despite their strong performance in other areas, they have been little-used in the domain of latent 
+							attribute inference. In the political orientation inference literature, there is one study which used 
+							the output of the LDAs as one of many features that were fed into a larger SVM classifier.
+								(Conover et al. 2011b)
+							- In "Classifying Political Orientation on Twitter", researchers employed a Labeled LDA as a stand-alone 
+							classifier, which reported accuracy rates as high as the SVM.					
 				b) What are the main conclusions that have been drawn?
 					- Many classifiers report accuracy rates 30% higher than can be expected in populations of general Twitter users.	
 						("Classifying Political Orientation on Twitter")
-					- 
+
 
 			2) Determining ideology based on Sentiment Analysis of the words in a user's tweets
 				a) What are the main techniques used to infer this? 
 				
 				b) What are the main conclusions that have been drawn?
 
-		ii. Measuring polarization through dynamic social network graphs
+		iii. Measuring polarization through dynamic social network graphs
 				a) What are the main techniques used to infer this? 
 
 				b) What are the main conclusions that have been drawn?
