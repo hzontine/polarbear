@@ -39,11 +39,15 @@ SD: Any impact of WWW and social networks here?
 	b. Political Polarization on Twitter
 		i. Methods for Collecting Data
 			1) "Classifying Political Orientation on Twitter"
-				a) Researchers surveyed In surveying such lists, 
-				They observed that a majority of the Twitter users were, in fact, politicians. To mimic this design, they populated their dataset 
-				entirely with state governors, federal-level senators, and federal-level representatives 
- 
-		ii. Predicting polarization
+				a) Political Figures Dataset: baseline dataset for the study.
+					- Researchers surveyed lists of self-declared Liberals and Democrats. They observed that a majority of the Twitter users 
+					were, in fact, politicians. To mimic this design, they populated their dataset entirely with state governors, 
+					federal-level senators, and federal-level representatives. 
+ 				b) Politically Active Dataset:
+					- "A user may indicate a political orientation in her Twitter profile (e.g., “Republican and loving it!” or 
+					“Born a Democrat, will die a Democrat.”) or be flagged as belonging to one party or the other in a Twitter listing 
+					such as the WeFollow service."
+ 		ii.  Predicting polarization
 			1) Inferring ideology based on connectedness on the graph
 				a) What are the main techniques used to infer this? 
 					- Pennebaker, Chung, and Ireland 2007
