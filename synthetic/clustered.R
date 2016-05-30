@@ -30,12 +30,15 @@ source("synthetic.R")
 #
 # prob.convert -- when an encounter between heterogeneous agents occurs, the
 # probability that one agent changes their opinion to match the other.
-
+#
+# prob.connected -- the probability of edges between nodes on the initial graph
+#
 sim.clustering <- function(init.opinions=sample(c(0,1),40,replace=TRUE),
 	num.iter=20,
 	binary=TRUE,
 	prob.convert=1.0,
-	N = 1) {
+	N = 1,
+	prob.connected=0.3) {
 
     if(binary && any(!init.opinions %in% c(0,1)){
 	stop("Initial Opinions are not all binary")
@@ -44,7 +47,7 @@ sim.clustering <- function(init.opinions=sample(c(0,1),40,replace=TRUE),
 	stop("Inital Opinions are not all in range")
     }
     graphs <- list(length=num.iter)
-    graphs[[1]] <- make.empty_graph(length(init.opinions), directed=FALSE)
+    graphs[[1]] <- erdos.renyi.game(length(init.opinions), prob.connected)
     V(graphs[[1]])$opinion <- init.opinions
 
     # For each iteration of the simulation...
