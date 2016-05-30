@@ -63,7 +63,8 @@ SD: Any impact of WWW and social networks here?
 								k-top mentions, tweet/retweet/hashtag/link/mention frequencies, and out/in-neighborhood size 
 							- It was "considered to be more fair representation of all existing systems proposed to date. 
 							Following prior work, a radial basis function was used as the SVM kernel. The cost and γ parameters were 
-							chosen using a grid search technique. The SVM itself was implemented using the library libSV"								    2) LLDA Classifier: "employs all words present in the corpus"
+							chosen using a grid search technique. The SVM itself was implemented using the library libSV"
+						2) LLDA Classifier: "employs all words present in the corpus"
 							- Despite their strong performance in other areas, they have been little-used in the domain of latent 
 							attribute inference. In the political orientation inference literature, there is one study which used 
 							the output of the LDAs as one of many features that were fed into a larger SVM classifier.

@@ -80,8 +80,8 @@ sim.opinion.dynamics <- function(
                                 V(graphs[[i]])[v]$opinion <-
                                     V(graphs[[i]])[ev]$opinion
                             } else {
-                                V(graphs[[i]])[v]$opinion <-
-                                    V(graphs[[i]])[ev]$opinion
+                                V(graphs[[i]])[ev]$opinion <-
+                                    V(graphs[[i]])[v]$opinion
                             }
                         }
                     } 
