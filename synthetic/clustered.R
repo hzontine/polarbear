@@ -29,7 +29,7 @@ source("plotting.R")
 # a N value. Returns a vector of N degree (default = 1) neighboring vertex IDs 
 # that vector will encounter in the current iteration.
 # 
-# N -- the degree to which the encounter.func will search for neighbors
+# degree -- the degree to which the encounter.func will search for neighbors
 #
 # prob.convert -- when an encounter between heterogeneous agents occurs, the
 # probability that one agent changes their opinion to match the other.
@@ -40,7 +40,7 @@ sim.clustering <- function(num.nodes=50,
 	num.iter=20,
 	binary=TRUE,
 	prob.convert=0.3,
-	N=1,
+	degree=1,
 	prob.connected=0.05) {
 
     init.opinions=sample(c(0,1),num.nodes,replace=TRUE)
@@ -66,8 +66,8 @@ sim.clustering <- function(num.nodes=50,
 	# Go through all the vertices, in random order:
   	    for (v in sample(1:gorder(graphs[[i]]))) {
 		# A vector that holds all the neighbors of the current node
-		# that are 1:N degrees away.
-		neighboring.nodes <- calculate.neighbors(graphs[[i]], v, N)
+		# that are between one and X degrees away.
+		neighboring.nodes <- calculate.neighbors(graphs[[i]], v, degree)
 
 		for (neigh in neighboring.nodes) {
 		    if (binary) {
@@ -102,7 +102,7 @@ calculate.neighbors <- function(graphs, v, N){
 }
 
 main <- function() {
-	graph.sim <<- sim.clustering()
+	graph.sim <<- sim.clustering(num.iter=10)
 	plot.animation(graph.sim, "opinion", interactive=FALSE, delay.between.frames=.2, 
 		animation.filename="clustering.gif")
 	plot.binary.opinions(graph.sim)
