@@ -61,20 +61,6 @@ perform.cursor.call <- function(url, field.to.extract) {
 }
 
 
-get.followers.page <- function(screen.name, cursor=-1) {
-    return(make.manual.twitter.api.call(paste0(
-        "https://api.twitter.com/1.1/followers/ids.json?screen_name=",
-            screen.name, "&cursor=", cursor)))
-}
-
-
-get.following.page <- function(screen.name, cursor=-1) {
-    return(make.manual.twitter.api.call(paste0(
-        "https://api.twitter.com/1.1/following/ids.json?screen_name=",
-            screen.name, "&cursor=", cursor)))
-}
-
-
 get.screen.names <- function(userids) {
     lookup.call <- make.manual.twitter.api.call(
         paste0("https://api.twitter.com/1.1/users/lookup.json?user_id=",
