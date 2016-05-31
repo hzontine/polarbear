@@ -3,6 +3,7 @@
 
 library(igraph)
 source("synthetic.R")
+source("plotting.R")
 
 # Run an opinion dynamics simulation with n agents for num.iter iterations.
 # Returns a list of igraph objects, each representing the graph at a snapshot 
@@ -16,6 +17,8 @@ source("synthetic.R")
 # init.opinions -- a vector of n nodes (n is up to the caller) with the inital
 # opinions of each of the nodes. If binary=TRUE, these should be integer 
 # values = 0 or = 1. If binary=FALSE, they should be reals on [0,1].
+#
+# num.nodes -- number of vertices in the graph
 #
 # num.iter -- the number of iterations to run the simulation
 # 
@@ -33,16 +36,19 @@ source("synthetic.R")
 #
 # prob.connected -- the probability of edges between nodes on the initial graph
 #
-sim.clustering <- function(init.opinions=sample(c(0,1),40,replace=TRUE),
+sim.clustering <- function(num.nodes=50,
 	num.iter=20,
 	binary=TRUE,
-	prob.convert=1.0,
-	N = 1,
-	prob.connected=0.3) {
+	prob.convert=0.3,
+	N=1,
+	prob.connected=0.05) {
+
+    init.opinions=sample(c(0,1),num.nodes,replace=TRUE)
 
     if(binary && any(!init.opinions %in% c(0,1))){
 	stop("Initial Opinions are not all binary")
     }
+
     if(!binary && any(init.opinions < 0 | init.opinions > 1)){
 	stop("Inital Opinions are not all in range")
     }
@@ -81,14 +87,14 @@ sim.clustering <- function(init.opinions=sample(c(0,1),40,replace=TRUE),
 					    V(graphs[[i]])[v]$opinion
 					}
 				}
-			} else{
-				stop("non-binary not supported yet")
 			}
-		    }
-		}
-	    }
-	}
-	return(graphs)
+		     }else{
+			stop("non-binary not supported yet")
+		     }
+		  }
+	    	}
+    }
+    return(graphs)
 }
 
 calculate.neighbors <- function(graphs, v, N){
@@ -97,6 +103,7 @@ calculate.neighbors <- function(graphs, v, N){
 
 main <- function() {
 	graph.sim <<- sim.clustering()
-	plot.animation(graph.sim, "clustering", delay.between.frames=.2)
+	plot.animation(graph.sim, "opinion", interactive=FALSE, delay.between.frames=.2, 
+		animation.filename="clustering.gif")
 	plot.binary.opinions(graph.sim)
 }
