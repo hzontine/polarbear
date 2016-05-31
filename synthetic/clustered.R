@@ -40,10 +40,10 @@ sim.clustering <- function(init.opinions=sample(c(0,1),40,replace=TRUE),
 	N = 1,
 	prob.connected=0.3) {
 
-    if(binary && any(!init.opinions %in% c(0,1)){
+    if(binary && any(!init.opinions %in% c(0,1))){
 	stop("Initial Opinions are not all binary")
     }
-    if(!binary && any(init.opinions < 0 | init.opinions > 1){
+    if(!binary && any(init.opinions < 0 | init.opinions > 1)){
 	stop("Inital Opinions are not all in range")
     }
     graphs <- list(length=num.iter)
@@ -87,16 +87,16 @@ sim.clustering <- function(init.opinions=sample(c(0,1),40,replace=TRUE),
 		    }
 		}
 	    }
+	}
 	return(graphs)
 }
 
 calculate.neighbors <- function(graphs, v, N){
-	
-
+	return(neighbors(graphs, V(graphs)[v], mode=N))
 }
 
 main <- function() {
-	graphs <<- sim.clustering()
-	plot.animation(graphs, "clustering", delay.between.frames=.2)
-	plot.binary.opinions(graphs)
+	graph.sim <<- sim.clustering()
+	plot.animation(graph.sim, "clustering", delay.between.frames=.2)
+	plot.binary.opinions(graph.sim)
 }
