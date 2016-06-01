@@ -13,11 +13,20 @@ auth.req <- POST("https://api.twitter.com/oauth2/token",
 
 access.token <- paste("Bearer",content(auth.req)$access_token)
 
+DEBUG <- TRUE
 make.manual.twitter.api.call <- function(the.api.request) {
-    content <- content(
+    if (DEBUG) {
+        cat("make.manual.twitter.api.call(\"",the.api.request,"\")...\n",
+            sep="")
+    }
+    payload <- fromJSON(content(
         GET(the.api.request,add_headers(Authorization=access.token)),
-        as="text")
-    return(fromJSON(content))
+        as="text"))
+    if ("errors" %in% names(payload)) {
+        cat("API barfed: ", payload$errors$message,"\n",sep="")
+        return(NULL)
+    }
+    return(payload)
 }
 
 #For example:

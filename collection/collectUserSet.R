@@ -124,10 +124,6 @@ perform.cursor.call <- function(url, field.to.extract) {
     results.so.far <- vector()
     the.call <- make.manual.twitter.api.call(paste0(
         url, "&cursor=-1"))
-    if ("error" %in% names(the.call)) {
-        cat(the.call[["error"]],"\n")
-        return(NULL)
-    }
     results.so.far <- union(results.so.far, the.call[[field.to.extract]])
     cursor <- the.call$next_cursor
     while (!is.null(cursor) && cursor != 0) {
