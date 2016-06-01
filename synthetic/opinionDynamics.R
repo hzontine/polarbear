@@ -61,7 +61,7 @@ sim.opinion.dynamics <- function(
         # Go through all the vertices, in random order:
         for (v in sample(1:gorder(graphs[[i]]))) {
 
-            # Each vertex encounters some others at random (mean field).
+            # Each vertex encounters some others at random.
             encountered.vertices <- encounter.func(graphs[[i]],v)
 
             # For each of these encountered partners...
