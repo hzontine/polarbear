@@ -78,10 +78,10 @@ plot.animation <- function(graphs, attribute.name="ideology",
     }
     if (!interactive) {
         cat("Assembling animation...\n")
-        system(paste0("convert -delay ",delay.between.frames*100,
-            " plot*.png ", animation.filename))
-        system("rm plot*.png")
-        cat("Animation in file ",animation.filename,".\n",sep="")
+          system(paste0("convert -delay ",delay.between.frames*100,
+              " plot*.png ", animation.filename))
+          system("rm plot*.png")
+          cat("Animation in file ",animation.filename,".\n",sep="")
     }
 }
 
