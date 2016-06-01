@@ -1,6 +1,8 @@
 
 source("manualApi.R")
 
+library(tcltk)
+
 
 # Given a set of "seed" screen names S, return a data frame for a graph. This
 # data frame will contain all users in a set U who satisfy the following
@@ -41,8 +43,18 @@ collect.user.set <- function(S, only.bidirectional=FALSE, verbose=TRUE) {
     if (verbose) cat("There are ", length(followers.of.S), 
         " followers of the seed set.\n", sep="")
 
+
     U.edgelist <- matrix(nrow=0,ncol=2)
-    for (u in followers.of.S) {
+
+    pb <- tkProgressBar(title=paste0("Collect user set (",
+        length(S), " seed users)"), min=0, max=length(followers.of.S))
+
+    for (i in 1:length(followers.of.S)) {
+
+        u <- followers.of.S[i]
+
+        setTkProgressBar(pb,i,label=paste0("Checking users: ",
+            round(100*i/length(followers.of.S),0),"%"))
 
         if (verbose) cat("Checking ", u, "...\n", sep="")
 
@@ -75,6 +87,9 @@ collect.user.set <- function(S, only.bidirectional=FALSE, verbose=TRUE) {
             # if (verbose) cat("Excluding ", u, ".\n", sep="")
         }
     }
+
+    close(pb)
+
 
     # *barfs*
     U.edgelist <- matrix(as.character(unlist(U.edgelist)),ncol=2)
