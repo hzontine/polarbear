@@ -20,6 +20,11 @@ conversions:
 
     - always successful, or only sometimes? (see "prob of converting," below)
 
+    - prob. of converting: should be inversely proportional to node's
+      in-degree? (i.e., if you're following a zillion people, it's less likely
+      you'll be influenced by each one because that one person only occupies a
+      small fraction of the ideas you're exposed to)
+
 
 
 parameters:
