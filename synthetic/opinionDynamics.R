@@ -43,8 +43,18 @@ source("synthetic.R")
 # probability that one agent (chosen at random) changes their opinion to
 # match the other.
 #
+
+# SD: note that when we actually call sim.opinion.dynamics() to run a
+# simulation, we will be giving it an encounter.func of our choice. That
+# encounter.func must be a function that takes two arguments (a graph, and the
+# vertex for which you want to get encountered vertices) and returns a vector
+# of vertices that will be encountered (and which may, as a result, possibly
+# influence or be influenced by that vertex).
+
+sim.opinion.dynamics(num.nodes=20, num.iter=100, encounter.func=get.graph.neighbors.encounter.func(5))
+
 sim.opinion.dynamics <- function(num.nodes=50, 
-    num.iter=20,
+        num.iter=20,
         binary=TRUE, 
         encounter.func=get.mean.field.encounter.func(3),
         N=1,
@@ -129,6 +139,27 @@ sim.opinion.dynamics <- function(num.nodes=50,
 # connections in the graph.)
 
 
+# SD: leave get.mean.field.encounter.func() exactly as is. Write a new
+# get.graph.neighbors.encounter.func() which will return a function that
+# chooses from graph neighbors.
+
+# SD: add code to detect when a vertex doesn't have enough neighbors to do
+# this, and in that case, simply return *all* the neighbors it does have.
+
+# SD: remember: all the encounter functions, no matter what they are and do,
+# must have the same function signature. (so that sim.opinion.dynamics() can
+# call them "blindly" without having to know which specific encounter function
+# it is. double-dispatch, polymorphism, blah blah.)
+
+# SD: deal with "mode".
+
+
+# SD: second level TODO:
+# deal with directed graphs. (1) In get.graph.neighbors.encounter.func(), if
+# the graph is directed, only use outgoing edges. (2) In sim.opinion.dynamics,
+# get rid of the whole part of the code where Stephen had a bug, and only
+# outward influence. (in other words, the node-in-question is always the
+# influencer, never the influencee.)
 
 get.mean.field.encounter.func <- function(num.vertices) {
     return(
@@ -139,12 +170,17 @@ get.mean.field.encounter.func <- function(num.vertices) {
                 }else{
             # Each vertex encounters some others at random from a vector
             # of its neighbors who are up to x degrees away.
-            sample(neighbors(graphs, V(graphs)[vertex], mode=x),num.vertices)
+            sample(neighbors(graph, V(graph)[vertex], mode=x),num.vertices)
             }
         }
     )
 }
         
+
+get.graph.neighbors.encounter.func <- function(num.vertices) {
+
+}
+
 
 main <- function() {
     graphs <<- sim.opinion.dynamics()
