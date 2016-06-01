@@ -139,13 +139,17 @@ get.screennames <- function(userids, verbose=TRUE) {
     return(screennames)
 }
 
+local.peeps <- c(
+    "rockladyeagles",
+    "hzontine",
+    "pinkcamowheelie",
+    "raechick",
+    "ZachWhitt2",
+    "persnickery"
+)
+
+r.people <- c("hadleywickham","GaborCsardi","robjhyndman")
 
 main <- function() {
-    U <<- collect.user.set(c("rockladyeagles",
-        "hzontine",
-        "pinkcamowheelie",
-        "raechick",
-        "ZachWhitt2",
-        "persnickery"
-    ))
+    U <<- collect.user.set(local.peeps, only.bidirectional=FALSE)
 }
