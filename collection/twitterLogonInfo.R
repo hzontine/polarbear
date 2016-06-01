@@ -21,31 +21,39 @@
 # Paste those below.
 
 # This is Hannah:
-#key <- "mGwXg8u650fqEeTAM7T1jDqMX"
-#secret <- "WOavl2fMDCL0QxFkEoYswy6FWTBDRLvaN8DtpUbbpKRCOtSDE1"
-#access_token <- "394926716-dHC5EZtfYQI0fgno0Yitvx4doHuz8JicBNxFBg6z"
-#access_token_secret <- "KncwptmZl0KUfWbebINwOFvc4bbR7q2O2ixs7F19DPrXY"
+hannah <- list()
+hannah$key <- "mGwXg8u650fqEeTAM7T1jDqMX"
+hannah$secret <- "WOavl2fMDCL0QxFkEoYswy6FWTBDRLvaN8DtpUbbpKRCOtSDE1"
+hannah$access_token <- "394926716-dHC5EZtfYQI0fgno0Yitvx4doHuz8JicBNxFBg6z"
+hannah$access_token_secret <- "KncwptmZl0KUfWbebINwOFvc4bbR7q2O2ixs7F19DPrXY"
 
 # This is Liv:
-#key <- "kzy13nReYwPakG1jflt2zPVUm"
-#secret <- "7t5E77ZzURWMJkFHS1J9SdIDThWounX9DMiWXRpN61je86vjN8"
-#access_token <- "3648031337-eefjrJKBbe7xqqpdXcQF9DLpxvpZYurRIJyiN9e"
-#access_token_secret <- "D1doHvZKXPn0sqBGXiJNuNcpuJmN2Z7BzkFbbbZDGt8qH"
+liv <- list()
+liv$key <- "kzy13nReYwPakG1jflt2zPVUm"
+liv$secret <- "7t5E77ZzURWMJkFHS1J9SdIDThWounX9DMiWXRpN61je86vjN8"
+liv$access_token <- "3648031337-eefjrJKBbe7xqqpdXcQF9DLpxvpZYurRIJyiN9e"
+liv$access_token_secret <- "D1doHvZKXPn0sqBGXiJNuNcpuJmN2Z7BzkFbbbZDGt8qH"
 
 #Aaron
-#key<- "QqNt2fPekjeu9jNzuyfIwxC2q"
-#secret <- "pidb0hZR2WtJwo594KnKEc0w9KcYOzwtubjLDKdecbtxOXRsb1"
-#access_token <- "551419186-TfWdgD0yNyipiWfVGx89rnwa8DOcUVGzQd1kd60d"
-#access_token_secret <- "TTiEJxJRvix00VuI3yDgFcmJzxjEqjhayGuPINED4IYGU"
+aaron <- list()
+aaron$key <- "QqNt2fPekjeu9jNzuyfIwxC2q"
+aaron$secret <- "pidb0hZR2WtJwo594KnKEc0w9KcYOzwtubjLDKdecbtxOXRsb1"
+aaron$access_token <- "551419186-TfWdgD0yNyipiWfVGx89rnwa8DOcUVGzQd1kd60d"
+aaron$access_token_secret <- "TTiEJxJRvix00VuI3yDgFcmJzxjEqjhayGuPINED4IYGU"
 
 # This is Stephen:
-key <- "MlUmay5kA1vGWKokmmFofgRLX"
-secret <- "2FFYCyI2rhUIEltkepeNhVcZvYufXJukCJMqE1s3ALKoLYm7LD"
-access_token <- "1019144197-cMFsHfxTZiG0oyOidzM7bCW4uX6PzjXVOyNQTUK"
-access_token_secret <- "fmW3KSw0kSYH43QPqSxUscnZD8XF8M8oEJnKm2sRAcq70"
+stephen <- list()
+stephen$key <- "MlUmay5kA1vGWKokmmFofgRLX"
+stephen$secret <- "2FFYCyI2rhUIEltkepeNhVcZvYufXJukCJMqE1s3ALKoLYm7LD"
+stephen$access_token <- "1019144197-cMFsHfxTZiG0oyOidzM7bCW4uX6PzjXVOyNQTUK"
+stephen$access_token_secret <- "fmW3KSw0kSYH43QPqSxUscnZD8XF8M8oEJnKm2sRAcq70"
 
 # This is Dave:
-#key <- "j9ylpEcXdHxZLZnN5OzH9CbNE"
-#secret <- "VeYV8XXHbUCLk43iOWVOYB6ODzgwODwj0AFJOXANUGm36DKJYI"
-#access_token <- "703433868-5F8OLs2t2w8Xdkbr9LFbtreyNP4lo4faM4BDq8fY"
-#access_token_secret <- "cwsYGxS64oR6np5XeqwdG0p2u3rky6xDEpcRm13TtMAZN"
+dave <- list()
+dave$key <- "j9ylpEcXdHxZLZnN5OzH9CbNE"
+dave$secret <- "VeYV8XXHbUCLk43iOWVOYB6ODzgwODwj0AFJOXANUGm36DKJYI"
+dave$access_token <- "703433868-5F8OLs2t2w8Xdkbr9LFbtreyNP4lo4faM4BDq8fY"
+dave$access_token_secret <- "cwsYGxS64oR6np5XeqwdG0p2u3rky6xDEpcRm13TtMAZN"
+
+auth.repo <- list(hannah, liv, aaron, stephen, dave)
+
