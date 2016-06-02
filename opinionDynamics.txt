@@ -1,3 +1,69 @@
+What is opinion dynamics?
+    - modeling user's latent opinion "to be modulated over time  by opinions asynchronously
+    expressed by her neighbors as sentiment messgaes" (De et al. 8)
+    - "informational influence: users lacking necessary information seek the opinions of their 
+    neighbors in order to update their beliefs" (Das, Gollapudi, Munagala 1)
+        * Das, G, and M believe this is the dominant model of influence in short-term
+        anonymous interactions, ex) chat rooms. 
+    - Three types of opinion update processes: (Das, Gollapudi, Munagala 2)
+        1) stubbornness- users do not change their opinion
+        2) compromise- users update their opinion to be a convex combination of their initial
+        opinion and their neighbor's opinion
+        3) biased conformity- user takes on the opinions of her surrounding neighbors, 
+        ignoring her own inital opinions
+
+Biased Voter Model
+
+    Made up of two basic parameters: 1) to capture stubbornness and 2) biased conformity  
+    This model converges a consensus after an exponential amount of time, but the state,
+    in which it spends the most time, was observed to be heavily polarized.
+    To achieve polarization, existing models required users to ignore opinions that are
+    less related to their own and to always be stubborn.
+    Opinion Formation: Asch
+        - "Asch, in his seminal conformity experiments, observed that a large fraction of 
+        his subjects could be swayed to essentially say 'white is black' if everyone else 
+        in the group said the same"
+        - In his experiments, "the subject was placed in a room with several stooges 
+        who unanimously gave the false (binary) response to a question where the 
+        true answer was self-evident.
+        - Observations: 1) "the extent of conformity (percent of subjects who conform) 
+        depends on the size of the group and 2) even when one of the stooges gives 
+        the true response, that is sufficient to reduce conformity significantly."
+    This model is a combination of certain aspects from the flocking and DeGroot models.
+    "We study the response of the subjects not only as a func- tion of the size of the 
+    neighborhood, but also as a function of the distribution of these opinions, and 
+    the distance of these opinions from the subject’s own"
+
+
+SLANT Model
+
+
+The SLANT model is a modeling framework of opinion dynamics in socia media and social networking.
+"The proposed framework is based on two intuitive ideas: 1) user's opinions are hidden until 
+they decide to share it with their friends and 2) users may update their opinions about a particular 
+topic by learning from the opinions shared by their friends." (De et al. 1) 
+They modeled user's latent opinions as countinous-time stochastic processes driven by a set of marked
+jump stochastic differential equations. Such construction allows each user’s latent opinion to be 
+modulated over time by the opinions asynchronously expressed by her neighbors as sentiment message
+The Markov property is essential to the main components of the model:
+I. "An efficient estimation procedure to find the parameters that maximize the likelihood of a set 
+of (millions of) sentiment messages via convex programming.
+II. A scalable simulation procedure to sample millions of sentiment messages from the proposed 
+model in a matter of minutes.
+III. A set of novel predictive formulas for efficient and accurate opinion forecasting, which 
+can also be used to identify conditions under which opinions converge to a steady state of 
+consensus or polarization." (De et al.)
+The model provided a good fit to both the synthetic and real data gathered from Twitter.
+
+    De, Valera, Ganguly, Bhattacharya, Gomez-Rodriguez. 2016. "Learning and Forecasting
+        Opinion Dynamics in Social Networks."
+
+
+
+
+Deffuant-Weisbuch Model
+Hegselmann-Krause Model
+
 
 There are two extensively studied models that explore continuous opinion
 dynamics under bounded confidence, the Deffuant-Weisbuch (DW) model (Deffuant
@@ -23,18 +89,18 @@ difference being open-minded), so did the number of final opinion clusters
 after reaching a period of steady state.
 
 
-Deffuant, G., D. Neau, F. Amblard, and G. Weisbuch. 2000. "Mixing Beliefs
-among Interacting Agents." _Advances in Complex Systems_ 3:87-98. doi: 10.1142/S0219525900000078
+    Deffuant, G., D. Neau, F. Amblard, and G. Weisbuch. 2000. "Mixing Beliefs
+        among Interacting Agents." _Advances in Complex Systems_ 3:87-98. doi: 10.1142/S0219525900000078
 
-Fu, G., W. Zhang, and Z. Li. 2015. "Opinion Dynamics of Modified Hegselmann -
-Krause Model in a Group-Based Population with Heterogeneous Bounded
-Confidence." Physica A: Statistical Mechanics and Its Applications
-419:558-565. doi:10.1016/j.physa.2014.10.045
+    Fu, G., W. Zhang, and Z. Li. 2015. "Opinion Dynamics of Modified Hegselmann -
+        Krause Model in a Group-Based Population with Heterogeneous Bounded
+        Confidence." Physica A: Statistical Mechanics and Its Applications
+        419:558-565. doi:10.1016/j.physa.2014.10.045
 
-Hegselmann, R., and U. Krause.  2002. "Opinion Dynamics and Bounded
-Confidence Models, Analysis, and Simulation." _Journal of Artificial Societies
-and Social Simulation_ 5. http://jasss.soc.surrey.ac.uk/5/3/2/2.pdf
+    Hegselmann, R., and U. Krause.  2002. "Opinion Dynamics and Bounded
+        Confidence Models, Analysis, and Simulation." _Journal of Artificial Societies
+        and Social Simulation_ 5. http://jasss.soc.surrey.ac.uk/5/3/2/2.pdf
 
-Lorenz, J. 2007. "Continuous Opinion Dynamics under Bounded Confidence: A
-Survey." International Journal of Modern Physics C 18:1819-1838.
-doi:10.1142/S0129183107011789 .
+    Lorenz, J. 2007. "Continuous Opinion Dynamics under Bounded Confidence: A
+        Survey." International Journal of Modern Physics C 18:1819-1838.
+        doi:10.1142/S0129183107011789 .

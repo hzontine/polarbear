@@ -29,12 +29,8 @@ source("synthetic.R")
 # or random interactions between a node's neighbors to the Nth degree in
 # the graph (FALSE)? 
 #
-# N --  random interactions between a node and all its neighbors to the Nth 
-# degree. Default is N = 1.
-#
-# encounter.func -- a function which takes several parameters including, a 
-# graph, vertex ID,  
-# Returns a vector of vertex IDs of which the vector may randomly encounter in
+# encounter.func -- a function which takes a graph and a vertex ID. Returns a 
+# vector of vertex IDs of which the vector may randomly encounter in
 # the current iteration.
 #
 # prob.connected -- the probability of edges between nodes on the initial graph
@@ -51,7 +47,6 @@ source("synthetic.R")
 # of vertices that will be encountered (and which may, as a result, possibly
 # influence or be influenced by that vertex).
 
-sim.opinion.dynamics(num.nodes=20, num.iter=100, encounter.func=get.graph.neighbors.encounter.func(5))
 
 sim.opinion.dynamics <- function(num.nodes=50, 
         num.iter=20,
@@ -60,7 +55,7 @@ sim.opinion.dynamics <- function(num.nodes=50,
         N=1,
         is.random=TRUE,
         prob.connected=0.05,
-        prob.convert=1.0) {
+        prob.convert=0.5) {
 
     if (binary){
         init.opinions=sample(c(0,1),num.nodes,replace=TRUE)
@@ -91,31 +86,21 @@ sim.opinion.dynamics <- function(num.nodes=50,
 
         # Go through all the vertices, in random order:
         for (v in sample(1:gorder(graphs[[i]]))) {
-            encountered.vertices <- encounter.func(graphs[[i]],v,is.random,N)
+            encountered.vertices <- encounter.func(graphs[[i]],v)
         
             # For each of these encountered partners...
             for (ev in encountered.vertices) {
 
                 if (binary) {
-                    # If they already have the same opinion, nm. If they
-                    # don't, roll dice to see whether they influence, and if
-                    # so, choose a random one to influence the other.
-                    if (V(graphs[[i]])[v]$opinion !=
-                        V(graphs[[i]])[ev]$opinion) {
-                        if (runif(1) < prob.convert) {
-                            change.first <- runif(1) < .5
-                                if (change.first) {
-                                   V(graphs[[i]])[v]$opinion <-
-                                     V(graphs[[i]])[ev]$opinion
-                                 } else {
-                                   V(graphs[[i]])[ev]$opinion <-
-                                     V(graphs[[i]])[v]$opinion
-                                 }
-                         }
-                     } 
-                 } else {
+                    if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion) {
+                        num.incoming.edges <- neighbors(g, ev, mode="in")
+                        #if () {
+                            V(graphs[[i]])[ev]$opinion <- V(graphs[[i]])[v]$opinion
+                        #}
+                    } 
+                } else {
                     stop("non-binary not supported yet.")
-                 }
+                }
              }
          }
      }
@@ -139,21 +124,6 @@ sim.opinion.dynamics <- function(num.nodes=50,
 # connections in the graph.)
 
 
-# SD: leave get.mean.field.encounter.func() exactly as is. Write a new
-# get.graph.neighbors.encounter.func() which will return a function that
-# chooses from graph neighbors.
-
-# SD: add code to detect when a vertex doesn't have enough neighbors to do
-# this, and in that case, simply return *all* the neighbors it does have.
-
-# SD: remember: all the encounter functions, no matter what they are and do,
-# must have the same function signature. (so that sim.opinion.dynamics() can
-# call them "blindly" without having to know which specific encounter function
-# it is. double-dispatch, polymorphism, blah blah.)
-
-# SD: deal with "mode".
-
-
 # SD: second level TODO:
 # deal with directed graphs. (1) In get.graph.neighbors.encounter.func(), if
 # the graph is directed, only use outgoing edges. (2) In sim.opinion.dynamics,
@@ -163,27 +133,37 @@ sim.opinion.dynamics <- function(num.nodes=50,
 
 get.mean.field.encounter.func <- function(num.vertices) {
     return(
-        function(graph, vertex, is.random, x) {
-            if (is.random){
+        function(graph, vertex) {
             # Each vertex encounters some others at random (mean field).
-            sample((1:gorder(graph))[-vertex],num.vertices)
-                }else{
+            return (
+                sample((1:gorder(graph))[-vertex],num.vertices)
+            )
+        }
+    )
+}
+get.graph.neighbors.encounter.func <- function(num.vertices) {
+    return(
+        function(graph,vertex) {
             # Each vertex encounters some others at random from a vector
-            # of its neighbors who are up to x degrees away.
-            sample(neighbors(graph, V(graph)[vertex], mode=x),num.vertices)
+            # of its "outgoing" neighbors, of whom he may pass 
+            # information to/influence.
+            total.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
+            if(length(total.neighbors) <= length(num.vertices)){
+                return (
+                    total.neighbors
+                )
+            } else {
+                return ( 
+                    sample(total.neighbors, num.vertices)
+                )
             }
         }
     )
 }
-        
-
-get.graph.neighbors.encounter.func <- function(num.vertices) {
-
-}
 
 
 main <- function() {
-    graphs <<- sim.opinion.dynamics()
+    graphs <<- sim.opinion.dynamics(encounter.func=get.mean.field.encounter.func(5))
     plot.animation(graphs,"opinion",delay.between.frames=.2)
     plot.binary.opinions(graphs)
 }
