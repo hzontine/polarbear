@@ -48,9 +48,9 @@ sim.opinion.dynamics <- function(num.nodes=50,
         num.iter=20,
         binary=TRUE, 
         encounter.func=get.mean.field.encounter.func(3),
-        N=1,
         prob.connected=0.03,
-        prob.convert=0.5) {
+        prob.convert=0.5,
+        victim.update.function=get.automatically.update.victim.function()) {
 
     if (binary){
         init.opinions=sample(c(0,1),num.nodes,replace=TRUE)
@@ -84,16 +84,7 @@ sim.opinion.dynamics <- function(num.nodes=50,
 
                 if (binary) {
                     if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion) {
-                        num.incoming.edges <- neighbors(graphs[[i]], ev, mode="in")
-
-# SD: a function that determines the new ideology value of the "victim" node.
-
-# These are all "update.victim.opinion" functions.
-
-
-                        #if () {
-                            V(graphs[[i]])[ev]$opinion <- V(graphs[[i]])[v]$opinion
-                        #}
+                            V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
                     } 
                 } else {
                     stop("non-binary not supported yet.")
@@ -118,6 +109,14 @@ sim.opinion.dynamics <- function(num.nodes=50,
 # (1) This could be a function that returns the "influencer's" value, period.
 # The generator function is called: get.automatically.update.victim.function()
 
+get.automatically.update.victim.function <- function(){
+    return (
+        function(graph, vertex, victim.vertex){
+            return(V(graph)[vertex]$opinion)
+        }
+    )
+}
+
 # (2) This could be a function that either returns (a) the "influencer's"
 # value, or (b) the victim's current value. The probability of (a) is equal to
 # probability 1/nie, where nie is the number of incoming edges, and the
@@ -125,15 +124,41 @@ sim.opinion.dynamics <- function(num.nodes=50,
 # The generator function is called:
 # get.proportional.to.in.degree.update.victim.function()
 
+get.proportional.to.in.degree.update.victim.function <- function(){
+    return (
+        function(graph, vertex, victim.vertex){
+            probability.of.converting <- 1 / (neighbors(graph, vertex, mode="in"))
+            if (runif(1, 1, probability.of.converting) == 1){
+                    return( V(graph)[vertex]$opinion )
+            } else {
+                    # Victim vertex opinion value stays the same
+                    return( V(graph)[victim.vertex]$opinion )
+            }
+        }
+    )
+}
+
 # (3) This could be a function that returns a new value iff the distance
 # between my current ideology and yours is less than a threshold ("bounded
 # confidence"), otherwise the victim's current value.
 # The generator function is called:
 # get.bounded.confidence.update.victim.function()
 
-
-
-
+get.bounded.confidence.update.victim.function <- function(threshold.value){
+    return (
+        function(graph, vertex, victim.vertex){
+            return (
+                if(abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion)
+                    < threshold.value ){
+    # what opinion value do we want to return here?
+                    V(graph)[vertex]$opinon
+                } else {
+                    V(graph)[victim.vertex]$opinion
+                }
+            )
+        }
+    )
+}
 
 # Terminology:
 #
@@ -143,7 +168,6 @@ sim.opinion.dynamics <- function(num.nodes=50,
 #
 # ** encounter generator functions: an "encounter generator function" is one
 # that can be called to return an encounter function.
-
 
 # Return a "mean-field" encounter function; i.e., vertices are chosen
 # uniformly from the entire population (unrelated to anything about
