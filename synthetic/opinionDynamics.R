@@ -45,7 +45,7 @@ source("synthetic.R")
 
 
 sim.opinion.dynamics <- function(num.nodes=50, 
-        num.iter=20,
+        num.iter=0,
         binary=TRUE, 
         encounter.func=get.mean.field.encounter.func(3),
         prob.connected=0.03,
