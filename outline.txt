@@ -1,6 +1,8 @@
 I. Introduction
 	a. "social bubble"
-	b. Why should we care if the American public is becoming polarized?
+    b. Definition of polarization. Are there competing definitions?
+    c. Definition of opinion dynamics
+	d. Why should we care if the American public is becoming polarized?
 II. Lit search
 	a. The Great Debate: Polarization
 		i. Converse's "The Nature of Belief Systems in Mass Publics" 1964
@@ -12,7 +14,6 @@ II. Lit search
 			5) Political and cultural divisions within the American public have deepened considerably since the 1970s.
 		ii. Saunders and Abramowitz: Polarization is real!
 SD: Find a definition of "elite."
-SD: Find a definition of "polarization." Are there competing definitions, or does everyone agree?
 SD: Big picture -- what kinds of techniques are they using to determine "how polarized a group is"; does this have anything to do with social networks
 			1) Wrote "Is Polarization a Myth?" (2008), ""Ideological realignment in the U.S. Electorate" (1998) and more
 			2) Growing elite polarization has led to an increase in ideological awareness and polarization among the public
@@ -36,7 +37,10 @@ SD: Any impact of WWW and social networks here?
 			(age, race, gender) have decreased.
 		iv. Saunders and Abramowitz vs. Fiorina
 			1) Other opinions?
-	b. Political Polarization on Twitter
+    b. Opinion Dynamics
+
+
+	c. Political Polarization on Twitter
 		i. Methods for Collecting Data
 			1) "Classifying Political Orientation on Twitter"
 				a) Political Figures Dataset: baseline dataset for the study.
