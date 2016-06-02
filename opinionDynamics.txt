@@ -1,5 +1,5 @@
 What is opinion dynamics?
-    - modeling user's latent opinion "to be modulated over time  by opinions asynchronously
+    - modeling user's latent opinion "to be modulated over time by opinions asynchronously
     expressed by her neighbors as sentiment messgaes" (De et al. 8)
     - "informational influence: users lacking necessary information seek the opinions of their 
     neighbors in order to update their beliefs" (Das, Gollapudi, Munagala 1)
