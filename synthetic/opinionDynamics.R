@@ -25,10 +25,6 @@ source("synthetic.R")
 # binary -- are opinions categorical with two possible values (TRUE), or
 # reals on [0,1] (FALSE)?
 #
-# is.random -- random interactions between all the nodes in the graph (TRUE)
-# or random interactions between a node's neighbors to the Nth degree in
-# the graph (FALSE)? 
-#
 # encounter.func -- a function which takes a graph and a vertex ID. Returns a 
 # vector of vertex IDs of which the vector may randomly encounter in
 # the current iteration.
@@ -53,8 +49,7 @@ sim.opinion.dynamics <- function(num.nodes=50,
         binary=TRUE, 
         encounter.func=get.mean.field.encounter.func(3),
         N=1,
-        is.random=TRUE,
-        prob.connected=0.05,
+        prob.connected=0.03,
         prob.convert=0.5) {
 
     if (binary){
@@ -69,13 +64,9 @@ sim.opinion.dynamics <- function(num.nodes=50,
     }
 
     graphs <- list(length=num.iter)
-    if(is.random){
-        graphs[[1]] <- make_empty_graph(length(init.opinions), directed=FALSE)
-        V(graphs[[1]])$opinion <- init.opinions
-    } else {
-        graphs[[1]] <- erdos.renyi.game(length(init.opinions), prob.connected)
-        V(graphs[[1]])$opinion <- init.opinions
-    }
+    graphs[[1]] <- erdos.renyi.game(length(init.opinions), prob.connected)
+    V(graphs[[1]])$opinion <- init.opinions
+
     # For each iteration of the sim...
     for (i in 2:num.iter) {
 
@@ -93,7 +84,13 @@ sim.opinion.dynamics <- function(num.nodes=50,
 
                 if (binary) {
                     if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion) {
-                        num.incoming.edges <- neighbors(g, ev, mode="in")
+                        num.incoming.edges <- neighbors(graphs[[i]], ev, mode="in")
+
+# SD: a function that determines the new ideology value of the "victim" node.
+
+# These are all "update.victim.opinion" functions.
+
+
                         #if () {
                             V(graphs[[i]])[ev]$opinion <- V(graphs[[i]])[v]$opinion
                         #}
@@ -108,6 +105,35 @@ sim.opinion.dynamics <- function(num.nodes=50,
 }
 
 
+# Terminology:
+#
+# ** victim update functions: a "victim update function" is one that takes a
+# graph, an influencing vertex, and a victim vertex, and returns the new value
+# for the victim's opinion.
+#
+# ** victim update generator functions: a "victim update generator function"
+# is one that can be called to return a victim update function.
+
+
+# (1) This could be a function that returns the "influencer's" value, period.
+# The generator function is called: get.automatically.update.victim.function()
+
+# (2) This could be a function that either returns (a) the "influencer's"
+# value, or (b) the victim's current value. The probability of (a) is equal to
+# probability 1/nie, where nie is the number of incoming edges, and the
+# original value otherwise.
+# The generator function is called:
+# get.proportional.to.in.degree.update.victim.function()
+
+# (3) This could be a function that returns a new value iff the distance
+# between my current ideology and yours is less than a threshold ("bounded
+# confidence"), otherwise the victim's current value.
+# The generator function is called:
+# get.bounded.confidence.update.victim.function()
+
+
+
+
 
 # Terminology:
 #
@@ -115,8 +141,8 @@ sim.opinion.dynamics <- function(num.nodes=50,
 # and a vertex, and returns a set of vertices that vertex will encounter in
 # one generation.
 #
-# ** generator functions: a "generator function" is one that can be called to
-# return an encounter function.
+# ** encounter generator functions: an "encounter generator function" is one
+# that can be called to return an encounter function.
 
 
 # Return a "mean-field" encounter function; i.e., vertices are chosen
@@ -147,14 +173,14 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
             # Each vertex encounters some others at random from a vector
             # of its "outgoing" neighbors, of whom he may pass 
             # information to/influence.
-            total.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
-            if(length(total.neighbors) <= length(num.vertices)){
+            outgoing.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
+            if(length(outgoing.neighbors) <= num.vertices){
                 return (
-                    total.neighbors
+                    outgoing.neighbors
                 )
             } else {
                 return ( 
-                    sample(total.neighbors, num.vertices)
+                    sample(outgoing.neighbors, num.vertices)
                 )
             }
         }
@@ -163,7 +189,7 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
 
 
 main <- function() {
-    graphs <<- sim.opinion.dynamics(encounter.func=get.mean.field.encounter.func(5))
-    plot.animation(graphs,"opinion",delay.between.frames=.2)
-    plot.binary.opinions(graphs)
+    graphs <<- sim.opinion.dynamics(encounter.func=get.graph.neighbors.encounter.func(5))
+    plot.animation(graphs,"opinion",delay.between.frames=.5)
+#    plot.binary.opinions(graphs)
 }

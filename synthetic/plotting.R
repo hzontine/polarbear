@@ -44,12 +44,12 @@ plot.animation <- function(graphs, attribute.name="ideology",
         binary <- FALSE
     }
 
-    vertex.coords <- layout_with_kk(graphs[[1]])
+    vertex.coords <- layout_with_fr(graphs[[1]])
     for (i in 1:length(graphs)) {
         if (try.to.keep.vertex.positions) {
-            vertex.coords <- layout_with_kk(graphs[[i]],coords=vertex.coords)
+            vertex.coords <- layout_with_fr(graphs[[i]],coords=vertex.coords)
         } else {
-            vertex.coords <- layout_with_kk(graphs[[i]],coords=NULL)
+            vertex.coords <- layout_with_fr(graphs[[i]],coords=NULL)
         }
         if (binary) {
             V(graphs[[i]])$color <- ifelse(
