@@ -2,7 +2,7 @@ library(RCurl)
 library(httr)
 library(jsonlite)
 
-source("twitterLogonInfo.R")
+source("charm.R")
 
 auth <- paste("Basic",RCurl::base64(paste(key,secret,sep=":")))
 auth.req <- POST("https://api.twitter.com/oauth2/token",
