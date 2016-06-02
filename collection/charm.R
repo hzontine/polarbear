@@ -54,6 +54,14 @@ hannah.key <- "mGwXg8u650fqEeTAM7T1jDqMX"
 hannah.secret <- "WOavl2fMDCL0QxFkEoYswy6FWTBDRLvaN8DtpUbbpKRCOtSDE1"
 hannah <- Charm$new(key=hannah.key, secret=hannah.secret)
 
+hannah2.key="rpUEULlXgW1MTXeOS2YrDN0Dy"
+hannah2.secret="DfJ57wcGNODc6nyld4cwVrxJiGnoSfphjMiYhRbpyJpww8YLgd"
+hannah2 <- Charm$new(key=hannah2.key, secret=hannah2.secret)
+
+hannah3.key="DJH6DeGeodvdZOfwuP1eaRzIk"
+hannah3.secret="FvcRfiVwD59nNgb3kmCTYPtn2KWiLPPi4TTHAx5x1VJ2EGA0jg"
+hannah3 <- Charm$new(key=hannah3.key, secret=hannah3.secret)
+
 liv.key <- "kzy13nReYwPakG1jflt2zPVUm"
 liv.secret <- "7t5E77ZzURWMJkFHS1J9SdIDThWounX9DMiWXRpN61je86vjN8"
 liv <- Charm$new(key=liv.key, secret=liv.secret)
