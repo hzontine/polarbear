@@ -1,3 +1,39 @@
+What is opinion dynamics?
+    - modeling user's latent opinion "to be modulated over time  by opinions asynchronously
+    expressed by her neighbors as sentiment messgaes" (De et al. 8)
+    - "informational influence: users lacking necessary information seek the opinions of their 
+    neighbors in order to update their beliefs" (Das, Gollapudi, Munagala 1)
+        * Das, G, and M believe this is the dominant model of influence in short-term
+        anonymous interactions, ex) chat rooms. 
+    - Three types of opinion update processes: (Das, Gollapudi, Munagala 2)
+        1) stubbornness- users do not change their opinion
+        2) compromise- users update their opinion to be a convex combination of their initial
+        opinion and their neighbor's opinion
+        3) biased conformity- user takes on the opinions of her surrounding neighbors, 
+        ignoring her own inital opinions
+
+Biased Voter Model
+
+    Made up of two basic parameters: 1) to capture stubbornness and 2) biased conformity  
+    This model converges a consensus after an exponential amount of time, but the state,
+    in which it spends the most time, was observed to be heavily polarized.
+    To achieve polarization, existing models required users to ignore opinions that are
+    less related to their own and to always be stubborn.
+    Opinion Formation: Asch
+        - "Asch, in his seminal conformity experiments, observed that a large fraction of 
+        his subjects could be swayed to essentially say 'white is black' if everyone else 
+        in the group said the same"
+        - In his experiments, "the subject was placed in a room with several stooges 
+        who unanimously gave the false (binary) response to a question where the 
+        true answer was self-evident.
+        - Observations: 1) "the extent of conformity (percent of subjects who conform) 
+        depends on the size of the group and 2) even when one of the stooges gives 
+        the true response, that is sufficient to reduce conformity significantly."
+    This model is a combination of certain aspects from the flocking and DeGroot models.
+    "We study the response of the subjects not only as a func- tion of the size of the 
+    neighborhood, but also as a function of the distribution of these opinions, and 
+    the distance of these opinions from the subject’s own"
+
 
 SLANT Model
 
