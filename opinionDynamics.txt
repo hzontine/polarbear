@@ -15,6 +15,7 @@ What is opinion dynamics?
 Biased Voter Model
 
     Made up of two basic parameters: 1) to capture stubbornness and 2) biased conformity  
+SD Reproduce this:
     This model converges a consensus after an exponential amount of time, but the state,
     in which it spends the most time, was observed to be heavily polarized.
     To achieve polarization, existing models required users to ignore opinions that are
