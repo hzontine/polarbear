@@ -36,7 +36,6 @@ Charm <- setRefClass("Charm",
             .self$initFields(...)
             num.refreshes <<- 0
         }
-    (Das, Gollapudi, Munagala 2)
     )
 )
 
