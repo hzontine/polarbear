@@ -35,6 +35,7 @@ Charm <- setRefClass("Charm",
             .self$initFields(...)
             num.refreshes <<- 0
         }
+    (Das, Gollapudi, Munagala 2)
     )
 )
 
@@ -61,6 +62,14 @@ hannah2 <- Charm$new(key=hannah2.key, secret=hannah2.secret)
 hannah3.key="DJH6DeGeodvdZOfwuP1eaRzIk"
 hannah3.secret="FvcRfiVwD59nNgb3kmCTYPtn2KWiLPPi4TTHAx5x1VJ2EGA0jg"
 hannah3 <- Charm$new(key=hannah3.key, secret=hannah3.secret)
+
+hannah4.key="JGWROlhDVcuagLp765FSkw0Rd"
+hannah4.secret="ga4G8vLP5CDhgHkFD3ciT4a7RyPghiSk2xMrmNRzWboxsmlFM4"
+hannah4 <- Charm$new(key=hannah4.key, secret=hannah4.secret)
+
+hannah5.key="FM0jwjo2WFqRnreiqhDsAmPGm"
+hannah5.secret="AVEH9syhse6lGnAojiZXIHeivqJCJ7P1e6PGCmedwcnhh9NDct"
+hannah5 <- Charm$new(key=hannah5.key, secret=hannah5.secret)
 
 liv.key <- "kzy13nReYwPakG1jflt2zPVUm"
 liv.secret <- "7t5E77ZzURWMJkFHS1J9SdIDThWounX9DMiWXRpN61je86vjN8"
