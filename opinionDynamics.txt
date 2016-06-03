@@ -13,7 +13,6 @@ What is opinion dynamics?
         ignoring her own inital opinions
 
 Biased Voter Model
-
     Made up of two basic parameters: 1) to capture stubbornness and 2) biased conformity  
 SD Reproduce this:
     This model converges a consensus after an exponential amount of time, but the state,
@@ -31,9 +30,11 @@ SD Reproduce this:
         depends on the size of the group and 2) even when one of the stooges gives 
         the true response, that is sufficient to reduce conformity significantly."
     This model is a combination of certain aspects from the flocking and DeGroot models.
-    "We study the response of the subjects not only as a func- tion of the size of the 
+    "We study the response of the subjects not only as a function of the size of the 
     neighborhood, but also as a function of the distribution of these opinions, and 
     the distance of these opinions from the subject’s own"
+    
+    (Das, Gollapudi, Munagala. "Modeling Opinion Dynamics in Social Networks".)
 
 
 SLANT Model
