@@ -63,24 +63,3 @@ flush.caches <- function() {
 }
 
 
-test.cache <- function() {
-    read.caches()
-    add.to.cache(5,c(10,15,20), "followers.cache")
-    add.to.cache(11,c(20,25,30), "followers.cache")
-    add.to.cache(17,c(1), "followers.cache")
-    flush.caches()
-    if (exists.in.cache(14, followers.cache)) {
-        stop("14 shouldn't be cached!")
-    }
-    if (!exists.in.cache(11, followers.cache)) {
-        stop("11 should be cached!")
-    }
-    cat("Here are 11's followers: ", 
-        get.cached.values(11, followers.cache), "\n")
-    add.to.cache(12,c(30,35), "followers.cache")
-    if (!exists.in.cache(12, followers.cache)) {
-        stop("12 should be cached!")
-    }
-    cat("Here are 12's followers: ", 
-        get.cached.values(12, followers.cache), "\n")
-}
