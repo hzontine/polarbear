@@ -1,4 +1,10 @@
 
+make more keys (just so we have 20 or so)
+annotate the taxonomy.txt file with two things:
+    1) the paper(s) that had results for each item
+    2) a checkmark next to the things that sim.opinion.dynamics() supports.
+
+
 Big picture:
 ------------
 every day
