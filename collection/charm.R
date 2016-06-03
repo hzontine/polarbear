@@ -21,13 +21,14 @@ library(methods)
 #   1. the "key" (also called "consumer key")
 #   2. the "secret" (also called "consumer secret")
 #
-# Paste those below.
 
 Charm <- setRefClass("Charm",
     fields = list(
+        name="character",
         key="character",
         secret="character",
         access.token="character",
+        charm.number="numeric",    # stupid, but don't know another way
         num.refreshes="numeric"
     ),
     methods = list(
@@ -50,45 +51,79 @@ Charm$methods(refresh=function() {
 })
 
 
+hannah.name <- "Hannah"
 hannah.key <- "mGwXg8u650fqEeTAM7T1jDqMX"
 hannah.secret <- "WOavl2fMDCL0QxFkEoYswy6FWTBDRLvaN8DtpUbbpKRCOtSDE1"
-hannah <- Charm$new(key=hannah.key, secret=hannah.secret)
+hannah <- Charm$new(name=hannah.name, key=hannah.key, secret=hannah.secret)
 
+hannah2.name <- "Hannah2"
 hannah2.key="rpUEULlXgW1MTXeOS2YrDN0Dy"
 hannah2.secret="DfJ57wcGNODc6nyld4cwVrxJiGnoSfphjMiYhRbpyJpww8YLgd"
-hannah2 <- Charm$new(key=hannah2.key, secret=hannah2.secret)
+hannah2 <- Charm$new(name=hannah2.name, key=hannah2.key, secret=hannah2.secret)
 
+hannah3.name <- "Hannah3"
 hannah3.key="DJH6DeGeodvdZOfwuP1eaRzIk"
 hannah3.secret="FvcRfiVwD59nNgb3kmCTYPtn2KWiLPPi4TTHAx5x1VJ2EGA0jg"
-hannah3 <- Charm$new(key=hannah3.key, secret=hannah3.secret)
+hannah3 <- Charm$new(name=hannah3.name, key=hannah3.key, secret=hannah3.secret)
 
+liv.name <- "Liv"
 liv.key <- "kzy13nReYwPakG1jflt2zPVUm"
 liv.secret <- "7t5E77ZzURWMJkFHS1J9SdIDThWounX9DMiWXRpN61je86vjN8"
-liv <- Charm$new(key=liv.key, secret=liv.secret)
+liv <- Charm$new(name=liv.name, key=liv.key, secret=liv.secret)
 
+aaron.name <- "Aaron"
 aaron.key <- "QqNt2fPekjeu9jNzuyfIwxC2q"
 aaron.secret <- "pidb0hZR2WtJwo594KnKEc0w9KcYOzwtubjLDKdecbtxOXRsb1"
-aaron <- Charm$new(key=aaron.key, secret=aaron.secret)
+aaron <- Charm$new(name=aaron.name, key=aaron.key, secret=aaron.secret)
 
+stephen.name <- "Stephen"
 stephen.key <- "MlUmay5kA1vGWKokmmFofgRLX"
 stephen.secret <- "2FFYCyI2rhUIEltkepeNhVcZvYufXJukCJMqE1s3ALKoLYm7LD"
-stephen <- Charm$new(key=stephen.key, secret=stephen.secret)
+stephen <- Charm$new(name=stephen.name, key=stephen.key, secret=stephen.secret)
 
+dave.name <- "Dave"
 dave.key <- "j9ylpEcXdHxZLZnN5OzH9CbNE"
 dave.secret <- "VeYV8XXHbUCLk43iOWVOYB6ODzgwODwj0AFJOXANUGm36DKJYI"
-dave <- Charm$new(key=dave.key, secret=dave.secret)
+dave <- Charm$new(name=dave.name, key=dave.key, secret=dave.secret)
 
 
 # An authentication "charm" is Stephen's name for a thing that will give you
 # permissions to talk to Twitter. It contains an unchanging key and secret
 # (from an app someone made on dev.twitter.com), plus a "refreshed"
 # authentication token that should be recent.
-charm.repo <- list(hannah, liv, aaron, stephen, dave)
 
-current.charm.num <- 0
+initialize.charms <- function() {
+    charm.repo <<- list(hannah, hannah2, hannah3, liv, aaron, stephen, dave)
+    for (i in 1:length(charm.repo)) {
+        charm.repo[[i]]$charm.number <- i
+    }
+    charms.checked.out <<- rep(FALSE, length(charm.repo))
+}
+
 
 get.charm <- function() {
-    current.charm.num <<- current.charm.num %% length(charm.repo) + 1
-    charm.repo[[current.charm.num]]$refresh()
-    return(charm.repo[[current.charm.num]])
+    # Yeah, it's a race condition. I'm feeling lucky.
+    if (all(charms.checked.out)) {
+        warning("No charms available.\n")
+        return(NULL)
+    }
+    if (sum(charms.checked.out) == length(charm.repo) - 1) {
+        charm.num.to.award <- which(!charms.checked.out)
+    } else {
+        charm.num.to.award <- sample(which(!charms.checked.out),1)
+    }
+    charm.to.award <- charm.repo[[charm.num.to.award]]
+    cat("Checking out charm ", charm.to.award$name, ".\n", sep="")
+    charms.checked.out[charm.num.to.award] <<- TRUE
+    charm.to.award$refresh()
+    return(charm.to.award)
 }
+
+return.charm <- function(charm) {
+    charms.checked.out[charm$charm.number] <<- FALSE
+}
+
+return.all.charms <- function() {
+    charms.checked.out <- rep(FALSE, length(charm.repo))
+}
+
