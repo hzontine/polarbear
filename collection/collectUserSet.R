@@ -155,7 +155,7 @@ perform.cursor.call <- function(url, field.to.extract, charm) {
 }
 
 
-get.screennames <- function(userids, verbose=TRUE, charm) {
+get.screennames <- function(userids, charm, verbose=TRUE) {
     if (simulated) return (get.simulated.screennames(length(userids)))
     if (verbose) cat("Getting ",length(userids), " screennames...\n", sep="")
     screennames <- vector(length=length(userids))
