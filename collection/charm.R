@@ -36,6 +36,7 @@ Charm <- setRefClass("Charm",
             .self$initFields(...)
             num.refreshes <<- 0
         }
+    (Das, Gollapudi, Munagala 2)
     )
 )
 
@@ -66,6 +67,16 @@ hannah3.key="DJH6DeGeodvdZOfwuP1eaRzIk"
 hannah3.secret="FvcRfiVwD59nNgb3kmCTYPtn2KWiLPPi4TTHAx5x1VJ2EGA0jg"
 hannah3 <- Charm$new(name=hannah3.name, key=hannah3.key, secret=hannah3.secret)
 
+hannah4.name <- "Hannah4"
+hannah4.key="JGWROlhDVcuagLp765FSkw0Rd"
+hannah4.secret="ga4G8vLP5CDhgHkFD3ciT4a7RyPghiSk2xMrmNRzWboxsmlFM4"
+hannah4 <- Charm$new(name=hannah4.name, key=hannah4.key, secret=hannah4.secret)
+
+hannah5.name <- "Hannah5"
+hannah5.key="FM0jwjo2WFqRnreiqhDsAmPGm"
+hannah5.secret="AVEH9syhse6lGnAojiZXIHeivqJCJ7P1e6PGCmedwcnhh9NDct"
+hannah5 <- Charm$new(name=hannah5.name, key=hannah5.key, secret=hannah5.secret)
+
 liv.name <- "Liv"
 liv.key <- "kzy13nReYwPakG1jflt2zPVUm"
 liv.secret <- "7t5E77ZzURWMJkFHS1J9SdIDThWounX9DMiWXRpN61je86vjN8"
@@ -93,7 +104,8 @@ dave <- Charm$new(name=dave.name, key=dave.key, secret=dave.secret)
 # authentication token that should be recent.
 
 initialize.charms <- function() {
-    charm.repo <<- list(hannah, hannah2, hannah3, liv, aaron, stephen, dave)
+    charm.repo <<- list(hannah, hannah2, hannah3, hannah4, hannah5, liv, 
+        aaron, stephen, dave)
     for (i in 1:length(charm.repo)) {
         charm.repo[[i]]$charm.number <- i
     }
