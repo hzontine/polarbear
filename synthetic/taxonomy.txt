@@ -2,28 +2,25 @@
 model variations:
 -----------------
 
-data:
-    - binary, or weighted opinions?
+how are opinions represented?
+    - binary, or continuous opinions?
     - univariate, or vector opinions? (Deffuant 2000)
 
-encounters:
-    - chosen globally (uniformly), or from graph neighbors?
-    - SD/HZ variant: weighted probability from each group
+how are the vertices that you encounter chosen?
+    - pairwise
+        - chosen globally (uniformly)
+        - chosen from graph neighbors
+        - SD/HZ variant: weighted probability between global and neighbors
+    - group influence (HK model)
 
-conversions:
-    - bi-directional (both encountering agents influence each other), or
-      uni-directional?
-
-    - total (outright copy attribute value from influencing node to
-      influenced) or partial (drift towards mean)  (maybe binary is always the
-      first and weighted is always the second)
-
-    - always successful, or only sometimes? (see "prob of converting," below)
-
-    - prob. of converting: should be inversely proportional to node's
-      in-degree? (i.e., if you're following a zillion people, it's less likely
+how effectual are encounters?
+    - conversions happen on every encounter
+    - conversions happen only with fixed probability
+    - there is a prob. of converting which is inversely proportional to node's
+      in-degree (i.e., if you're following a zillion people, it's less likely
       you'll be influenced by each one because that one person only occupies a
       small fraction of the ideas you're exposed to)
+    - different nodes have different "stubbornness" attribute
 
 
 
