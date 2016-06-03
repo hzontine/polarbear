@@ -1,10 +1,7 @@
 
-library(doParallel)
-registerDoParallel(8)
-
 source("manualApi.R")
 source("charm.R")
-initialize.charms()
+source("cache.R")
 
 
 # Given a set of "seed" screen names S, return a data frame for a graph. This
@@ -37,38 +34,31 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
         }
     }
 
+    read.caches()
+
     # A vector of the screen names of everyone who follows anyone in the seed
     # set.
     followers.of.S <- vector()
 
-    charm <- get.charm()
     for (s in S) {
         if (verbose) cat("Processing seed node ",s,"...\n", sep="")
-        this.seed.nodes.followers <- get.followers.of.screenname(s, charm)
+        this.seed.nodes.followers <- get.followers.of.screenname(s)
         followers.of.S <- union(followers.of.S, this.seed.nodes.followers)
     }
-    return.charm(charm)
 
     if (verbose) cat("There are ", length(followers.of.S), 
         " followers of the seed set.\n", sep="")
 
-    U.edgelist <- 
-        foreach (i=1:length(followers.of.S), .combine=rbind) %do% {
+    U.edgelist <- matrix(nrow=0,ncol=2)
 
-        # Get a charm to use for this 
-        charm <- get.charm()
-        while (is.null(charm)) {
-            if (verbose) cat("No charms. Wait for one...\n")
-            Sys.sleep(sample(60:120,1))
-            charm <- get.charm()
-        }
+    for (i in 1:length(followers.of.S)) {
 
         u <- followers.of.S[i]
 
         if (verbose) cat("Deciding whether to retain ", u, "...\n", sep="")
 
-        u.followers <- get.followers.of.userid(u, charm)
-        u.followees <- get.followees.of.userid(u, charm)
+        u.followers <- get.followers.of.userid(u)
+        u.followees <- get.followees.of.userid(u)
         if ((!only.bidirectional && 
                 any(u.followers %in% followers.of.S))  ||
              (only.bidirectional && 
@@ -87,13 +77,10 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
             } else {
                 u.followee.rows <- matrix(nrow=0,ncol=2)
             }
-            return.charm(charm)
-            return(rbind(u.follower.rows, u.followee.rows))
+            U.edgelist <- rbind(U.edgelist, u.follower.rows, u.followee.rows)
 
         } else {
             if (verbose) cat("  Dropping ", u, ".\n", sep="")
-            return.charm(charm)
-            return(NULL)
         }
     }
 
@@ -105,49 +92,66 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
     vertices.to.retain <- 
         V(U)[degree(U, mode="in") > 0  &  degree(U, mode="out") > 0]
 
-    charm <- get.charm()
     if (include.screennames) {
-        V(U)$screenname <- get.screennames(V(U)$name, charm)
+        V(U)$screenname <- get.screennames(V(U)$name)
     }
-    return.charm(charm)
+
     return(induced_subgraph(U, vertices.to.retain))
 }
 
-get.followers.of.screenname <- function(screenname, charm, verbose=TRUE) {
+get.followers.of.screenname <- function(screenname, verbose=TRUE) {
     if (verbose) cat("Getting ", screenname, "'s followers...\n", sep="")
     if (simulated) return(get.simulated.userids.not.including(0))
     return(perform.cursor.call(paste0(
         "https://api.twitter.com/1.1/followers/ids.json?screen_name=",
-            screenname), "ids", charm))
+            screenname), "ids"))
 }
 
-get.followers.of.userid <- function(userid, charm) {
-    if (simulated) return(get.simulated.userids.not.including(userid))
-    return(perform.cursor.call(paste0(
-        "https://api.twitter.com/1.1/followers/ids.json?user_id=",
-            userid), "ids", charm))
+get.followers.of.userid <- function(userid) {
+    if (exists.in.cache(userid, followers.cache)) {
+        cat("Returning cached results for user ", userid, "...\n", sep="")
+        return(get.cached.values(userid, followers.cache))
+    }
+    if (simulated) {
+        followers <- get.simulated.userids.not.including(userid)
+    } else {
+        followers <- perform.cursor.call(paste0(
+            "https://api.twitter.com/1.1/followers/ids.json?user_id=",
+                userid), "ids")
+    }
+    add.to.cache(userid, followers, "followers.cache")
+    return(followers)
 }
 
-get.followees.of.userid <- function(userid, charm) {
-    if (simulated) return(get.simulated.userids.not.including(userid))
-    return(perform.cursor.call(paste0(
-        "https://api.twitter.com/1.1/friends/ids.json?user_id=",
-            userid), "ids", charm))
+get.followees.of.userid <- function(userid) {
+    if (exists.in.cache(userid, followees.cache)) {
+        cat("Returning cached results for user ", userid, "...\n", sep="")
+        return(get.cached.values(userid, followees.cache))
+    }
+    if (simulated) {
+        followees <- get.simulated.userids.not.including(userid)
+    } else {
+        followees <- perform.cursor.call(paste0(
+            "https://api.twitter.com/1.1/friends/ids.json?user_id=",
+                userid), "ids")
+    }
+    add.to.cache(userid, followees, "followees.cache")
+    return(followees)
 }
 
-perform.cursor.call <- function(url, field.to.extract, charm) {
+perform.cursor.call <- function(url, field.to.extract) {
     results.so.far <- vector()
     call.num <- 1
     cat("Making call #", call.num, "...\n", sep="")
     the.call <- make.manual.twitter.api.call(paste0(
-        url, "&cursor=-1"), charm)
+        url, "&cursor=-1"))
     results.so.far <- union(results.so.far, the.call[[field.to.extract]])
     cursor <- the.call$next_cursor
     while (!is.null(cursor) && cursor != 0) {
         call.num <- call.num + 1
         cat("Making call #", call.num, "...\n", sep="")
         the.call <- make.manual.twitter.api.call(paste0( url, 
-            "&cursor=", cursor), charm)
+            "&cursor=", cursor))
         results.so.far <- union(results.so.far, the.call[[field.to.extract]])
         cursor <- the.call$next_cursor
     }
@@ -155,7 +159,7 @@ perform.cursor.call <- function(url, field.to.extract, charm) {
 }
 
 
-get.screennames <- function(userids, charm, verbose=TRUE) {
+get.screennames <- function(userids, verbose=TRUE) {
     if (simulated) return (get.simulated.screennames(length(userids)))
     if (verbose) cat("Getting ",length(userids), " screennames...\n", sep="")
     screennames <- vector(length=length(userids))
@@ -164,7 +168,7 @@ get.screennames <- function(userids, charm, verbose=TRUE) {
         chunk.range <- (1+100*(chunk.num-1)):min(100*chunk.num,length(userids))
         lookup.call <- make.manual.twitter.api.call(
             paste0("https://api.twitter.com/1.1/users/lookup.json?user_id=",
-                paste(userids[chunk.range],collapse=",")), charm)
+                paste(userids[chunk.range],collapse=",")))
         screennames[chunk.range] <- lookup.call$screen_name
     }
     return(screennames)

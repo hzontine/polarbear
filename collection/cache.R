@@ -1,19 +1,25 @@
 
-FOLLOWERS_CACHE_NAME <- "followersCache.csv"
-FOLLOWEES_CACHE_NAME <- "followeesCache.csv"
+# Two global variables exist: followers.cache and followers.cache.
 
-read.caches <- function() {
-    if (file.exists(FOLLOWERS_CACHE_NAME)) {
-        followers.cache <<- read.csv(FOLLOWERS_CACHE_NAME)
+
+read.caches <- function(force=FALSE) {
+
+    if (exists("followers.cache") && !force) {
+        cat("variable followers.cache already exists; NOT reading afresh!\n")
+        return(NULL)
+    }
+
+    if (file.exists("followers.cache.csv")) {
+        followers.cache <<- read.csv("followers.cache.csv", header=FALSE)
     } else {
-        followers.cache <<- data.frame(userid=0,follower=0)
+        followers.cache <<- data.frame(userid=integer(),follower=integer())
     }
     colnames(followers.cache) <- c("userid","follower")
 
-    if (file.exists(FOLLOWEES_CACHE_NAME)) {
-        followees.cache <<- read.csv(FOLLOWEES_CACHE_NAME)
+    if (file.exists("followees.cache.csv")) {
+        followees.cache <<- read.csv("followees.cache.csv", header=FALSE)
     } else {
-        followees.cache <<- data.frame(userid=0,followee=0)
+        followees.cache <<- data.frame(userid=integer(),followee=integer())
     }
     colnames(followees.cache) <- c("userid","followee")
 }
@@ -23,22 +29,37 @@ exists.in.cache <- function(userid, cache) {
 }
 
 get.cached.values <- function(userid, cache) {
-    return(cache[cache$userid == userid,2])
+    cached.values <- cache[cache[1] == userid,2]
+    if (length(cached.values) == 1  &&  is.na(cached.values)) {
+        return(NULL)
+    } else {
+        return(cached.values)
+    }
 }
 
 add.to.cache <- function(userid, values, cache.name) {
-    if (exists.in.cache(userid, get(cache.name))) {
+    if (length(values) == 0) {
+        # TODO: add value-less userids to the cache anyway so we don't re-ask
+        # Twitter for them.
+        return(NULL)
+    }
+    the.cache <- get(cache.name)
+    if (exists.in.cache(userid, the.cache)) {
         warning(paste0(userid, " already in ", cache.name, "!"))
         return(NULL)
     }
     new.rows <- cbind(userid, values)
-    colnames(new.rows) <- colnames(get(cache.name))
-    assign(cache.name, rbind(get(cache.name), new.rows), .GlobalEnv)
+    colnames(new.rows) <- colnames(the.cache)
+    assign(cache.name, rbind(the.cache, new.rows), .GlobalEnv)
+    write.table(new.rows, paste0(cache.name,".csv"), row.names=FALSE, 
+        col.names=FALSE, append=TRUE, sep=",")
 }
 
 flush.caches <- function() {
-    write.csv(followers.cache, FOLLOWERS_CACHE_NAME, row.names=FALSE)
-    write.csv(followees.cache, FOLLOWEES_CACHE_NAME, row.names=FALSE)
+    write.csv(followers.cache, "followers.cache.csv", row.names=FALSE,
+        col.names=FALSE)
+    write.csv(followees.cache, "followees.cache.csv", row.names=FALSE,
+        col.names=FALSE)
 }
 
 

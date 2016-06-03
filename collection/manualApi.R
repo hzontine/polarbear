@@ -5,22 +5,27 @@ library(stringr)
 
 source("charm.R")
 
+if (!exists("charm.repo")) {
+    initialize.charms()
+}
+# active.charm is now in the global environment.
+
 
 DEBUG <- TRUE
-make.manual.twitter.api.call <- function(the.api.request, charm) {
+make.manual.twitter.api.call <- function(the.api.request) {
 
     parsed.str <- str_match(the.api.request, "1\\.1/(.*)/(.*)\\.json")
     resource.name <- parsed.str[[2]]
     op.name <- parsed.str[[3]]
 
     if (DEBUG) {
-        cat("make.manual.twitter.api.call(\"",the.api.request,"\")...\n",
-            sep="")
-        cat("  (this is a ", resource.name, " resource request.)\n", sep="")
+        cat("make.manual.twitter.api.call(\"",the.api.request,
+            "\")...\n", sep="")
+        #cat("  (this is a ", resource.name, " resource request.)\n", sep="")
     }
 
-    payload <- fromJSON(content(
-        GET(the.api.request,add_headers(Authorization=charm$access.token)),
+    payload <- fromJSON(content(GET(the.api.request,
+            add_headers(Authorization=active.charm$access.token)),
         as="text"))
 
     if ("errors" %in% names(payload)) {
@@ -29,7 +34,7 @@ make.manual.twitter.api.call <- function(the.api.request, charm) {
             rate.limit.payload <- fromJSON(content(
                 GET(paste0("https://api.twitter.com/1.1/application/",
                     "rate_limit_status.json?resources=", resource.name),
-                    add_headers(Authorization=charm$access.token)),
+                    add_headers(Authorization=active.charm$access.token)),
                 as="text"))
             limit <- rate.limit.payload$resources[[resource.name]][[
                 paste("",resource.name,op.name,sep="/")]]$limit
@@ -37,21 +42,13 @@ make.manual.twitter.api.call <- function(the.api.request, charm) {
                 paste("",resource.name,op.name,sep="/")]]$remaining
             cat("Rate limit hit! ", remaining, "/", limit, " remaining.\n",
                 sep="")
-            cat("Sleeping for 15 minutes...\n")
-            Sys.sleep(15*60)
+            old.charm <- active.charm
+            new.charm <- get.charm()
+            cat("Swapping ", old.charm$name, " charm for ", 
+                new.charm$name, ".\n", sep="")
+            active.charm <<- new.charm
 
-            # We could try to be smart about how long to sleep (commented out
-            # code, below) but this turns out to suck, since our clock isn't
-            # synchronized with Twitter.
-            #  time.for.reset <- rate.limit.payload$resources[[resource.name]][[
-            #      paste("",resource.name,op.name,sep="/")]]$reset
-            #  seconds.to.sleep <- (time.for.reset - 
-            #      as.integer(as.POSIXct(Sys.time()))) / 1000
-            #  cat("Rate limit hit! Sleeping for ", seconds.to.sleep, 
-            #      "seconds...\n")
-            #  Sys.sleep(seconds.to.sleep)
-            cat("*yawn*\n")
-            return(make.manual.twitter.api.call(the.api.request, charm))
+            return(make.manual.twitter.api.call(the.api.request))
         }
         stop("API barfed: ", payload$errors$message,"\n",sep="")
     }
@@ -59,6 +56,5 @@ make.manual.twitter.api.call <- function(the.api.request, charm) {
 }
 
 #For example:
-#my.charm <- get.charm()
-#hannahs.info <- make.manual.twitter.api.call("https://api.twitter.com/1.1/users/lookup.json?screen_name=hzontine",my.charm)
+#hannahs.info <- make.manual.twitter.api.call("https://api.twitter.com/1.1/users/lookup.json?screen_name=hzontine")
 #cat(hannahs.info$description,"\n")

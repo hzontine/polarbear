@@ -108,33 +108,25 @@ initialize.charms <- function() {
     for (i in 1:length(charm.repo)) {
         charm.repo[[i]]$charm.number <- i
     }
-    charms.checked.out <<- rep(FALSE, length(charm.repo))
+    current.charm.num <<- 1
+    active.charm <<- charm.repo[[1]]
+    active.charm$refresh()
 }
 
 
 get.charm <- function() {
-    # Yeah, it's a race condition. I'm feeling lucky.
-    if (all(charms.checked.out)) {
-        warning("No charms available.\n")
-        return(NULL)
-    }
-    if (sum(charms.checked.out) == length(charm.repo) - 1) {
-        charm.num.to.award <- which(!charms.checked.out)
-    } else {
-        charm.num.to.award <- sample(which(!charms.checked.out),1)
-    }
-    charm.to.award <- charm.repo[[charm.num.to.award]]
-    cat("Checking out charm ", charm.to.award$name, ".\n", sep="")
-    charms.checked.out[charm.num.to.award] <<- TRUE
-    charm.to.award$refresh()
-    return(charm.to.award)
-}
 
-return.charm <- function(charm) {
-    charms.checked.out[charm$charm.number] <<- FALSE
-}
+    if (current.charm.num == length(charm.repo)) {
+        # We've wrapped around and used all the charms. Impose a delay so we
+        # don't wear Twitter out by continually trying to blow through the
+        # rate limit stop sign.
+        cat("Charms exhausted. Take a break before cycling through again.\n")
+        Sys.sleep(14*60)
+    }
+    current.charm.num <<- current.charm.num %% length(charm.repo) + 1
 
-return.all.charms <- function() {
-    charms.checked.out <- rep(FALSE, length(charm.repo))
+    next.charm <- charm.repo[[current.charm.num]]
+    next.charm$refresh()
+    return(next.charm)
 }
 
