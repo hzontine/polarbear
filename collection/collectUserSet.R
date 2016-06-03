@@ -1,7 +1,10 @@
 
-source("manualApi.R")
+library(doParallel)
+registerDoParallel(8)
 
-library(tcltk)
+source("manualApi.R")
+source("charm.R")
+initialize.charms()
 
 
 # Given a set of "seed" screen names S, return a data frame for a graph. This
@@ -17,9 +20,13 @@ library(tcltk)
 # those who *both* follow at least one element of U *and* are followed by at
 # least one element (possibly different) of U.
 #
-# verbose -- print breadcrumb trail to the screen.
+# include.screennames -- if TRUE, attach a "screenname" attribute to each
+# vertex giving their (current) Twitter screenname.
 #
-collect.user.set <- function(S, only.bidirectional=FALSE, verbose=TRUE) {
+# verbose -- if TRUE, print breadcrumb trail to the screen.
+#
+collect.user.set <- function(S, only.bidirectional=FALSE, 
+    include.screennames=TRUE, verbose=TRUE) {
 
     if (verbose) {
         if (length(S) < 10) {
@@ -34,42 +41,41 @@ collect.user.set <- function(S, only.bidirectional=FALSE, verbose=TRUE) {
     # set.
     followers.of.S <- vector()
 
+    charm <- get.charm()
     for (s in S) {
-        if (verbose) cat("Processing ",s,"...\n", sep="")
-        this.seed.nodes.followers <- get.followers.of.screenname(s)
+        if (verbose) cat("Processing seed node ",s,"...\n", sep="")
+        this.seed.nodes.followers <- get.followers.of.screenname(s, charm)
         followers.of.S <- union(followers.of.S, this.seed.nodes.followers)
     }
+    return.charm(charm)
 
     if (verbose) cat("There are ", length(followers.of.S), 
         " followers of the seed set.\n", sep="")
 
+    U.edgelist <- 
+        foreach (i=1:length(followers.of.S), .combine=rbind) %do% {
 
-    U.edgelist <- matrix(nrow=0,ncol=2)
-
-    pb <- tkProgressBar(title=paste0("Collect user set (",
-        length(S), " seed users)"), min=0, max=length(followers.of.S))
-
-    for (i in 1:length(followers.of.S)) {
+        # Get a charm to use for this 
+        charm <- get.charm()
+        while (is.null(charm)) {
+            if (verbose) cat("No charms. Wait for one...\n")
+            Sys.sleep(sample(60:120,1))
+            charm <- get.charm()
+        }
 
         u <- followers.of.S[i]
 
-        setTkProgressBar(pb,i,label=paste0("Checking users: ",
-            round(100*i/length(followers.of.S),0),"%"))
+        if (verbose) cat("Deciding whether to retain ", u, "...\n", sep="")
 
-        if (verbose) cat("Checking ", u, "...\n", sep="")
-
-        u.followers <- get.followers.of.userid(u)
-        u.followees <- vector()
-        if (only.bidirectional) {
-            u.followees <- get.followees.of.userid(u)
-        }
+        u.followers <- get.followers.of.userid(u, charm)
+        u.followees <- get.followees.of.userid(u, charm)
         if ((!only.bidirectional && 
                 any(u.followers %in% followers.of.S))  ||
              (only.bidirectional && 
                 any(u.followers %in% followers.of.S) && 
                 any(u.followees %in% followers.of.S))) {
 
-            if (verbose) cat("Including ", u, ".\n", sep="")
+            if (verbose) cat("  Retaining ", u, ".\n", sep="")
             
             if (length(u.followers) > 0) {
                 u.follower.rows <- cbind(u,u.followers)
@@ -81,54 +87,67 @@ collect.user.set <- function(S, only.bidirectional=FALSE, verbose=TRUE) {
             } else {
                 u.followee.rows <- matrix(nrow=0,ncol=2)
             }
-            U.edgelist <- rbind(U.edgelist, u.follower.rows, u.followee.rows)
+            return.charm(charm)
+            return(rbind(u.follower.rows, u.followee.rows))
 
         } else {
-            # if (verbose) cat("Excluding ", u, ".\n", sep="")
+            if (verbose) cat("  Dropping ", u, ".\n", sep="")
+            return.charm(charm)
+            return(NULL)
         }
     }
 
-    close(pb)
-
 
     # *barfs*
-    U.edgelist <- matrix(as.character(unlist(U.edgelist)),ncol=2)
+    U.edgelist <- unique(matrix(as.character(unlist(U.edgelist)),ncol=2))
     
     U <- graph_from_edgelist(U.edgelist)
     vertices.to.retain <- 
         V(U)[degree(U, mode="in") > 0  &  degree(U, mode="out") > 0]
+
+    charm <- get.charm()
+    if (include.screennames) {
+        V(U)$screenname <- get.screennames(V(U)$name, charm)
+    }
+    return.charm(charm)
     return(induced_subgraph(U, vertices.to.retain))
 }
 
-
-get.followers.of.screenname <- function(screenname, verbose=TRUE) {
+get.followers.of.screenname <- function(screenname, charm, verbose=TRUE) {
     if (verbose) cat("Getting ", screenname, "'s followers...\n", sep="")
+    if (simulated) return(get.simulated.userids.not.including(0))
     return(perform.cursor.call(paste0(
         "https://api.twitter.com/1.1/followers/ids.json?screen_name=",
-            screenname),"ids"))
+            screenname), "ids", charm))
 }
 
-get.followers.of.userid <- function(userid) {
+get.followers.of.userid <- function(userid, charm) {
+    if (simulated) return(get.simulated.userids.not.including(userid))
     return(perform.cursor.call(paste0(
         "https://api.twitter.com/1.1/followers/ids.json?user_id=",
-            userid),"ids"))
+            userid), "ids", charm))
 }
 
-get.followees.of.userid <- function(userid) {
+get.followees.of.userid <- function(userid, charm) {
+    if (simulated) return(get.simulated.userids.not.including(userid))
     return(perform.cursor.call(paste0(
         "https://api.twitter.com/1.1/friends/ids.json?user_id=",
-            userid),"ids"))
+            userid), "ids", charm))
 }
 
-perform.cursor.call <- function(url, field.to.extract) {
+perform.cursor.call <- function(url, field.to.extract, charm) {
     results.so.far <- vector()
+    call.num <- 1
+    cat("Making call #", call.num, "...\n", sep="")
     the.call <- make.manual.twitter.api.call(paste0(
-        url, "&cursor=-1"))
+        url, "&cursor=-1"), charm)
     results.so.far <- union(results.so.far, the.call[[field.to.extract]])
     cursor <- the.call$next_cursor
     while (!is.null(cursor) && cursor != 0) {
+        call.num <- call.num + 1
+        cat("Making call #", call.num, "...\n", sep="")
         the.call <- make.manual.twitter.api.call(paste0( url, 
-            "&cursor=", cursor))
+            "&cursor=", cursor), charm)
         results.so.far <- union(results.so.far, the.call[[field.to.extract]])
         cursor <- the.call$next_cursor
     }
@@ -136,7 +155,8 @@ perform.cursor.call <- function(url, field.to.extract) {
 }
 
 
-get.screennames <- function(userids, verbose=TRUE) {
+get.screennames <- function(userids, verbose=TRUE, charm) {
+    if (simulated) return (get.simulated.screennames(length(userids)))
     if (verbose) cat("Getting ",length(userids), " screennames...\n", sep="")
     screennames <- vector(length=length(userids))
     for (chunk.num in 1:ceiling(length(userids)/100)) {
@@ -144,11 +164,34 @@ get.screennames <- function(userids, verbose=TRUE) {
         chunk.range <- (1+100*(chunk.num-1)):min(100*chunk.num,length(userids))
         lookup.call <- make.manual.twitter.api.call(
             paste0("https://api.twitter.com/1.1/users/lookup.json?user_id=",
-                paste(userids[chunk.range],collapse=",")))
+                paste(userids[chunk.range],collapse=",")), charm)
         screennames[chunk.range] <- lookup.call$screen_name
     }
     return(screennames)
 }
+
+
+
+#############################################################################
+# Just so I can test this thing without hitting the API every time, if
+# "simulated" is TRUE generate fake API call responses.
+
+simulated <- TRUE
+
+get.simulated.userids.not.including <- function(userid) {
+    users <- sample(1:200,5)
+    return(users[users != userid])
+}
+
+get.simulated.screennames <- function(n) {
+    ret.val <- vector(length=n)
+    for (i in 1:n) {
+        ret.val[i] <- paste0("@",paste0(sample(letters,3),collapse=""))
+    }
+    return(ret.val)
+}
+
+#############################################################################
 
 local.peeps <- c(
     "rockladyeagles",
@@ -163,4 +206,5 @@ r.people <- c("hadleywickham","GaborCsardi","robjhyndman")
 
 main <- function() {
     U <<- collect.user.set(local.peeps, only.bidirectional=FALSE)
+    plot(U, vertex.label=V(U)$screenname, vertex.size=21)
 }
