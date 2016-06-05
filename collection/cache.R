@@ -1,5 +1,12 @@
 
-# Two global variables exist: followers.cache and followers.cache.
+library(dplyr)
+library(DBI)
+
+source("db.R")
+
+# To set up MySQL schema:
+# mysql> create table followers (userid varchar(20), follower varchar(20));
+# mysql> create table followees (userid varchar(20), followee varchar(20));
 
 
 read.caches <- function(force=FALSE) {
@@ -9,27 +16,19 @@ read.caches <- function(force=FALSE) {
         return(NULL)
     }
 
-    if (file.exists("followers.cache.csv")) {
-        followers.cache <<- read.csv("followers.cache.csv", header=FALSE)
-    } else {
-        followers.cache <<- data.frame(userid=integer(),follower=integer())
-    }
-    colnames(followers.cache) <- c("userid","follower")
-
-    if (file.exists("followees.cache.csv")) {
-        followees.cache <<- read.csv("followees.cache.csv", header=FALSE)
-    } else {
-        followees.cache <<- data.frame(userid=integer(),followee=integer())
-    }
-    colnames(followees.cache) <- c("userid","followee")
+    db.src <- src_mysql("polarbear",user="stephen",password="iloverae")
+    followees.cache <<- tbl(db.src,"followees")
+    followers.cache <<- tbl(db.src,"followers")
 }
 
-exists.in.cache <- function(userid, cache) {
-    return(userid %in% cache[,1])
+exists.in.cache <- function(the.userid, cache) {
+    return(nrow(cache %>% dplyr::filter(userid==the.userid)) > 0)
 }
 
-get.cached.values <- function(userid, cache) {
-    cached.values <- cache[cache[1] == userid,2]
+get.cached.values <- function(the.userid, cache) {
+    cached.values <- cache %>%
+        dplyr::filter(userid == the.userid) %>%
+        dplyr::select(2)
     if (length(cached.values) == 1  &&  is.na(cached.values)) {
         return(NULL)
     } else {
@@ -50,16 +49,12 @@ add.to.cache <- function(userid, values, cache.name) {
     }
     new.rows <- cbind(userid, values)
     colnames(new.rows) <- colnames(the.cache)
-    assign(cache.name, rbind(the.cache, new.rows), .GlobalEnv)
-    write.table(new.rows, paste0(cache.name,".csv"), row.names=FALSE, 
-        col.names=FALSE, append=TRUE, sep=",")
-}
 
-flush.caches <- function() {
-    write.csv(followers.cache, "followers.cache.csv", row.names=FALSE,
-        col.names=FALSE)
-    write.csv(followees.cache, "followees.cache.csv", row.names=FALSE,
-        col.names=FALSE)
+    mysql.table.name <- str_match(cache.name, "(.*)\\.cache")[[2]]
+    conn <- get.connection(TRUE)
+    dbGetQuery(conn,
+        paste0("insert into ", mysql.table.name, " values (",
+            paste("'",userid,"','",values,"'",sep="",collapse="),("),")"))
+    dbDisconnect(conn)
 }
-
 
