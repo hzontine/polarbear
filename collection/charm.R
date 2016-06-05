@@ -114,14 +114,20 @@ initialize.charms <- function() {
 }
 
 
-get.charm <- function() {
+get.charm <- function(verbose=TRUE) {
 
     if (current.charm.num == length(charm.repo)) {
         # We've wrapped around and used all the charms. Impose a delay so we
         # don't wear Twitter out by continually trying to blow through the
         # rate limit stop sign.
-        cat("Charms exhausted. Take a break before cycling through again.\n")
-        Sys.sleep(14*60)
+        if (verbose) {
+            cat("\nCharms exhausted. Chill before cycling through again.\n")
+            print(Sys.time())
+        }
+        Sys.sleep(15*60+1)
+        if (verbose) {
+            print(Sys.time())
+        }
     }
     current.charm.num <<- current.charm.num %% length(charm.repo) + 1
 
