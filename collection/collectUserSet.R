@@ -15,7 +15,12 @@ source("cache.R")
 #
 # only.bidirectional -- if TRUE, then the only users who will be returned are
 # those who *both* follow at least one element of U *and* are followed by at
-# least one element (possibly different) of U.
+# least one element (possibly different) of U. If FALSE, the only thing that
+# matters is the latter (i.e., only followers are checked).
+#
+# threshold.for.inclusion -- the minimum number of followees (and if
+# only.bidirectional is TRUE, also the minimum number of followers) a vertex
+# must have to be included in the final graph.
 #
 # include.screennames -- if TRUE, attach a "screenname" attribute to each
 # vertex giving their (current) Twitter screenname.
@@ -23,7 +28,7 @@ source("cache.R")
 # verbose -- if TRUE, print breadcrumb trail to the screen.
 #
 collect.user.set <- function(S, only.bidirectional=FALSE, 
-    include.screennames=TRUE, verbose=TRUE) {
+    threshold.for.inclusion=1, include.screennames=TRUE, verbose=TRUE) {
 
     if (verbose) {
         if (length(S) < 10) {
@@ -57,21 +62,27 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
 
         if (verbose) cat("Deciding whether to retain ", u, "...\n", sep="")
 
-        u.followers <- get.followers.of.userid(u)
-        u.followees <- get.followees.of.userid(u)
+        f <- dplyr::filter
+        u.followers <- get.followers.of.userid(u, verbose)
+        u.followees <- get.followees.of.userid(u, verbose)
         if ((!only.bidirectional && 
-                any(u.followers %in% followers.of.S))  ||
+                nrow(f(u.followers,follower %in% followers.of.S)) >=
+                        threshold.for.inclusion) ||
              (only.bidirectional && 
-                any(u.followers %in% followers.of.S) && 
-                any(u.followees %in% followers.of.S))) {
+                nrow(f(u.followers,follower %in% followers.of.S)) >=
+                        threshold.for.inclusion &&
+                nrow(f(u.followees,followee %in% followers.of.S)) >=
+                        threshold.for.inclusion)) {
 
-            if (verbose) cat("  Retaining ", u, ".\n", sep="")
+            cat("  Retaining ", u, ".\n", sep="")
             
+            u.followers <- as.data.frame(collect(select(u.followers,2)))[,1]
             if (length(u.followers) > 0) {
                 u.follower.rows <- cbind(u,u.followers)
             } else {
                 u.follower.rows <- matrix(nrow=0,ncol=2)
             }
+            u.followees <- as.data.frame(collect(select(u.followees,2)))[,1]
             if (length(u.followees) > 0) {
                 u.followee.rows <- cbind(u.followees,u)
             } else {
@@ -89,8 +100,14 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
     U.edgelist <- unique(matrix(as.character(unlist(U.edgelist)),ncol=2))
     
     U <- graph_from_edgelist(U.edgelist)
-    vertices.to.retain <- 
-        V(U)[degree(U, mode="in") > 0  &  degree(U, mode="out") > 0]
+    if (only.bidirectional) {
+        vertices.to.retain <- 
+            V(U)[degree(U, mode="in") >= threshold.for.inclusion  &  
+                 degree(U, mode="out") >= threshold.for.inclusion]
+    } else {
+        vertices.to.retain <- 
+            V(U)[degree(U, mode="out") >= threshold.for.inclusion]
+    }
 
     if (include.screennames) {
         V(U)$screenname <- get.screennames(V(U)$name)
@@ -107,13 +124,17 @@ get.followers.of.screenname <- function(screenname, verbose=TRUE) {
             screenname,"&stringify_ids=true"), "ids"))
 }
 
-get.followers.of.userid <- function(userid) {
+get.followers.of.userid <- function(userid, verbose=FALSE) {
     if (exists.in.cache(userid, followers.cache)) {
-        cat("Returning cached followers results for user ", userid,
-            "...\n", sep="")
+        if (verbose) {
+            cat("Returning cached followers results for user ", userid,
+                "...\n", sep="")
+        }
         return(get.cached.values(userid, followers.cache))
     }
     if (simulated) {
+        # TODO: this will probably break now that non-simulated data is
+        # returning a dplyr tbl instead of a vector.
         followers <- get.simulated.userids.not.including(userid)
     } else {
         followers <- perform.cursor.call(paste0(
@@ -121,13 +142,15 @@ get.followers.of.userid <- function(userid) {
                 userid,"&stringify_ids=true"), "ids")
     }
     add.to.cache(userid, followers, "followers.cache")
-    return(followers)
+    return(get.followers.of.userid(userid, FALSE))
 }
 
-get.followees.of.userid <- function(userid) {
+get.followees.of.userid <- function(userid, verbose=FALSE) {
     if (exists.in.cache(userid, followees.cache)) {
-        cat("Returning cached followee results for user ", userid,
-            "...\n", sep="")
+        if (verbose) {
+            cat("Returning cached followees results for user ", userid,
+                "...\n", sep="")
+        }
         return(get.cached.values(userid, followees.cache))
     }
     if (simulated) {
@@ -138,7 +161,7 @@ get.followees.of.userid <- function(userid) {
                 userid,"&stringify_ids=true"), "ids")
     }
     add.to.cache(userid, followees, "followees.cache")
-    return(followees)
+    return(get.followees.of.userid(userid, FALSE))
 }
 
 perform.cursor.call <- function(url, field.to.extract) {
@@ -181,7 +204,7 @@ get.screennames <- function(userids, verbose=TRUE) {
 # Just so I can test this thing without hitting the API every time, if
 # "simulated" is TRUE generate fake API call responses.
 
-simulated <- TRUE
+simulated <- FALSE
 
 get.simulated.userids.not.including <- function(userid) {
     users <- sample(1:200,sample(3:10,1))
@@ -210,6 +233,11 @@ local.peeps <- c(
 r.people <- c("hadleywickham","GaborCsardi","robjhyndman")
 
 main <- function() {
-    U <<- collect.user.set(local.peeps, only.bidirectional=FALSE)
-    plot(U, vertex.label=V(U)$screenname, vertex.size=21)
+    seed.set <- local.peeps
+    U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
+        verbose=FALSE)
+    plot(U, vertex.label=paste0("@",V(U)$screenname), vertex.size=6, 
+        vertex.label.cex=.8, edge.arrow.size=.5, layout=layout_with_kk,
+        vertex.color=ifelse(V(U)$screenname %in% seed.set,
+            "dodgerblue","orange"))
 }
