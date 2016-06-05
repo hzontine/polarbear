@@ -104,7 +104,7 @@ get.followers.of.screenname <- function(screenname, verbose=TRUE) {
     if (simulated) return(get.simulated.userids.not.including(0))
     return(perform.cursor.call(paste0(
         "https://api.twitter.com/1.1/followers/ids.json?screen_name=",
-            screenname), "ids"))
+            screenname,"&stringify_ids=true"), "ids"))
 }
 
 get.followers.of.userid <- function(userid) {
@@ -118,7 +118,7 @@ get.followers.of.userid <- function(userid) {
     } else {
         followers <- perform.cursor.call(paste0(
             "https://api.twitter.com/1.1/followers/ids.json?user_id=",
-                userid), "ids")
+                userid,"&stringify_ids=true"), "ids")
     }
     add.to.cache(userid, followers, "followers.cache")
     return(followers)
@@ -135,7 +135,7 @@ get.followees.of.userid <- function(userid) {
     } else {
         followees <- perform.cursor.call(paste0(
             "https://api.twitter.com/1.1/friends/ids.json?user_id=",
-                userid), "ids")
+                userid,"&stringify_ids=true"), "ids")
     }
     add.to.cache(userid, followees, "followees.cache")
     return(followees)
@@ -184,7 +184,7 @@ get.screennames <- function(userids, verbose=TRUE) {
 simulated <- TRUE
 
 get.simulated.userids.not.including <- function(userid) {
-    users <- sample(1:200,5)
+    users <- sample(1:200,sample(3:10,1))
     return(users[users != userid])
 }
 
