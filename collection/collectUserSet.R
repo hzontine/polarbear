@@ -109,7 +109,8 @@ get.followers.of.screenname <- function(screenname, verbose=TRUE) {
 
 get.followers.of.userid <- function(userid) {
     if (exists.in.cache(userid, followers.cache)) {
-        cat("Returning cached results for user ", userid, "...\n", sep="")
+        cat("Returning cached followers results for user ", userid,
+            "...\n", sep="")
         return(get.cached.values(userid, followers.cache))
     }
     if (simulated) {
@@ -125,7 +126,8 @@ get.followers.of.userid <- function(userid) {
 
 get.followees.of.userid <- function(userid) {
     if (exists.in.cache(userid, followees.cache)) {
-        cat("Returning cached results for user ", userid, "...\n", sep="")
+        cat("Returning cached followee results for user ", userid,
+            "...\n", sep="")
         return(get.cached.values(userid, followees.cache))
     }
     if (simulated) {
@@ -142,14 +144,13 @@ get.followees.of.userid <- function(userid) {
 perform.cursor.call <- function(url, field.to.extract) {
     results.so.far <- vector()
     call.num <- 1
-    cat("Making call #", call.num, "...\n", sep="")
     the.call <- make.manual.twitter.api.call(paste0(
         url, "&cursor=-1"))
     results.so.far <- union(results.so.far, the.call[[field.to.extract]])
     cursor <- the.call$next_cursor
     while (!is.null(cursor) && cursor != 0) {
         call.num <- call.num + 1
-        cat("Making call #", call.num, "...\n", sep="")
+        cat("Making repeated call #", call.num, "...\n", sep="")
         the.call <- make.manual.twitter.api.call(paste0( url, 
             "&cursor=", cursor))
         results.so.far <- union(results.so.far, the.call[[field.to.extract]])
