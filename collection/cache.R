@@ -7,6 +7,8 @@ source("db.R")
 # To set up MySQL schema:
 # mysql> create table followers (userid varchar(20), follower varchar(20));
 # mysql> create table followees (userid varchar(20), followee varchar(20));
+# mysql> create table nodata_users (userid varchar(20));
+
 
 
 read.caches <- function(force=FALSE) {
@@ -19,27 +21,31 @@ read.caches <- function(force=FALSE) {
     db.src <- src_mysql("polarbear",user="stephen",password="iloverae")
     followees.cache <<- tbl(db.src,"followees")
     followers.cache <<- tbl(db.src,"followers")
+    nodata.cache <<- tbl(db.src,"nodata_users")
 }
 
 exists.in.cache <- function(the.userid, cache) {
-    return(nrow(cache %>% dplyr::filter(userid==the.userid)) > 0)
+    return(nrow(cache %>% dplyr::filter(userid==the.userid)) > 0 ||
+           nrow(nodata.cache %>% dplyr::filter(userid==the.userid)) > 0)
 }
 
 get.cached.values <- function(the.userid, cache) {
-    cached.values <- cache %>%
-        dplyr::filter(userid == the.userid) %>%
-        dplyr::select(2)
-    if (length(cached.values) == 1  &&  is.na(cached.values)) {
-        return(NULL)
-    } else {
+    cached.values <- cache %>% dplyr::filter(userid == the.userid)
+#    if (nrow(cached.values) == 1  &&  is.na(cached.values)) {
+#        return(NULL)
+#    } else {
         return(cached.values)
-    }
+#    }
 }
 
 add.to.cache <- function(userid, values, cache.name) {
     if (length(values) == 0) {
-        # TODO: add value-less userids to the cache anyway so we don't re-ask
-        # Twitter for them.
+        # Add value-less userids to the "nodata" table so we don't keep
+        # asking Twitter for them.
+        conn <- get.connection(TRUE)
+        dbGetQuery(conn,
+            paste0("insert into nodata_users values ('",userid,"')"))
+        dbDisconnect(conn)
         return(NULL)
     }
     the.cache <- get(cache.name)
