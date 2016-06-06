@@ -11,17 +11,19 @@ if (!exists("charm.repo")) {
 # active.charm is now in the global environment.
 
 
-DEBUG <- TRUE
-make.manual.twitter.api.call <- function(the.api.request) {
+# For "very verbose."
+UBER <- 2
+
+make.manual.twitter.api.call <- function(the.api.request, verbose=FALSE) {
 
     parsed.str <- str_match(the.api.request, "1\\.1/(.*)/(.*)\\.json")
     resource.name <- parsed.str[[2]]
     op.name <- parsed.str[[3]]
 
-    if (DEBUG) {
+    if (verbose==UBER) {
         cat("make.manual.twitter.api.call(\"",the.api.request,
             "\")...\n", sep="")
-        #cat("  (this is a ", resource.name, " resource request.)\n", sep="")
+        cat("  (this is a ", resource.name, " resource request.)\n", sep="")
     }
 
     payload <- fromJSON(content(GET(the.api.request,
@@ -40,12 +42,14 @@ make.manual.twitter.api.call <- function(the.api.request) {
                 paste("",resource.name,op.name,sep="/")]]$limit
             remaining <- rate.limit.payload$resources[[resource.name]][[
                 paste("",resource.name,op.name,sep="/")]]$remaining
-            cat("Rate limit hit! ", remaining, "/", limit, " remaining.\n",
-                sep="")
+            if (verbose==UBER) {
+                cat("Rate limit hit! ", remaining, "/", limit, 
+                    " remaining.\n", sep="")
+            }
             old.charm <- active.charm
             new.charm <- get.charm()
-            cat("Swapping ", old.charm$name, " charm for ", 
-                new.charm$name, ".\n", sep="")
+            if (verbose) cat("Swapping ", old.charm$name, " charm for ", 
+                new.charm$name, ".\n\n", sep="")
             active.charm <<- new.charm
 
             return(make.manual.twitter.api.call(the.api.request))
