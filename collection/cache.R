@@ -8,6 +8,7 @@ source("db.R")
 # mysql> create table followers (userid varchar(20), follower varchar(20));
 # mysql> create table followees (userid varchar(20), followee varchar(20));
 # mysql> create table nodata_users (userid varchar(20));
+# mysql> create table screennames (userid varchar(20), screenname varchar(16));
 
 
 
@@ -21,6 +22,7 @@ read.caches <- function(force=FALSE) {
     db.src <- src_mysql("polarbear",user="stephen",password="iloverae")
     followees.cache <<- tbl(db.src,"followees")
     followers.cache <<- tbl(db.src,"followers")
+    screennames.cache <<- tbl(db.src,"screennames")
     nodata.cache <<- tbl(db.src,"nodata_users")
 }
 

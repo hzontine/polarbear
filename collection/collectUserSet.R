@@ -187,14 +187,41 @@ get.screennames <- function(userids, verbose=TRUE) {
     if (simulated) return (get.simulated.screennames(length(userids)))
     if (verbose) cat("Getting ",length(userids), " screennames...\n", sep="")
     screennames <- vector(length=length(userids))
-    for (chunk.num in 1:ceiling(length(userids)/100)) {
-        if (verbose) cat("chunk number ",chunk.num, "...\n", sep="")
+    userids.we.need.to.bug.twitter.for <- vector(length=length(userids))
+    for (i in length(userids)) {
+        if (exists.in.cache(userids[i])) {
+            screennames[i] <- get.cached.values(userids[i])
+        } else {
+            userid.indices.we.need.to.bug.twitter.for <- 
+                c(userid.indices.we.need.to.bug.twitter.for, userids[i])
+        }
+    }
+    userids.we.need.to.bug.twitter.for <- 
+        userids[userid.indices.we.need.to.bug.twitter.for]
+    num.chunks <- ceiling(length(userids.we.need.to.bug.twitter.for)/100)
+    if (num.chunks == 0) {
+        return(screennames)
+    }
+    screennames.we.bugged.twitter.for <- 
+        vector(length=length(userids.we.need.to.bug.twitter.for)
+    for (chunk.num in 
+            1:ceiling(length(userids.we.need.to.bug.twitter.for)/100)) {
+        if (verbose) {
+            cat("Retrieving screenname chunk ",chunk.num, 
+                " of ", num.chunks, "...\n", sep="")
+        }
         chunk.range <- (1+100*(chunk.num-1)):min(100*chunk.num,length(userids))
         lookup.call <- make.manual.twitter.api.call(
             paste0("https://api.twitter.com/1.1/users/lookup.json?user_id=",
-                paste(userids[chunk.range],collapse=",")))
-        screennames[chunk.range] <- lookup.call$screen_name
+                paste(userids.we.need.to.bug.twitter.for[chunk.range],
+                    collapse=",")))
+        screennames.we.bugged.twitter.for[chunk.range] <- 
+            lookup.call$screen_name
+        add.to.cache(userids.we.need.to.bug.twitter.for,
+            screennames.we.bugged.twitter.for, screenname.cache)
     }
+    screennames[userids.we.need.to.bug.twitter.for] <-
+        screennames.we.bugged.twitter.for
     return(screennames)
 }
 
