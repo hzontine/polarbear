@@ -76,6 +76,55 @@ hannah5.key="FM0jwjo2WFqRnreiqhDsAmPGm"
 hannah5.secret="AVEH9syhse6lGnAojiZXIHeivqJCJ7P1e6PGCmedwcnhh9NDct"
 hannah5 <- Charm$new(name=hannah5.name, key=hannah5.key, secret=hannah5.secret)
 
+hannah6.name <- "Hannah6"
+hannah6.key="eoyL8ai68849R8EQ7noGA3xQW"
+hannah6.secret="ycHxUVTOkbGowfeqKkTs0ANdIpOteF5ic7ELGZlGTvv3TGCipx"
+hannah6 <- Charm$new(name=hannah6.name, key=hannah6.key, secret=hannah6.secret)
+
+hannah7.name <- "Hannah7"
+hannah7.key="2lgLl8hc3sj95YLncDFjE7yQe"
+hannah7.secret="DL3uLEdaheqkq7862mTPnnlh6ry0rlsesTjfP2SgnwCeKd5xeL"
+hannah7 <- Charm$new(name=hannah7.name, key=hannah7.key, secret=hannah7.secret)
+
+hannah8.name <- "Hannah8"
+hannah8.key="hgTBSs9tfhmtJaVk6xvrUryRl"
+hannah8.secret="iVhrfPTOendP2rbQoPFzzYR9T99WXVj8XLwkFccgr1PjVhmnHT"
+hannah8 <- Charm$new(name=hannah8.name, key=hannah8.key, secret=hannah8.secret)
+
+hannah9.name <- "Hannah9"
+hannah9.key="ToszGLdFAGqAxs8iHo9pvlWkE"
+hannah9.secret="B9kfsaafq2akScWmgWt9mE56UNsJODyV4mGcRwPRJirpFM6jEE"
+hannah9 <- Charm$new(name=hannah9.name, key=hannah9.key, secret=hannah9.secret)
+
+hannah10.name <- "Hannah10"
+hannah10.key="PYQGQrOfSbNxzyLAhjSIP4P1H"
+hannah10.secret="iUryLbHvyloCo4s0EHgszpOAZ3BzIj0vbQv8SR2AfZLKG80kPR"
+hannah10 <- Charm$new(name=hannah10.name, key=hannah10.key, secret=hannah10.secret)
+
+hannah11.name <- "Hannah11"
+hannah11.key="QemY30K5KhZTeKmr0kqZiXOLX"
+hannah11.secret="9N7iBhl6gDyUdey7PsncHpsO2QobXdu68rMZnRlRkTYtwswEdS"
+hannah11 <- Charm$new(name=hannah11.name, key=hannah11.key, secret=hannah11.secret)
+
+hannah12.name <- "Hannah12"
+hannah12.key="ouT1l2VUnIWoG1pUfe1WBQSMu"
+hannah12.secret="iiJaZPzcK382QqHhDmlLHdpQLY25vgYTPMehPzAtwoURwY8l7A"
+hannah12 <- Charm$new(name=hannah12.name, key=hannah12.key, secret=hannah12.secret)
+
+hannah13.name <- "Hannah13"
+hannah13.key="7SmI8l5vuVh2DsRxC0j1UeGvC"
+hannah13.secret="bQwQrJJgiQaTz5y6qHGihMQyXcbPMJVyNcMMnbSTFKnyJbiZ4u"
+hannah13 <- Charm$new(name=hannah13.name, key=hannah13.key, secret=hannah13.secret)
+
+hannah14.name <- "Hannah14"
+hannah14.key="xiq61FE0avCBZRlZ6vEzYKikg"
+hannah14.secret="G2gZoGX434tJw955p9QtfhA7X8qb1YAZpaBbPS1h9DTpBuBiDi"
+hannah14 <- Charm$new(name=hannah14.name, key=hannah14.key, secret=hannah14.secret)
+
+
+
+
+
 liv.name <- "Liv"
 liv.key <- "kzy13nReYwPakG1jflt2zPVUm"
 liv.secret <- "7t5E77ZzURWMJkFHS1J9SdIDThWounX9DMiWXRpN61je86vjN8"
@@ -103,8 +152,9 @@ dave <- Charm$new(name=dave.name, key=dave.key, secret=dave.secret)
 # authentication token that should be recent.
 
 initialize.charms <- function() {
-    charm.repo <<- list(hannah, hannah2, hannah3, hannah4, hannah5, liv, 
-        aaron, stephen, dave)
+    charm.repo <<- list(hannah, hannah2, hannah3, hannah4, 
+        hannah5, hannah6, hannah7, hannah8, hannah9, hannah10, 
+        hannah11, hannah12, hannah13, hannah14, liv, aaron, stephen, dave)
     for (i in 1:length(charm.repo)) {
         charm.repo[[i]]$charm.number <- i
     }
