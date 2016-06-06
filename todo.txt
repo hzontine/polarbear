@@ -6,7 +6,9 @@ Hannah:
     2) a checkmark next to the things that sim.opinion.dynamics() supports.
  * continue to add to outline.txt
  * read two chapters of K&C 
-
+ * synthetic
+    - modify opinionDynamics.R to allow for ideologies to be continuous
+    - analyze clustering coefficient
 Stephen:
  * read two chapters of K&C
 
@@ -16,16 +18,28 @@ Stephen:
 This 1st Summer Term (due by 6/17):
 --------------------------------------
  * More Lit Search on Sentiment Analysis
-
-
-
-
+ * Synthetic
+     - parameter sweep of final assortavity vs
+        closeness.threshold
+        num.encounter.per.iter
+        num.vertices
+     - add code for edge deletion, appropriately parameterized
 
 
 By the end of the SSI Term (due by 7/20):
 -------------------------------------------
  * Need to find an accurate political classifier
+ * Synthetix    
 
+
+
+Add code for edge deletion, appropriately parameterized.
+
+Add code to make encounters influenced by current neighbors. (i.e., don't just
+choose encounter partners randomly from overall pop)
+
+Start the sim with initial condition = Dave's political blog graph (and book
+graph)
 
 
 
