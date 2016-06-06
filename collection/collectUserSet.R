@@ -28,7 +28,7 @@ source("cache.R")
 # verbose -- if TRUE, print breadcrumb trail to the screen.
 #
 collect.user.set <- function(S, only.bidirectional=FALSE, 
-    threshold.for.inclusion=1, include.screennames=TRUE, verbose=TRUE) {
+    threshold.for.inclusion=2, include.screennames=TRUE, verbose=TRUE) {
 
     if (verbose) {
         if (length(S) < 10) {
@@ -47,7 +47,7 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
 
     for (s in S) {
         if (verbose) cat("Processing seed node ",s,"...\n", sep="")
-        this.seed.nodes.followers <- get.followers.of.screenname(s)
+        this.seed.nodes.followers <- get.followers.of.screenname(s, verbose)
         followers.of.S <- union(followers.of.S, this.seed.nodes.followers)
     }
 
@@ -118,13 +118,27 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
     return(induced_subgraph(U, vertices.to.retain))
 }
 
-get.followers.of.screenname <- function(screenname, verbose=TRUE) {
+get.followers.of.screenname <- function(screenname, verbose=FALSE) {
     if (verbose) cat("Getting ", screenname, "'s followers...\n", sep="")
     if (simulated) return(get.simulated.userids.not.including(0))
-    return(perform.cursor.call(paste0(
-        "https://api.twitter.com/1.1/followers/ids.json?screen_name=",
-            screenname,"&stringify_ids=true"), "ids"))
+    userid <- as.data.frame(collect(
+        get.userid.for.screenname(screenname)))[1,1]
+    return(as.data.frame(collect(get.followers.of.userid(userid, verbose)))[,2])
 }
+
+get.userid.for.screenname <- function(screenname, verbose=FALSE) {
+    if (value.exists.in.cache(screenname, screennames.cache)) {
+        return(get.cached.userid(screenname, screennames.cache))
+    } else {
+        lookup.call <- make.manual.twitter.api.call(paste0(
+            "https://api.twitter.com/1.1/users/lookup.json?screen_name=",
+            screenname))
+        userid <- lookup.call$id_str
+        add.to.cache(userid, screenname, "screennames.cache")
+        return(get.userid.for.screenname(screenname, FALSE))
+    }
+}
+
 
 get.followers.of.userid <- function(userid, verbose=FALSE) {
     if (exists.in.cache(userid, followers.cache)) {
@@ -262,10 +276,12 @@ local.peeps <- c(
 
 r.people <- c("hadleywickham","GaborCsardi","robjhyndman")
 
+political.people <- c("SpeakerRyan","NancyPelosi")
+
 main <- function() {
     seed.set <- local.peeps
-    U <<- collect.user.set(seed.set, only.bidirectional=FALSE,
-        verbose=FALSE)
+    U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
+        threshold.for.inclusion=2,verbose=TRUE)
     cat("Plotting...\n")
     plot(U, vertex.label=paste0("@",V(U)$screenname), vertex.size=6, 
         vertex.label.cex=.8, edge.arrow.size=.5, layout=layout_with_kk,
