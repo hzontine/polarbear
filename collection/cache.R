@@ -30,12 +30,7 @@ exists.in.cache <- function(the.userid, cache) {
 }
 
 get.cached.values <- function(the.userid, cache) {
-    cached.values <- cache %>% dplyr::filter(userid == the.userid)
-#    if (nrow(cached.values) == 1  &&  is.na(cached.values)) {
-#        return(NULL)
-#    } else {
-        return(cached.values)
-#    }
+    return(cache %>% dplyr::filter(userid == the.userid))
 }
 
 add.to.cache <- function(userid, values, cache.name) {
@@ -49,10 +44,6 @@ add.to.cache <- function(userid, values, cache.name) {
         return(NULL)
     }
     the.cache <- get(cache.name)
-    if (exists.in.cache(userid, the.cache)) {
-        warning(paste0(userid, " already in ", cache.name, "!"))
-        return(NULL)
-    }
     new.rows <- cbind(userid, values)
     colnames(new.rows) <- colnames(the.cache)
 
