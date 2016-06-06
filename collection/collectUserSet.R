@@ -133,8 +133,6 @@ get.followers.of.userid <- function(userid, verbose=FALSE) {
         return(get.cached.values(userid, followers.cache))
     }
     if (simulated) {
-        # TODO: this will probably break now that non-simulated data is
-        # returning a dplyr tbl instead of a vector.
         followers <- get.simulated.userids.not.including(userid)
     } else {
         followers <- perform.cursor.call(paste0(
@@ -186,14 +184,16 @@ perform.cursor.call <- function(url, field.to.extract) {
 get.screennames <- function(userids, verbose=TRUE) {
     if (simulated) return (get.simulated.screennames(length(userids)))
     if (verbose) cat("Getting ",length(userids), " screennames...\n", sep="")
-    screennames <- vector(length=length(userids))
-    userids.we.need.to.bug.twitter.for <- vector(length=length(userids))
-    for (i in length(userids)) {
-        if (exists.in.cache(userids[i])) {
-            screennames[i] <- get.cached.values(userids[i])
+    screennames <- rep(NA,length(userids))
+    userid.indices.we.need.to.bug.twitter.for <- vector()
+    for (i in 1:length(userids)) {
+        if (exists.in.cache(userids[i], screennames.cache)) {
+            screennames[i] <- 
+                as.data.frame(collect(
+                    get.cached.values(userids[i], screennames.cache)))[1,2]
         } else {
             userid.indices.we.need.to.bug.twitter.for <- 
-                c(userid.indices.we.need.to.bug.twitter.for, userids[i])
+                c(userid.indices.we.need.to.bug.twitter.for, i)
         }
     }
     userids.we.need.to.bug.twitter.for <- 
@@ -203,14 +203,15 @@ get.screennames <- function(userids, verbose=TRUE) {
         return(screennames)
     }
     screennames.we.bugged.twitter.for <- 
-        vector(length=length(userids.we.need.to.bug.twitter.for)
+        vector(length=length(userids.we.need.to.bug.twitter.for))
     for (chunk.num in 
             1:ceiling(length(userids.we.need.to.bug.twitter.for)/100)) {
         if (verbose) {
             cat("Retrieving screenname chunk ",chunk.num, 
                 " of ", num.chunks, "...\n", sep="")
         }
-        chunk.range <- (1+100*(chunk.num-1)):min(100*chunk.num,length(userids))
+        chunk.range <- (1+100*(chunk.num-1)):min(100*chunk.num,
+                                length(userids.we.need.to.bug.twitter.for))
         lookup.call <- make.manual.twitter.api.call(
             paste0("https://api.twitter.com/1.1/users/lookup.json?user_id=",
                 paste(userids.we.need.to.bug.twitter.for[chunk.range],
@@ -218,9 +219,9 @@ get.screennames <- function(userids, verbose=TRUE) {
         screennames.we.bugged.twitter.for[chunk.range] <- 
             lookup.call$screen_name
         add.to.cache(userids.we.need.to.bug.twitter.for,
-            screennames.we.bugged.twitter.for, screenname.cache)
+            screennames.we.bugged.twitter.for, "screennames.cache")
     }
-    screennames[userids.we.need.to.bug.twitter.for] <-
+    screennames[userid.indices.we.need.to.bug.twitter.for] <-
         screennames.we.bugged.twitter.for
     return(screennames)
 }
