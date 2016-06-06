@@ -77,12 +77,14 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
             cat("  Retaining ", u, ".\n", sep="")
             
             u.followers <- as.data.frame(collect(select(u.followers,2)))[,1]
+            u.followers <- intersect(u.followers, followers.of.S)
             if (length(u.followers) > 0) {
                 u.follower.rows <- cbind(u,u.followers)
             } else {
                 u.follower.rows <- matrix(nrow=0,ncol=2)
             }
             u.followees <- as.data.frame(collect(select(u.followees,2)))[,1]
+            u.followees <- intersect(u.followees, followers.of.S)
             if (length(u.followees) > 0) {
                 u.followee.rows <- cbind(u.followees,u)
             } else {
@@ -262,8 +264,9 @@ r.people <- c("hadleywickham","GaborCsardi","robjhyndman")
 
 main <- function() {
     seed.set <- local.peeps
-    U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
+    U <<- collect.user.set(seed.set, only.bidirectional=FALSE,
         verbose=FALSE)
+    cat("Plotting...\n")
     plot(U, vertex.label=paste0("@",V(U)$screenname), vertex.size=6, 
         vertex.label.cex=.8, edge.arrow.size=.5, layout=layout_with_kk,
         vertex.color=ifelse(V(U)$screenname %in% seed.set,
