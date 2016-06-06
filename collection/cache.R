@@ -17,11 +17,6 @@ source("db.R")
 
 read.caches <- function(force=FALSE) {
 
-    if (exists("followers.cache") && !force) {
-        cat("variable followers.cache already exists; NOT reading afresh!\n")
-        return(NULL)
-    }
-
     db.src <- src_mysql("polarbear",user="stephen",password="iloverae")
     followees.cache <<- tbl(db.src,"followees")
     followers.cache <<- tbl(db.src,"followers")
