@@ -12,6 +12,9 @@ Hannah:
  * Synthetic
     - modify opinionDynamics.R to allow for ideologies to be continuous
     - analyze clustering coefficient
+ * compute some basic graph metrics (transitivity, avg. path length, etc.) for
+   the "small.RData" graph that SD collected by starting with the Hannah+Zach+
+   Stephen+Rae+Lizzy seed set.
 Stephen:
  * Get data collection code running on caladan.
  * Acquire at least one entire (small-ish) Twitter data set that we can use to

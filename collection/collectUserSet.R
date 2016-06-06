@@ -51,20 +51,25 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
         followers.of.S <- union(followers.of.S, this.seed.nodes.followers)
     }
 
-    if (verbose) cat("There are ", length(followers.of.S), 
-        " followers of the seed set.\n", sep="")
+    cat("There are ", length(followers.of.S), " followers of the seed set.\n",
+        sep="")
 
     U.edgelist <- matrix(nrow=0,ncol=2)
+
+    f <- dplyr::filter
 
     for (i in 1:length(followers.of.S)) {
 
         u <- followers.of.S[i]
 
-        if (verbose) cat("Deciding whether to retain ", u, "...\n", sep="")
+        if (verbose) {
+            cat("Deciding whether to retain user ", u, " (", i, "/",
+                length(followers.of.S), " = ", 
+                round(i/length(followers.of.S)*100,1), "%)...\n", sep="")
+        }
+        u.followers <- collect(get.followers.of.userid(u, verbose))
+        u.followees <- collect(get.followees.of.userid(u, verbose))
 
-        f <- dplyr::filter
-        u.followers <- get.followers.of.userid(u, verbose)
-        u.followees <- get.followees.of.userid(u, verbose)
         if ((!only.bidirectional && 
                 nrow(f(u.followers,follower %in% followers.of.S)) >=
                         threshold.for.inclusion) ||
@@ -93,6 +98,7 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
             U.edgelist <- rbind(U.edgelist, u.follower.rows, u.followee.rows)
 
         } else {
+
             if (verbose) cat("  Dropping ", u, ".\n", sep="")
         }
     }
@@ -119,11 +125,12 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
 }
 
 get.followers.of.screenname <- function(screenname, verbose=FALSE) {
-    if (verbose) cat("Getting ", screenname, "'s followers...\n", sep="")
+    cat("Getting ", screenname, "'s followers...\n", sep="")
     if (simulated) return(get.simulated.userids.not.including(0))
     userid <- as.data.frame(collect(
         get.userid.for.screenname(screenname)))[1,1]
-    return(as.data.frame(collect(get.followers.of.userid(userid, verbose)))[,2])
+    return(as.data.frame(collect(
+        get.followers.of.userid(userid, verbose)))[,2])
 }
 
 get.userid.for.screenname <- function(screenname, verbose=FALSE) {
@@ -132,7 +139,7 @@ get.userid.for.screenname <- function(screenname, verbose=FALSE) {
     } else {
         lookup.call <- make.manual.twitter.api.call(paste0(
             "https://api.twitter.com/1.1/users/lookup.json?screen_name=",
-            screenname))
+            screenname), verbose)
         userid <- lookup.call$id_str
         add.to.cache(userid, screenname, "screennames.cache")
         return(get.userid.for.screenname(screenname, FALSE))
@@ -153,7 +160,7 @@ get.followers.of.userid <- function(userid, verbose=FALSE) {
     } else {
         followers <- perform.cursor.call(paste0(
             "https://api.twitter.com/1.1/followers/ids.json?user_id=",
-                userid,"&stringify_ids=true"), "ids")
+                userid,"&stringify_ids=true"), "ids", verbose)
     }
     add.to.cache(userid, followers, "followers.cache")
     return(get.followers.of.userid(userid, FALSE))
@@ -172,24 +179,24 @@ get.followees.of.userid <- function(userid, verbose=FALSE) {
     } else {
         followees <- perform.cursor.call(paste0(
             "https://api.twitter.com/1.1/friends/ids.json?user_id=",
-                userid,"&stringify_ids=true"), "ids")
+                userid,"&stringify_ids=true"), "ids", verbose)
     }
     add.to.cache(userid, followees, "followees.cache")
     return(get.followees.of.userid(userid, FALSE))
 }
 
-perform.cursor.call <- function(url, field.to.extract) {
+perform.cursor.call <- function(url, field.to.extract, verbose=FALSE) {
     results.so.far <- vector()
     call.num <- 1
     the.call <- make.manual.twitter.api.call(paste0(
-        url, "&cursor=-1"))
+        url, "&cursor=-1"), verbose)
     results.so.far <- union(results.so.far, the.call[[field.to.extract]])
     cursor <- the.call$next_cursor
     while (!is.null(cursor) && cursor != 0) {
         call.num <- call.num + 1
-        cat("Making repeated call #", call.num, "...\n", sep="")
+        if (verbose) cat("Making repeated call #", call.num, "...\n", sep="")
         the.call <- make.manual.twitter.api.call(paste0( url, 
-            "&cursor=", cursor))
+            "&cursor=", cursor), verbose)
         results.so.far <- union(results.so.far, the.call[[field.to.extract]])
         cursor <- the.call$next_cursor
     }
@@ -197,9 +204,9 @@ perform.cursor.call <- function(url, field.to.extract) {
 }
 
 
-get.screennames <- function(userids, verbose=TRUE) {
+get.screennames <- function(userids, verbose=FALSE) {
     if (simulated) return (get.simulated.screennames(length(userids)))
-    if (verbose) cat("Getting ",length(userids), " screennames...\n", sep="")
+    cat("Getting ",length(userids), " screennames...\n", sep="")
     screennames <- rep(NA,length(userids))
     userid.indices.we.need.to.bug.twitter.for <- vector()
     for (i in 1:length(userids)) {
@@ -231,7 +238,7 @@ get.screennames <- function(userids, verbose=TRUE) {
         lookup.call <- make.manual.twitter.api.call(
             paste0("https://api.twitter.com/1.1/users/lookup.json?user_id=",
                 paste(userids.we.need.to.bug.twitter.for[chunk.range],
-                    collapse=",")))
+                    collapse=",")), verbose)
         screennames.we.bugged.twitter.for[chunk.range] <- 
             lookup.call$screen_name
         add.to.cache(userids.we.need.to.bug.twitter.for,
@@ -277,11 +284,12 @@ local.peeps <- c(
 r.people <- c("hadleywickham","GaborCsardi","robjhyndman")
 
 political.people <- c("SpeakerRyan","NancyPelosi")
+political.people <- c("RobWittman")
 
 main <- function() {
-    seed.set <- local.peeps
+    seed.set <- political.people
     U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
-        threshold.for.inclusion=2,verbose=TRUE)
+        threshold.for.inclusion=4,verbose=TRUE)
     cat("Plotting...\n")
     plot(U, vertex.label=paste0("@",V(U)$screenname), vertex.size=6, 
         vertex.label.cex=.8, edge.arrow.size=.5, layout=layout_with_kk,
