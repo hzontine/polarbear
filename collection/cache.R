@@ -55,3 +55,18 @@ add.to.cache <- function(userid, values, cache.name) {
     dbDisconnect(conn)
 }
 
+# Functions to support reverse lookup (e.g., userid for screenname).
+value.exists.in.cache <- function(the.value, cache) {
+    # I know, I know, it's a hack. First, using "screenname" explicitly here
+    # instead of "whatever column 2 is" (which I can't figure out how to do in
+    # dplyr) and second, storing a screenname in the nodata_users table, which
+    # is supposedly made up of userids?!?
+    return(nrow(cache %>% dplyr::filter(screenname == the.value)) > 0 ||
+           nrow(nodata.cache %>% dplyr::filter(userid==the.value)) > 0)
+}
+
+get.cached.userid <- function(the.value, cache) {
+    # (See "hack" comments, above.)
+    return(cache %>% dplyr::filter(screenname == the.value))
+}
+
