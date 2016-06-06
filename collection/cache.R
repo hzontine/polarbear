@@ -11,6 +11,9 @@ source("db.R")
 # mysql> create table screennames (userid varchar(20), screenname varchar(16));
 
 
+# TODO: if we already have a userid's followers cached, and we already have
+# the screenname that goes with that userid, then we should be able to use the
+# cache to find the followers for that screenname.
 
 read.caches <- function(force=FALSE) {
 
