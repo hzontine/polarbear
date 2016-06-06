@@ -1,34 +1,45 @@
-
-make more keys (just so we have 20 or so)
-annotate the taxonomy.txt file with two things:
+This Week (due by 6/10):
+-------------------------------------
+Hannah:
+ * annotate the taxonomy.txt file with two things:
     1) the paper(s) that had results for each item
     2) a checkmark next to the things that sim.opinion.dynamics() supports.
+ * continue to add to outline.txt
+ * read two chapters of K&C 
+
+Stephen:
+ * read two chapters of K&C
 
 
-Big picture:
-------------
-every day
-1-2 hours on K&C book
-write sim code for synthetic graphs
-    - analysis of mean-field (uniform.R) -- plot percentage of opinions v time
-    - write social-net influence (clusters.R)
-lit review
-    - continue to write outline (this will help discover gaps)
 
 
-Action items:
--------------
-- need to find a political classifier
-- is there a tool where you can input a past twitter names and the output
-	is their twitter ID number?
-- find out: is there a limit to the number of apps a Twitter developer account
-  can create?
-    - if not: crank some music, veg, and create a zillion (where zillion = 100
-      or something) twitter apps. Put all the "keys" and "secrets" in
-      twitterLogonInfo.R.
-    - if so: get a zillion (where zillion = 10 or something) of your friends
-      to create accounts and apps and give you the keys/secrets
+This 1st Summer Term (due by 6/17):
+--------------------------------------
+ * More Lit Search on Sentiment Analysis
 
+
+
+
+
+
+By the end of the SSI Term (due by 7/20):
+-------------------------------------------
+ * Need to find an accurate political classifier
+
+
+
+
+
+This Fall:
+--------------
+ * Play with data mining classification. (wait for Stephen on this)
+
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~
 
 Tools/environment:
 ------------------
@@ -38,12 +49,7 @@ Background knowledge:
 ---------------------
 
 Kolaczyk/Csardi book
-
-
 Play with data mining classification. (wait for Stephen on this)
-
-
-
 
 
 Lit search:
@@ -125,9 +131,6 @@ graph)
 
 Real data:
 ----------
-
-Write down unambiguously "what our precise Twitter data needs are."
-(HZ take a first cut.)
 
 Load and explore Dave's political blog graphs (see github data folder)
 
