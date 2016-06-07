@@ -3,6 +3,28 @@ source("manualApi.R")
 source("charm.R")
 source("cache.R")
 
+library(methods)
+
+
+Memento <- setRefClass("Memento",
+    fields = list(
+        i="numeric",
+        U.edgelist="matrix"
+    ),
+    methods = list(
+        initialize=function(...) {
+            .self$initFields(...)
+            i <<- 1
+            U.edgelist <<- matrix(nrow=0,ncol=2)
+        },
+        set.i=function(new.i) {
+            i <<- new.i
+        },
+        append.edges=function(new.edges) {
+            U.edgelist <<- rbind(U.edgelist,new.edges)
+        }
+    )
+)
 
 # Given a set of "seed" screen names S, return a data frame for a graph. This
 # data frame will contain all users in a set U who satisfy the following
@@ -28,7 +50,17 @@ source("cache.R")
 # verbose -- if TRUE, print breadcrumb trail to the screen.
 #
 collect.user.set <- function(S, only.bidirectional=FALSE, 
-    threshold.for.inclusion=2, include.screennames=TRUE, verbose=TRUE) {
+    threshold.for.inclusion=2, include.screennames=TRUE, verbose=TRUE,
+    memento=NULL) {
+
+    if (is.null(memento)) {
+        # Don't store any progress globally.
+        memento <- Memento$new()
+    } else {
+        if (memento$i > 1) {
+            cat("Resuming at iteration ", memento$i, ".\n", sep="")
+        }
+    }
 
     if (verbose) {
         if (length(S) < 10) {
@@ -54,11 +86,11 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
     cat("There are ", length(followers.of.S), " followers of the seed set.\n",
         sep="")
 
-    U.edgelist <- matrix(nrow=0,ncol=2)
-
     f <- dplyr::filter
 
-    for (i in 1:length(followers.of.S)) {
+    for (i in (memento$i):length(followers.of.S)) {
+
+        memento$set.i(i)
 
         u <- followers.of.S[i]
 
@@ -95,7 +127,7 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
             } else {
                 u.followee.rows <- matrix(nrow=0,ncol=2)
             }
-            U.edgelist <- rbind(U.edgelist, u.follower.rows, u.followee.rows)
+            memento$append.edges(rbind(u.follower.rows, u.followee.rows))
 
         } else {
 
@@ -104,8 +136,8 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
     }
 
 
-    # *barfs*
-    U.edgelist <- unique(matrix(as.character(unlist(U.edgelist)),ncol=2))
+    # TODO: What's a better way, Dave?
+    U.edgelist <- unique(matrix(as.character(unlist(memento$U.edgelist)),ncol=2))
     
     U <- graph_from_edgelist(U.edgelist)
     if (only.bidirectional) {
@@ -286,10 +318,14 @@ r.people <- c("hadleywickham","GaborCsardi","robjhyndman")
 political.people <- c("SpeakerRyan","NancyPelosi")
 political.people <- c("RobWittman")
 
+# Run this line only if you want to manually whack older results and start
+# over.
+#main.memento <- Memento$new()
+
 main <- function() {
     seed.set <- political.people
     U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
-        threshold.for.inclusion=4,verbose=TRUE)
+        threshold.for.inclusion=1, verbose=TRUE, memento=main.memento)
     cat("Plotting...\n")
     plot(U, vertex.label=paste0("@",V(U)$screenname), vertex.size=6, 
         vertex.label.cex=.8, edge.arrow.size=.5, layout=layout_with_kk,

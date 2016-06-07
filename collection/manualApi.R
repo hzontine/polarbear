@@ -54,7 +54,7 @@ make.manual.twitter.api.call <- function(the.api.request, verbose=FALSE) {
 
             return(make.manual.twitter.api.call(the.api.request))
         }
-        stop("API barfed: ", payload$errors$message,"\n",sep="")
+        cat("API barfed: ", payload$errors$message,"\n",sep="")
     }
     return(payload)
 }
