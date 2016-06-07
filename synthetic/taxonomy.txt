@@ -3,13 +3,15 @@ model variations:
 -----------------
 
 how are opinions represented?
-    - binary, or continuous opinions?
+    - binary, or continuous opinions? 
+        Binary: (Yildiz, Acemoglu 2011)
+        Continuous: (Ghaderi, Srikant 2012)
     - univariate, or vector opinions? (Deffuant 2000)
 
 how are the vertices that you encounter chosen?
     - pairwise
-        - chosen globally (uniformly)
-        - chosen from graph neighbors
+        - chosen uniformly from the global graph
+        - chosen from graph neighbors (Yildiz, Acemoglui 2011)
         - SD/HZ variant: weighted probability between global and neighbors
     - group influence (HK model)
 
@@ -20,7 +22,8 @@ how effectual are encounters?
       in-degree (i.e., if you're following a zillion people, it's less likely
       you'll be influenced by each one because that one person only occupies a
       small fraction of the ideas you're exposed to)
-    - different nodes have different "stubbornness" attribute
+    - different nodes have different "stubbornness" attribute (Yildiz, Acemoglu 2011)
+
 
 
 
