@@ -8,7 +8,7 @@ Hannah:
    functionality we want to add to the sim.opinion.dynamics() code.
  * continue to add to outline.txt
  * Read first 1/3 of the papers in the "hannah to read" Zotero folder.
- * Read two chapters of K&C 
+ * Read chapter 6 of K&C 
  * Synthetic
     - modify opinionDynamics.R to allow for ideologies to be continuous
     - analyze clustering coefficient
@@ -20,7 +20,7 @@ Stephen:
  * Acquire at least one entire (small-ish) Twitter data set that we can use to
    calibrate the simulation.
  * Read first 1/3 of the papers in the "stephen to read" Zotero folder.
- * Read two chapters of K&C
+ * Read chapter 6 of K&C 
 
 
 
@@ -36,7 +36,7 @@ Hannah:
          b) num.encounter.per.iter
          c) num.vertices
      - add code for edge deletion, appropriately parameterized
- * Read two chapters of K&C
+ * Read chapter 10 of K&C 
 
 Stephen:
  * Read second 1/3 of the papers in the "stephen to read" Zotero folder.
@@ -44,7 +44,7 @@ Stephen:
     - add code to represent ideologies as a vector of opinions, with each value
     reflecting a user's opinion on a certain "hot topic"
         * binary and continuous
- * Read two chapters of K&C
+ * Read chapter 10 of K&C 
 
 
 Due by 6/24:
@@ -52,12 +52,30 @@ Due by 6/24:
 Hannah:
  * Read last 1/3 of the papers in the "hannah to read" Zotero folder.
  * Find a political classifier
- * Read two chapters of K&C
+ * Read chapter 7 of K&C 
 
 Stephen:
  * Read last 1/3 of the papers in the "stephen to read" Zotero folder.
  * Start the simulation with initial condition = Dave's political blog & book graph
- * Read two chapters of K&C
+ * Read chapter 7 of K&C 
+
+
+Due by 7/1:
+------------
+Hannah:
+ * Read chapter 8 of K&C 
+
+Stephen:
+ * Read chapter 8 of K&C 
+
+
+Due by 7/1:
+------------
+Hannah:
+ * Read chapter 9 of K&C 
+
+Stephen:
+ * Read chapter 9 of K&C 
 
 
 By the end of SSI (7/20):
