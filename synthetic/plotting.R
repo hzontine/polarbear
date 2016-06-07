@@ -56,9 +56,22 @@ plot.animation <- function(graphs, attribute.name="ideology",
                 get.vertex.attribute(graphs[[i]],attribute.name) == 0,
                 "blue","red")
         } else {
-            V(graphs[[i]])$color <- 
-                colorRampPalette(c("blue","white","red"))(100)[ceiling(
-                    get.vertex.attribute(graphs[[i]],attribute.name) * 100)]
+            atr = get.vertex.attribute(graphs[[i]],attribute.name)
+            if (attr == 0) { V(graphs[[i]])$color <- "darkblue" }
+            if (attr == 0.1) { V(graphs[[i]])$color <- "blue" }
+            if (attr == 0.2) { V(graphs[[i]])$color <- "dodgerblue3" }
+            if (attr == 0.3) { V(graphs[[i]])$color <- "deepskyblue1" }
+            if (attr == 0.4) { V(graphs[[i]])$color <- "cadetblue2" }
+            if (attr == 0.5) { V(graphs[[i]])$color <- "white" }
+            if (attr == 0.6) { V(graphs[[i]])$color <- "darksalmon" }
+            if (attr == 0.7) { V(graphs[[i]])$color <- "coral3" }
+            if (attr == 0.8) { V(graphs[[i]])$color <- "firebrick" }
+            if (attr == 0.9) { V(graphs[[i]])$color <- "red3" }
+            if (attr == 1) { V(graphs[[i]])$color <- "darkred" }
+            if (attr > 1 || attr < 0) { V(graphs[[i]])$color <- "darkgreen"}
+                # V(graphs[[i]])$color <- 
+                # colorRampPalette(c("blue","white","red"))(100)[ceiling(
+                #     get.vertex.attribute(graphs[[i]],attribute.name) * 100)]
         }
         if (!interactive) {
             png(paste0("plot",paste0(rep(0,3-floor(log10(i)+1)),collapse=""),

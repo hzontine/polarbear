@@ -45,15 +45,19 @@ source("synthetic.R")
 
 
 sim.opinion.dynamics <- function(num.nodes=50, 
-        num.iter=0,
-        binary=TRUE, 
+        num.iter=20,
+        binary=FALSE, 
         encounter.func=get.mean.field.encounter.func(3),
         prob.connected=0.03,
         prob.convert=0.5,
-        victim.update.function=get.automatically.update.victim.function()) {
+        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=0.3)) {
 
     if (binary){
         init.opinions=sample(c(0,1),num.nodes,replace=TRUE)
+    } else {
+        init.opinions=sample(c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
+        0.9, 1), num.nodes, replace=TRUE)
+        cat(init.opinions, "\n")
     }
 
     if (binary  &&  any(!init.opinions %in% c(0,1))) {
@@ -74,20 +78,20 @@ sim.opinion.dynamics <- function(num.nodes=50,
 
         # Create a new igraph object to represent this point in time.
         graphs[[i]] <- graphs[[i-1]]
-
         # Go through all the vertices, in random order:
         for (v in sample(1:gorder(graphs[[i]]))) {
             encountered.vertices <- encounter.func(graphs[[i]],v)
-        
             # For each of these encountered partners...
             for (ev in encountered.vertices) {
-
+# Is this if statement necessary?
                 if (binary) {
                     if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion) {
-                            V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
+                        V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
                     } 
                 } else {
-                    stop("non-binary not supported yet.")
+                    if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion) {
+                         V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev) 
+                    }
                 }
              }
          }
@@ -138,6 +142,7 @@ get.proportional.to.in.degree.update.victim.function <- function(){
     )
 }
 
+# If binary = FALSE:
 # (3) This could be a function that returns a new value iff the distance
 # between my current ideology and yours is less than a threshold ("bounded
 # confidence"), otherwise the victim's current value.
@@ -150,8 +155,10 @@ get.bounded.confidence.update.victim.function <- function(threshold.value){
             return (
                 if(abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion)
                     < threshold.value ){
-    # what opinion value do we want to return here?
-                    V(graph)[vertex]$opinon
+                         V(graph)[vertex]$opinon
+
+# What value do we want to return?
+
                 } else {
                     V(graph)[victim.vertex]$opinion
                 }
