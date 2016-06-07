@@ -19,11 +19,13 @@ X        - chosen from graph neighbors (Yildiz, Acemoglui 2011)
 how effectual are encounters?
 X    - conversions happen on every encounter
 X    - conversions happen only with fixed probability
-X    - there is a prob. of converting which is inversely proportional to node's
+     - there is a prob. of converting which is inversely proportional to node's
        in-degree (i.e., if you're following a zillion people, it's less likely
        you'll be influenced by each one because that one person only occupies a
-       small fraction of the ideas you're exposed to)
+       small fraction of the ideas you're exposed to) (??)
     - different nodes have different "stubbornness" attribute (Yildiz, Acemoglu 2011)
+        Question: can/should the "degree of activeness on Twitter" be modeled?
+        (More likely to be influenced the more tweets you see.)
 
 
 
