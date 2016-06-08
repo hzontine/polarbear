@@ -307,8 +307,8 @@ get.simulated.screennames <- function(n) {
 local.peeps <- c(
     "rockladyeagles",
     "hzontine",
-    "pinkcamowheelie",
-    "raechick",
+    #"pinkcamowheelie",
+    #"raechick",
     "ZachWhitt2",
     "persnickery"
 )
@@ -320,15 +320,22 @@ political.people <- c("RobWittman")
 
 # Run this line only if you want to manually whack older results and start
 # over.
-#main.memento <- Memento$new()
+# main.memento <- Memento$new()
 
 main <- function() {
-    seed.set <- political.people
-    U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
-        threshold.for.inclusion=1, verbose=TRUE, memento=main.memento)
+    seed.set <- local.peeps
+#    U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
+#        threshold.for.inclusion=1, verbose=TRUE, memento=main.memento)
     cat("Plotting...\n")
     plot(U, vertex.label=paste0("@",V(U)$screenname), vertex.size=6, 
         vertex.label.cex=.8, edge.arrow.size=.5, layout=layout_with_kk,
         vertex.color=ifelse(V(U)$screenname %in% seed.set,
             "dodgerblue","orange"))
+    cat("Global transitivity:  ",transitivity(U, type="global"),"\n")
+    cat("Average Local transitivity:  ",mean(transitivity(U, type="local")),"\n")
+    cat("Average path length:  ",mean_distance(U, directed=TRUE),"\n")
+    cat("Diameter:  ",diameter(U,directed=TRUE),"\n")
+    cat("The two farthest nodes are: ",farthest_vertices(U)$vertices[1]$screenname,
+        " and ",farthest_vertices(U)$vertices[2]$screenname,"\n")
+        
 }

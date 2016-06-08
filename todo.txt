@@ -8,9 +8,6 @@ Hannah:
    functionality we want to add to the sim.opinion.dynamics() code.
  * Read first 1/3 of the papers in the "hannah to read" Zotero folder.
  * Read chapter 6 of K&C 
- * compute some basic graph metrics (transitivity, avg. path length, etc.) for
-   the "small.RData" graph that SD collected by starting with the Hannah+Zach+
-   Stephen+Rae+Lizzy seed set.
 Stephen:
  * Get data collection code running on caladan.
  * Acquire at least one entire (small-ish) Twitter data set that we can use to
