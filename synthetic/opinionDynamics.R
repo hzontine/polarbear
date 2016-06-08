@@ -126,6 +126,11 @@ get.automatically.update.victim.function <- function(){
 # The generator function is called:
 # get.proportional.to.in.degree.update.victim.function()
 
+# TODO: add a scaling factor. In other words, we do want higher in-degree to
+# correspond to lower-chance-of-updating, but we don't necessarily want to fix
+# it to the exact equation: P(updating) = 1/in-degree.
+# TODO: wire the prob.convert into things properly (or get rid of it).
+
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
