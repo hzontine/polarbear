@@ -44,19 +44,14 @@ source("synthetic.R")
 # influence or be influenced by that vertex).
 
 
-sim.opinion.dynamics <- function(num.nodes=50, 
-        num.iter=20,
+sim.opinion.dynamics <- function(
+        init.opinions=sample(c(0,1),50,replace=TRUE),
+        num.iter=18,
         binary=FALSE, 
         encounter.func=get.mean.field.encounter.func(3),
         prob.connected=0.03,
         prob.convert=0.5,
-        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=0.3)) {
-
-    if (binary){
-        init.opinions=sample(c(0,1),num.nodes,replace=TRUE)
-    } else {
-        init.opinions=sample(seq(0,1,0.1), num.nodes, replace=TRUE)
-    }
+        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.)) {
 
     if (binary  &&  any(!init.opinions %in% c(0,1))) {
         stop("init.opinions not all binary!")
@@ -83,7 +78,7 @@ sim.opinion.dynamics <- function(num.nodes=50,
             for (ev in encountered.vertices) {
 # Is this if statement necessary?
                 if (binary) {
-                    if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion) {
+                    if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion){
                         V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
                     } 
                 } else {
@@ -152,18 +147,30 @@ get.proportional.to.in.degree.update.victim.function <- function(){
 # The generator function is called:
 # get.bounded.confidence.update.victim.function()
 
-get.bounded.confidence.update.victim.function <- function(threshold.value){
+# threshold.value -- the maximum distance between the victim's and
+# influencer's opinions that will cause the victim to update their opinion at
+# all. (If the difference exceeds the threshold.value, the victim's opinion
+# stays exactly the same.)
+#
+# migration.factor -- a numeric between 0 and 1 that dictates what fraction of
+# the distance between the victim's opinion and the influencer's opinion the
+# victim will move, *if* the victim does move. For example: if the victim's
+# opinion is .4 and the influencer's is .8, and the migration.factor is .5,
+# then the victim's opinion will be updated to .6, which is half the distance
+# between them. If the migration.factor is 0, the victim's opinion is
+# unchanged. If the migration.factor is 1, the victim's opinion is moved all
+# the way to .8.
+
+get.bounded.confidence.update.victim.function <- function(threshold.value,
+    migration.factor=.5){
     return (
         function(graph, vertex, victim.vertex){
             return (
                 if(abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion)
                     < threshold.value ){
-                         V(graph)[vertex]$opinon
-
-# What value do we want to return?
-
+                     V(graph)[vertex]$opinion
                 } else {
-                    V(graph)[victim.vertex]$opinion
+                     V(graph)[victim.vertex]$opinion
                 }
             )
         }
@@ -223,7 +230,8 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
 
 
 main <- function() {
-    graphs <<- sim.opinion.dynamics(encounter.func=get.graph.neighbors.encounter.func(5))
+    graphs <<- sim.opinion.dynamics(init.opinions=runif(50),
+        encounter.func=get.graph.neighbors.encounter.func(30), prob.connected=.5)
     plot.animation(graphs,"opinion",delay.between.frames=.5)
 #    plot.binary.opinions(graphs)
 }
