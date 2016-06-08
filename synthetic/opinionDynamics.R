@@ -63,19 +63,10 @@ sim.opinion.dynamics <- function(
             encountered.vertices <- encounter.func(graphs[[i]],v)
             # For each of these encountered partners...
             for (ev in encountered.vertices) {
-# Is this if statement necessary?
-                if (binary) {
-                    if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion){
-                        V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
-                    } 
-                } else {
-                    if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion) {
-                         V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev) 
-                    }
-                }
-             }
-         }
-     }
+                V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
+            }
+        }
+    }
     graphs
 }
 
@@ -133,6 +124,9 @@ get.proportional.to.in.degree.update.victim.function <- function(){
 # The generator function is called:
 # get.bounded.confidence.update.victim.function()
 
+# get.bounded.confidence.update.victim.function: note this ONLY makes sense
+# for continuous (not binary) opinions.
+#
 # threshold.value -- the maximum distance between the victim's and
 # influencer's opinions that will cause the victim to update their opinion at
 # all. (If the difference exceeds the threshold.value, the victim's opinion
@@ -154,9 +148,16 @@ get.bounded.confidence.update.victim.function <- function(threshold.value,
             return (
                 if(abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion)
                     < threshold.value ){
-                     V(graph)[vertex]$opinion
+
+                    # "Okay, you have a point."
+                    diff.of.opinion <- V(graph)[vertex]$opinion -
+                        V(graph)[victim.vertex]$opinion
+                    diff.of.opinion * migration.factor +
+                        V(graph)[victim.vertex]$opinion
                 } else {
-                     V(graph)[victim.vertex]$opinion
+                    # "Sorry, you violated my confidence bound." I'm staying
+                    # put.
+                    V(graph)[victim.vertex]$opinion
                 }
             )
         }
