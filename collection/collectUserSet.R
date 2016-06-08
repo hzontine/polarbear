@@ -1,10 +1,8 @@
 
 source("manualApi.R")
-source("charm.R")
 source("cache.R")
 
 library(methods)
-
 
 Memento <- setRefClass("Memento",
     fields = list(
@@ -326,13 +324,18 @@ political.people <- c("RobWittman","RepComstock")
 # over.
 #main.memento <- Memento$new()
 
-main <- function() {
+main <- function(start.over=FALSE,do.plot=FALSE) {
     seed.set <- political.people
     U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
         threshold.for.inclusion=1, verbose=TRUE, memento=main.memento)
-    cat("Plotting...\n")
-    plot(U, vertex.label=paste0("@",V(U)$screenname), vertex.size=6, 
-        vertex.label.cex=.8, edge.arrow.size=.5, layout=layout_with_kk,
-        vertex.color=ifelse(V(U)$screenname %in% seed.set,
-            "dodgerblue","orange"))
+    if (start.over) {
+        main.memento <<- Memento$new()
+    }
+    if (do.plot) {
+        cat("Plotting...\n")
+        plot(U, vertex.label=paste0("@",V(U)$screenname), vertex.size=6,
+            vertex.label.cex=.8, edge.arrow.size=.5, layout=layout_with_kk,
+            vertex.color=ifelse(V(U)$screenname %in% seed.set,
+                "dodgerblue","orange"))
+    }
 }
