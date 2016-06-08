@@ -309,8 +309,8 @@ get.simulated.screennames <- function(n) {
 local.peeps <- c(
     "rockladyeagles",
     "hzontine",
-    "pinkcamowheelie",
-    "raechick",
+    #"pinkcamowheelie",
+    #"raechick",
     "ZachWhitt2",
     "persnickery"
 )
@@ -322,7 +322,7 @@ political.people <- c("RobWittman","RepComstock")
 
 # Run this line only if you want to manually whack older results and start
 # over.
-#main.memento <- Memento$new()
+# main.memento <- Memento$new()
 
 main <- function(start.over=FALSE,do.plot=FALSE) {
     seed.set <- political.people
@@ -338,4 +338,10 @@ main <- function(start.over=FALSE,do.plot=FALSE) {
             vertex.color=ifelse(V(U)$screenname %in% seed.set,
                 "dodgerblue","orange"))
     }
+    cat("Global transitivity:  ",transitivity(U, type="global"),"\n")
+    cat("Average Local transitivity:  ",mean(transitivity(U, type="local")),"\n")
+    cat("Average path length:  ",mean_distance(U, directed=TRUE),"\n")
+    cat("Diameter:  ",diameter(U,directed=TRUE),"\n")
+    cat("The two farthest nodes are: ",farthest_vertices(U)$vertices[1]$screenname,
+        " and ",farthest_vertices(U)$vertices[2]$screenname,"\n")
 }
