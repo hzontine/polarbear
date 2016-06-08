@@ -46,19 +46,10 @@ source("synthetic.R")
 
 sim.opinion.dynamics <- function(
         init.opinions=sample(c(0,1),50,replace=TRUE),
-        num.iter=18,
-        binary=FALSE, 
+        num.iter=20,
         encounter.func=get.mean.field.encounter.func(3),
         prob.connected=0.03,
-        prob.convert=0.5,
         victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.)) {
-
-    if (binary  &&  any(!init.opinions %in% c(0,1))) {
-        stop("init.opinions not all binary!")
-    }
-    if (!binary  &&  any(init.opinions < 0 | init.opinions > 1)) {
-        stop("init.opinions not all in range!")
-    }
 
     graphs <- list(length=num.iter)
     graphs[[1]] <- erdos.renyi.game(length(init.opinions), prob.connected)
