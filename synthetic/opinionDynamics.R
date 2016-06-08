@@ -31,10 +31,6 @@ source("synthetic.R")
 #
 # prob.connected -- the probability of edges between nodes on the initial graph
 #
-# prob.convert -- when an encounter between heterogeneous agents occurs, the
-# probability that one agent (chosen at random) changes their opinion to
-# match the other.
-#
 
 # SD: note that when we actually call sim.opinion.dynamics() to run a
 # simulation, we will be giving it an encounter.func of our choice. That
@@ -115,7 +111,6 @@ get.automatically.update.victim.function <- function(){
 # TODO: add a scaling factor. In other words, we do want higher in-degree to
 # correspond to lower-chance-of-updating, but we don't necessarily want to fix
 # it to the exact equation: P(updating) = 1/in-degree.
-# TODO: wire the prob.convert into things properly (or get rid of it).
 
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
