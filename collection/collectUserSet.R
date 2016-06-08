@@ -150,7 +150,7 @@ collect.user.set <- function(S, only.bidirectional=FALSE,
     }
 
     if (include.screennames) {
-        V(U)$screenname <- get.screennames(V(U)$name)
+        V(U)$screenname <- get.screennames(V(U)$name, verbose)
     }
 
     return(induced_subgraph(U, vertices.to.retain))
@@ -251,6 +251,10 @@ get.screennames <- function(userids, verbose=FALSE) {
                 c(userid.indices.we.need.to.bug.twitter.for, i)
         }
     }
+    if (verbose) {
+        cat(length(userids) - length(userid.indices.we.need.to.bug.twitter.for),
+            " of these are cached.\n")
+    }
     userids.we.need.to.bug.twitter.for <- 
         userids[userid.indices.we.need.to.bug.twitter.for]
     num.chunks <- ceiling(length(userids.we.need.to.bug.twitter.for)/100)
@@ -316,7 +320,7 @@ local.peeps <- c(
 r.people <- c("hadleywickham","GaborCsardi","robjhyndman")
 
 political.people <- c("SpeakerRyan","NancyPelosi")
-political.people <- c("RobWittman")
+political.people <- c("RobWittman","RepComstock")
 
 # Run this line only if you want to manually whack older results and start
 # over.
