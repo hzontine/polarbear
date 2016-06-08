@@ -240,7 +240,12 @@ get.screennames <- function(userids, verbose=FALSE) {
     screennames <- rep(NA,length(userids))
     userid.indices.we.need.to.bug.twitter.for <- vector()
     for (i in 1:length(userids)) {
-        if (exists.in.cache(userids[i], screennames.cache)) {
+        if (verbose) {
+            if (i %% 100 == 0) {
+                cat("Examined ", i, " of ", length(userids), "...\n", sep="")
+            }
+        }
+        if (exists.in.cache(userids[i], screennames.cache, check.nodata=FALSE)) {
             screennames[i] <- 
                 as.data.frame(collect(
                     get.cached.values(userids[i], screennames.cache)))[1,2]
@@ -251,7 +256,7 @@ get.screennames <- function(userids, verbose=FALSE) {
     }
     if (verbose) {
         cat(length(userids) - length(userid.indices.we.need.to.bug.twitter.for),
-            " of these are cached.\n")
+            "of these are cached.\n")
     }
     userids.we.need.to.bug.twitter.for <- 
         userids[userid.indices.we.need.to.bug.twitter.for]

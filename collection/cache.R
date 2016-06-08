@@ -24,9 +24,14 @@ read.caches <- function(force=FALSE) {
     nodata.cache <<- tbl(db.src,"nodata_users")
 }
 
-exists.in.cache <- function(the.userid, cache) {
-    return(nrow(cache %>% dplyr::filter(userid==the.userid)) > 0 ||
+exists.in.cache <- function(the.userid, cache, check.nodata=TRUE) {
+    in.cache <- nrow(cache %>% dplyr::filter(userid==the.userid)) > 0
+    if (check.nodata) {
+        return(in.cache || 
            nrow(nodata.cache %>% dplyr::filter(userid==the.userid)) > 0)
+    } else {
+        return(in.cache)
+    }
 }
 
 get.cached.values <- function(the.userid, cache) {
