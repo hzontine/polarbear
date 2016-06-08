@@ -5,9 +5,7 @@ library(stringr)
 
 source("charm.R")
 
-if (!exists("charm.repo")) {
-    initialize.charms()
-}
+initialize.charms()
 # active.charm is now in the global environment.
 
 
@@ -48,7 +46,7 @@ make.manual.twitter.api.call <- function(the.api.request, verbose=FALSE) {
             }
             old.charm <- active.charm
             new.charm <- get.charm()
-            if (verbose) cat("Swapping ", old.charm$name, " charm for ", 
+            if (verbose) cat("\nSwapping ", old.charm$name, " charm for ", 
                 new.charm$name, ".\n\n", sep="")
             active.charm <<- new.charm
 
