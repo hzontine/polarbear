@@ -6,12 +6,8 @@ Hannah:
     2) a checkmark next to the things that sim.opinion.dynamics() supports.
  * schedule target due dates and owner (HZ or SD) for each specific piece of
    functionality we want to add to the sim.opinion.dynamics() code.
- * continue to add to outline.txt
  * Read first 1/3 of the papers in the "hannah to read" Zotero folder.
  * Read chapter 6 of K&C 
- * Synthetic
-    - modify opinionDynamics.R to allow for ideologies to be continuous
-    - analyze clustering coefficient
  * compute some basic graph metrics (transitivity, avg. path length, etc.) for
    the "small.RData" graph that SD collected by starting with the Hannah+Zach+
    Stephen+Rae+Lizzy seed set.
@@ -32,6 +28,7 @@ Hannah:
  * More Lit Search on Sentiment Analysis
     Find a political classifier
  * Synthetic
+     - analyze clustering coefficient
      - parameter sweep of final assortavity vs
          a) closeness.threshold
          b) num.encounter.per.iter
