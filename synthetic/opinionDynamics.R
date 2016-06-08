@@ -14,23 +14,21 @@ source("synthetic.R")
 # The probability of one agent successfully influencing another to change
 # their opinion is fixed, and not based on a homophilic threshold.
 #
-# init.opinions -- a vector of n nodes (n is up to the caller) with the
-# initial opinions for each of the nodes. If binary=TRUE, these should be
-# integer values =0 or =1. If binary=FALSE, they should be reals on [0,1].
-#
-# num.nodes -- number of vertices in the graph
+# init.graph -- the initial condition of the simulation. This can be any
+# igraph object with an attribute on each vertex called "opinion". (The value
+# of the attribute can be binary or continuous.)
 #
 # num.iter -- the number of iterations to run the simulation.
-#
-# binary -- are opinions categorical with two possible values (TRUE), or
-# reals on [0,1] (FALSE)?
 #
 # encounter.func -- a function which takes a graph and a vertex ID. Returns a 
 # vector of vertex IDs of which the vector may randomly encounter in
 # the current iteration.
 #
-# prob.connected -- the probability of edges between nodes on the initial graph
-#
+# victim.update.function -- a function which takes a graph and two vertex IDs:
+# the first is the "potential influencer" (i.e., the node whose opinion may
+# cause the second vertex's opinion to be updated) and the second is the
+# "potential victim." It will return the (possibly new) value of the second
+# vetex.
 
 # SD: note that when we actually call sim.opinion.dynamics() to run a
 # simulation, we will be giving it an encounter.func of our choice. That
@@ -40,16 +38,13 @@ source("synthetic.R")
 # influence or be influenced by that vertex).
 
 
-sim.opinion.dynamics <- function(
-        init.opinions=sample(c(0,1),50,replace=TRUE),
+sim.opinion.dynamics <- function(init.graph,
         num.iter=20,
         encounter.func=get.mean.field.encounter.func(3),
-        prob.connected=0.03,
         victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.)) {
 
     graphs <- list(length=num.iter)
-    graphs[[1]] <- erdos.renyi.game(length(init.opinions), prob.connected)
-    V(graphs[[1]])$opinion <- init.opinions
+    graphs[[1]] <- init.graph
 
     # For each iteration of the sim...
     for (i in 2:num.iter) {
@@ -217,8 +212,11 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
 
 
 main <- function() {
-    graphs <<- sim.opinion.dynamics(init.opinions=runif(50),
-        encounter.func=get.graph.neighbors.encounter.func(30), prob.connected=.5)
+    init.graph <- erdos.renyi.game(50,.1)
+    V(init.graph)$opinion <- runif(vcount(init.graph))
+    graphs <<- sim.opinion.dynamics(init.graph,num.iter=7,
+        encounter.func=get.graph.neighbors.encounter.func(3))
+        #encounter.func=get.mean.field.encounter.func(3))
     plot.animation(graphs,"opinion",delay.between.frames=.5)
 #    plot.binary.opinions(graphs)
 }
