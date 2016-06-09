@@ -201,7 +201,8 @@ initialize.charms <- function() {
     charm.repo <<- list(hannah, hannah2, hannah3, hannah4, 
         hannah5, hannah6, hannah7, hannah8, hannah9, hannah10, 
         hannah11, hannah12, hannah13, hannah14, hannah15,
-        hannah16, liv, aaron, stephen,
+        hannah16, liv, aaron, stephen, stephen2,
+        stephen3, stephen4, stephen5, stephen6,
         # rae1, rae2, 
         dave)
     for (i in 1:length(charm.repo)) {
