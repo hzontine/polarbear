@@ -14,27 +14,21 @@ source("synthetic.R")
 # The probability of one agent successfully influencing another to change
 # their opinion is fixed, and not based on a homophilic threshold.
 #
-# init.opinions -- a vector of n nodes (n is up to the caller) with the
-# initial opinions for each of the nodes. If binary=TRUE, these should be
-# integer values =0 or =1. If binary=FALSE, they should be reals on [0,1].
-#
-# num.nodes -- number of vertices in the graph
+# init.graph -- the initial condition of the simulation. This can be any
+# igraph object with an attribute on each vertex called "opinion". (The value
+# of the attribute can be binary or continuous.)
 #
 # num.iter -- the number of iterations to run the simulation.
-#
-# binary -- are opinions categorical with two possible values (TRUE), or
-# reals on [0,1] (FALSE)?
 #
 # encounter.func -- a function which takes a graph and a vertex ID. Returns a 
 # vector of vertex IDs of which the vector may randomly encounter in
 # the current iteration.
 #
-# prob.connected -- the probability of edges between nodes on the initial graph
-#
-# prob.convert -- when an encounter between heterogeneous agents occurs, the
-# probability that one agent (chosen at random) changes their opinion to
-# match the other.
-#
+# victim.update.function -- a function which takes a graph and two vertex IDs:
+# the first is the "potential influencer" (i.e., the node whose opinion may
+# cause the second vertex's opinion to be updated) and the second is the
+# "potential victim." It will return the (possibly new) value of the second
+# vetex.
 
 # SD: note that when we actually call sim.opinion.dynamics() to run a
 # simulation, we will be giving it an encounter.func of our choice. That
@@ -44,30 +38,13 @@ source("synthetic.R")
 # influence or be influenced by that vertex).
 
 
-sim.opinion.dynamics <- function(num.nodes=50, 
+sim.opinion.dynamics <- function(init.graph,
         num.iter=20,
-        binary=FALSE, 
         encounter.func=get.mean.field.encounter.func(3),
-        prob.connected=0.03,
-        prob.convert=0.5,
-        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=0.3)) {
-
-    if (binary){
-        init.opinions=sample(c(0,1),num.nodes,replace=TRUE)
-    } else {
-        init.opinions=sample(seq(0,1,0.1), num.nodes, replace=TRUE)
-    }
-
-    if (binary  &&  any(!init.opinions %in% c(0,1))) {
-        stop("init.opinions not all binary!")
-    }
-    if (!binary  &&  any(init.opinions < 0 | init.opinions > 1)) {
-        stop("init.opinions not all in range!")
-    }
+        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.)) {
 
     graphs <- list(length=num.iter)
-    graphs[[1]] <- erdos.renyi.game(length(init.opinions), prob.connected)
-    V(graphs[[1]])$opinion <- init.opinions
+    graphs[[1]] <- init.graph
 
     # For each iteration of the sim...
     for (i in 2:num.iter) {
@@ -81,19 +58,10 @@ sim.opinion.dynamics <- function(num.nodes=50,
             encountered.vertices <- encounter.func(graphs[[i]],v)
             # For each of these encountered partners...
             for (ev in encountered.vertices) {
-# Is this if statement necessary?
-                if (binary) {
-                    if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion) {
-                        V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
-                    } 
-                } else {
-                    if (V(graphs[[i]])[v]$opinion != V(graphs[[i]])[ev]$opinion) {
-                         V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev) 
-                    }
-                }
-             }
-         }
-     }
+                V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
+            }
+        }
+    }
     graphs
 }
 
@@ -129,7 +97,6 @@ get.automatically.update.victim.function <- function(){
 # TODO: add a scaling factor. In other words, we do want higher in-degree to
 # correspond to lower-chance-of-updating, but we don't necessarily want to fix
 # it to the exact equation: P(updating) = 1/in-degree.
-# TODO: wire the prob.convert into things properly (or get rid of it).
 
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
@@ -152,17 +119,39 @@ get.proportional.to.in.degree.update.victim.function <- function(){
 # The generator function is called:
 # get.bounded.confidence.update.victim.function()
 
-get.bounded.confidence.update.victim.function <- function(threshold.value){
+# get.bounded.confidence.update.victim.function: note this ONLY makes sense
+# for continuous (not binary) opinions.
+#
+# threshold.value -- the maximum distance between the victim's and
+# influencer's opinions that will cause the victim to update their opinion at
+# all. (If the difference exceeds the threshold.value, the victim's opinion
+# stays exactly the same.)
+#
+# migration.factor -- a numeric between 0 and 1 that dictates what fraction of
+# the distance between the victim's opinion and the influencer's opinion the
+# victim will move, *if* the victim does move. For example: if the victim's
+# opinion is .4 and the influencer's is .8, and the migration.factor is .5,
+# then the victim's opinion will be updated to .6, which is half the distance
+# between them. If the migration.factor is 0, the victim's opinion is
+# unchanged. If the migration.factor is 1, the victim's opinion is moved all
+# the way to .8.
+
+get.bounded.confidence.update.victim.function <- function(threshold.value,
+    migration.factor=.5){
     return (
         function(graph, vertex, victim.vertex){
             return (
                 if(abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion)
                     < threshold.value ){
-                         V(graph)[vertex]$opinon
 
-# What value do we want to return?
-
+                    # "Okay, you have a point."
+                    diff.of.opinion <- V(graph)[vertex]$opinion -
+                        V(graph)[victim.vertex]$opinion
+                    diff.of.opinion * migration.factor +
+                        V(graph)[victim.vertex]$opinion
                 } else {
+                    # "Sorry, you violated my confidence bound." I'm staying
+                    # put.
                     V(graph)[victim.vertex]$opinion
                 }
             )
@@ -223,7 +212,11 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
 
 
 main <- function() {
-    graphs <<- sim.opinion.dynamics(encounter.func=get.graph.neighbors.encounter.func(5))
+    init.graph <- erdos.renyi.game(50,.1)
+    V(init.graph)$opinion <- runif(vcount(init.graph))
+    graphs <<- sim.opinion.dynamics(init.graph,num.iter=7,
+        encounter.func=get.graph.neighbors.encounter.func(3))
+        #encounter.func=get.mean.field.encounter.func(3))
     plot.animation(graphs,"opinion",delay.between.frames=.5)
 #    plot.binary.opinions(graphs)
 }

@@ -146,6 +146,46 @@ stephen.key <- "MlUmay5kA1vGWKokmmFofgRLX"
 stephen.secret <- "2FFYCyI2rhUIEltkepeNhVcZvYufXJukCJMqE1s3ALKoLYm7LD"
 stephen <- Charm$new(name=stephen.name, key=stephen.key, secret=stephen.secret)
 
+stephen2.name <- "Stephen2"
+stephen2.key <- "HcLTIZ6izJGcmR8bPCQWkRHIk"
+stephen2.secret <- "ESjhs6N9nx9eAPjAqP3y262I2WvOrbpmYmMCgfi9vRMbuuClEP"
+stephen2 <- Charm$new(name=stephen2.name, key=stephen2.key, 
+    secret=stephen2.secret)
+
+stephen3.name <- "Stephen3"
+stephen3.key <- "vhnaVEttuEWXcKETbPQKWLvtz"
+stephen3.secret <- "vwf2iviX6mpHdFiKvn8sltfYRLZNh8Bx0jwYytZHEpsLAi76cZ"
+stephen3 <- Charm$new(name=stephen3.name, key=stephen3.key, 
+    secret=stephen3.secret)
+
+stephen4.name <- "Stephen4"
+stephen4.key <- "s96OW4joK29MEgw0UNw7UhDSV"
+stephen4.secret <- "lN95enYS3zXYaMnwv6wyB3VvRQretzFGQNHLQeyERrsWbjpKRH"
+stephen4 <- Charm$new(name=stephen4.name, key=stephen4.key, 
+    secret=stephen4.secret)
+
+stephen5.name <- "Stephen5"
+stephen5.key <- "7qGoaOAdBVIp3FescZuAhVtzG"
+stephen5.secret <- "rfZoEQq430iRgvIoLWbsORzDyu5c2tQANh7pjfzXdOZ6O1fxtl"
+stephen5 <- Charm$new(name=stephen5.name, key=stephen5.key, 
+    secret=stephen5.secret)
+
+stephen6.name <- "Stephen6"
+stephen6.key <- "7qGoaOAdBVIp3FescZuAhVtzG"
+stephen6.secret <- "rfZoEQq430iRgvIoLWbsORzDyu6c2tQANh7pjfzXdOZ6O1fxtl"
+stephen6 <- Charm$new(name=stephen6.name, key=stephen6.key, 
+    secret=stephen6.secret)
+
+rae1.name <- "Rae1"
+rae1.key <- "FLoQBrbMbINCP42zVf4IZgo1t"
+rae1.secret <- "ZhIsMNWYXkOi8sjJykj708keP5nH0SJIdo4PKisFXHDAQOItFJ"
+rae1 <- Charm$new(name=rae1.name, key=rae1.key, secret=rae1.secret)
+
+rae2.name <- "Rae2"
+rae2.key <- "lkuPxNswBGumboWnvxPXuC2go"
+rae2.secret <- "u2b4F55Xkw6AhdUVNocFPI8OQcBhqGsVnZOiAxwf2lGk2kAdKS"
+rae2 <- Charm$new(name=rae2.name, key=rae2.key, secret=rae2.secret)
+
 dave.name <- "Dave"
 dave.key <- "j9ylpEcXdHxZLZnN5OzH9CbNE"
 dave.secret <- "VeYV8XXHbUCLk43iOWVOYB6ODzgwODwj0AFJOXANUGm36DKJYI"
@@ -158,10 +198,19 @@ dave <- Charm$new(name=dave.name, key=dave.key, secret=dave.secret)
 # authentication token that should be recent.
 
 initialize.charms <- function() {
+<<<<<<< HEAD
     charm.repo <<- list(hannah, hannah2, hannah3, hannah4, 
         hannah5, hannah6, hannah7, hannah8, hannah9, hannah10, 
         hannah11, hannah12, hannah13, hannah14, hannah15,
         hannah16, liv, aaron, stephen, dave)
+=======
+    charm.repo <<- list(hannah, hannah2, hannah3, hannah4, hannah5, hannah6,
+        hannah7, hannah8, hannah9, hannah10, hannah11, hannah12, hannah13, 
+        hannah14, liv, aaron, stephen, stephen2, stephen3, stephen4, stephen5, 
+        stephen6, 
+        # rae1, rae2, 
+        dave)
+>>>>>>> efadd2a8eb056b2e27fd6e01bd69ecbea78e3228
     for (i in 1:length(charm.repo)) {
         charm.repo[[i]]$charm.number <- i
     }
@@ -170,6 +219,7 @@ initialize.charms <- function() {
     active.charm$refresh()
 }
 
+last.time <- Sys.time()
 
 get.charm <- function(verbose=TRUE) {
 
@@ -179,11 +229,15 @@ get.charm <- function(verbose=TRUE) {
         # rate limit stop sign.
         if (verbose) {
             cat("\nCharms exhausted. Chill before cycling through again.\n")
+            dt <- Sys.time() - last.time
+            units(dt) <- "mins"
+            cat("(That took",round(dt,2),"minutes out of your 15.)\n")
             print(Sys.time())
         }
         Sys.sleep(15*60+1)
         if (verbose) {
-            print(Sys.time())
+            last.time <<- Sys.time()
+            print(last.time)
         }
     }
     current.charm.num <<- current.charm.num %% length(charm.repo) + 1
