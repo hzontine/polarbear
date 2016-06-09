@@ -171,10 +171,22 @@ stephen5 <- Charm$new(name=stephen5.name, key=stephen5.key,
     secret=stephen5.secret)
 
 stephen6.name <- "Stephen6"
-stephen6.key <- "7qGoaOAdBVIp3FescZuAhVtzG"
-stephen6.secret <- "rfZoEQq430iRgvIoLWbsORzDyu6c2tQANh7pjfzXdOZ6O1fxtl"
+stephen6.key <- "wgILdQ0SlOZt8W40njkP9LC67"
+stephen6.secret <- "JazXPMjwjEP7zOvTSczCi1ARx2qRpqp351UJD5yxQz4icrsDaB"
 stephen6 <- Charm$new(name=stephen6.name, key=stephen6.key, 
     secret=stephen6.secret)
+
+stephen7.name <- "Stephen7"
+stephen7.key <- "eKTUjddkvkSE5KEKCnPyyNfJA"
+stephen7.secret <- "Hny8rkbCtxrPt1bSgnAtC2k0ihe2tyuHasVONSbOdQ4s9ihZno"
+stephen7 <- Charm$new(name=stephen7.name, key=stephen7.key, 
+    secret=stephen7.secret)
+
+stephen8.name <- "Stephen8"
+stephen8.key <- "CAWMXz7tn6chB3D2EZWVKfAan"
+stephen8.secret <- "Isds4kgYGchhpRvN3EULLI8WRA0o18p7nIceRFzOrQQnwK40ms"
+stephen8 <- Charm$new(name=stephen8.name, key=stephen8.key, 
+    secret=stephen8.secret)
 
 rae1.name <- "Rae1"
 rae1.key <- "FLoQBrbMbINCP42zVf4IZgo1t"
@@ -199,10 +211,9 @@ dave <- Charm$new(name=dave.name, key=dave.key, secret=dave.secret)
 
 initialize.charms <- function() {
     charm.repo <<- list(hannah, hannah2, hannah3, hannah4, 
-        hannah5, hannah6, hannah7, hannah8, hannah9, hannah10, 
-        hannah11, hannah12, hannah13, hannah14, hannah15,
-        hannah16, liv, aaron, stephen, stephen2,
-        stephen3, stephen4, stephen5, stephen6,
+        hannah5, hannah6, hannah7, hannah8, hannah9, hannah10, hannah11,
+        hannah12, hannah13, hannah14, hannah15, hannah16, liv, aaron, stephen,
+        stephen2, stephen3, stephen4, stephen5, stephen6, stephen7, stephen8,
         # rae1, rae2, 
         dave)
     for (i in 1:length(charm.repo)) {
