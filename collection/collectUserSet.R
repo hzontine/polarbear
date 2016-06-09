@@ -331,11 +331,11 @@ political.people <- c("RobWittman","RepComstock")
 
 main <- function(start.over=FALSE,do.plot=FALSE) {
     seed.set <- political.people
-    U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
-        threshold.for.inclusion=1, verbose=TRUE, memento=main.memento)
     if (start.over) {
         main.memento <<- Memento$new()
     }
+    U <<- collect.user.set(seed.set, only.bidirectional=TRUE,
+        threshold.for.inclusion=1, verbose=TRUE, memento=main.memento)
     if (do.plot) {
         cat("Plotting...\n")
         plot(U, vertex.label=paste0("@",V(U)$screenname), vertex.size=6,
