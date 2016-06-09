@@ -121,9 +121,15 @@ hannah14.key="xiq61FE0avCBZRlZ6vEzYKikg"
 hannah14.secret="G2gZoGX434tJw955p9QtfhA7X8qb1YAZpaBbPS1h9DTpBuBiDi"
 hannah14 <- Charm$new(name=hannah14.name, key=hannah14.key, secret=hannah14.secret)
 
+hannah15.name <- "Hannah15"
+hannah15.key="GlL27kSOcx6BtXfXr3ia5McEq"
+hannah15.secret="5WLY8xebaRSaDjTUq6sKjhXMfqJJcK9p9RRUsOboYb5QxOHsvQ"
+hannah15 <- Charm$new(name=hannah15.name, key=hannah15.key, secret=hannah15.secret)
 
-
-
+hannah16.name <- "Hannah16"
+hannah16.key="xuuAEFcO7ZQ97Eht8uSm3cHSh"
+hannah16.secret="28QVtLt1S3pPgdFfdWOvYPSRKKhsb3SunzFTene5sPVNFfEwiT"
+hannah16 <- Charm$new(name=hannah16.name, key=hannah16.key, secret=hannah16.secret)
 
 liv.name <- "Liv"
 liv.key <- "kzy13nReYwPakG1jflt2zPVUm"
@@ -154,7 +160,8 @@ dave <- Charm$new(name=dave.name, key=dave.key, secret=dave.secret)
 initialize.charms <- function() {
     charm.repo <<- list(hannah, hannah2, hannah3, hannah4, 
         hannah5, hannah6, hannah7, hannah8, hannah9, hannah10, 
-        hannah11, hannah12, hannah13, hannah14, liv, aaron, stephen, dave)
+        hannah11, hannah12, hannah13, hannah14, hannah15,
+        hannah16, liv, aaron, stephen, dave)
     for (i in 1:length(charm.repo)) {
         charm.repo[[i]]$charm.number <- i
     }
