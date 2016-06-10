@@ -4,6 +4,7 @@
 
 library(igraph)
 source("synthetic.R")
+source("plotting.R")
 
 # Run an opinion dynamics simulation with n agents for num.iter iterations.
 # Return a list of igraph objects, each giving the graph at a snapshot in
@@ -29,14 +30,6 @@ source("synthetic.R")
 # cause the second vertex's opinion to be updated) and the second is the
 # "potential victim." It will return the (possibly new) value of the second
 # vetex.
-
-# SD: note that when we actually call sim.opinion.dynamics() to run a
-# simulation, we will be giving it an encounter.func of our choice. That
-# encounter.func must be a function that takes two arguments (a graph, and the
-# vertex for which you want to get encountered vertices) and returns a vector
-# of vertices that will be encountered (and which may, as a result, possibly
-# influence or be influenced by that vertex).
-
 
 sim.opinion.dynamics <- function(init.graph,
         num.iter=20,
@@ -210,7 +203,6 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
     )
 }
 
-
 main <- function() {
     init.graph <- erdos.renyi.game(50,.1)
     V(init.graph)$opinion <- runif(vcount(init.graph))
@@ -218,5 +210,40 @@ main <- function() {
         encounter.func=get.graph.neighbors.encounter.func(3))
         #encounter.func=get.mean.field.encounter.func(3))
     plot.animation(graphs,"opinion",delay.between.frames=.5)
+#    plot.binary.opinions(graphs)
+}
+
+param.sweep <- function() {
+
+    library(doParallel)
+    registerDoParallel(8)
+
+    set.seed(1234)
+
+    init.graph <- erdos.renyi.game(50,.1)
+    V(init.graph)$opinion <- runif(vcount(init.graph))
+
+    encs.per.iter <- 1
+    bc.thresh <- 1
+
+    foreach (encs.per.iter=1:8) %dopar% {
+      for (bc.thresh in 1) {
+        graphs <- sim.opinion.dynamics(init.graph,num.iter=20,
+            encounter.func=get.graph.neighbors.encounter.func(encs.per.iter),
+            victim.update.function=
+                get.bounded.confidence.update.victim.function(bc.thresh))
+            #encounter.func=get.mean.field.encounter.func(3))
+        plot.animation(graphs,"opinion",delay.between.frames=.5,
+            interactive=FALSE,
+            subtitle=paste0("encounter: ",encs.per.iter,
+                                            " graph neighbor per iteration\n",
+                "update: bounded confidence threshold ",bc.thresh),
+            animation.filename=paste0("polarGraph",encs.per.iter,"UpdateBC",
+                bc.thresh,".gif"),
+            overwrite.animation.file=TRUE
+        )
+      }
+    }
+
 #    plot.binary.opinions(graphs)
 }

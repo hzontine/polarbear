@@ -26,15 +26,21 @@ library(igraph)
 # overwrite.animation.file -- controls whether to overwrite or error out if
 # file already exists. Only relevant if interactive is FALSE.
 #
+# subtitle -- an optional subtitle for the plot.
+#
 plot.animation <- function(graphs, attribute.name="ideology", 
     try.to.keep.vertex.positions=TRUE, delay.between.frames=.5, 
     interactive=TRUE, animation.filename="polar.gif",
-    overwrite.animation.file=FALSE) {
+    overwrite.animation.file=FALSE, subtitle="") {
 
     if (!interactive && !overwrite.animation.file) {
         if (file.exists(animation.filename)) {
             stop(paste0("File ",animation.filename, " already exists!"))
         }
+    }
+
+    if (!interactive) {
+        base.filename <- tempfile(pattern="polar")
     }
 
     # Detect binary graphs so we can plot colors differently.
@@ -61,13 +67,13 @@ plot.animation <- function(graphs, attribute.name="ideology",
                     get.vertex.attribute(graphs[[i]],attribute.name) * 100)]
         }
         if (!interactive) {
-            png(paste0("plot",paste0(rep(0,3-floor(log10(i)+1)),collapse=""),
-                i,".png"))
+            png(paste0(base.filename,"plot",
+                paste0(rep(0,3-floor(log10(i)+1)),collapse=""), i,".png"))
             cat("Building frame",i,"of",length(graphs),"...\n")
         }
         plot(graphs[[i]],
             layout=vertex.coords,
-            main=paste("Iteration",i,"of",length(graphs)))
+            main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
         legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
             fill=c("blue","white","red"))
         if (interactive) {
@@ -78,10 +84,10 @@ plot.animation <- function(graphs, attribute.name="ideology",
     }
     if (!interactive) {
         cat("Assembling animation...\n")
-          system(paste0("convert -delay ",delay.between.frames*100,
-              " plot*.png ", animation.filename))
-          system("rm plot*.png")
-          cat("Animation in file ",animation.filename,".\n",sep="")
+        system(paste0("convert -delay ",delay.between.frames*100,
+            " ",base.filename,"plot*.png ", animation.filename))
+        system(paste0("rm ",base.filename,"plot*.png"))
+        cat("Animation in file ",animation.filename,".\n",sep="")
     }
 }
 
