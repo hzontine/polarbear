@@ -4,6 +4,7 @@
 
 library(igraph)
 source("synthetic.R")
+source("plotting.R")
 
 # Run an opinion dynamics simulation with n agents for num.iter iterations.
 # Return a list of igraph objects, each giving the graph at a snapshot in
