@@ -62,8 +62,21 @@ The model provided a good fit to both the synthetic and real data gathered from 
 
 
 
+"Stubborn" Voters
 
-Deffuant-Weisbuch Model
+- binary attribute: stubborn or not stubborn
+- non-stubborn nodes can have random encounters with neighbors where they may adopt
+the opinion of the stubborn node
+- Extension of classic voter model: "coalescing random walks with absorbing states given 
+by the stubborn agents"
+- "the expected value of the asymptotic opinion of agent i is given by the probability 
+that the dual random walk on G initiated at node i is absorbed by the stubborn set of type one."
+- Stubborn agents of opposite ideologies prevent consensus in the society
+
+    Yildiz, Acemoglu, et al. "Discrete Opinion Dynamics with Stubborn Agents".
+
+
+Deffuant-Weisbucc Model
 Hegselmann-Krause Model
 
 
