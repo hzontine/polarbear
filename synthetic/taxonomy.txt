@@ -4,8 +4,8 @@ model variations:
 
 how are opinions represented?
     - univariate 
-X        Binary: (Yildiz, Acemoglu 2011) 
-         Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000)
+X         Binary: (Yildiz, Acemoglu 2011) 
+X         Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000)
     - vector of opinions
         Binary: (Deffuant 2000)
         Continuous: 
