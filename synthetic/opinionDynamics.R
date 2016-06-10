@@ -203,7 +203,6 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
     )
 }
 
-
 main <- function() {
     init.graph <- erdos.renyi.game(50,.1)
     V(init.graph)$opinion <- runif(vcount(init.graph))
@@ -211,5 +210,40 @@ main <- function() {
         encounter.func=get.graph.neighbors.encounter.func(3))
         #encounter.func=get.mean.field.encounter.func(3))
     plot.animation(graphs,"opinion",delay.between.frames=.5)
+#    plot.binary.opinions(graphs)
+}
+
+param.sweep <- function() {
+
+    library(doParallel)
+    registerDoParallel(8)
+
+    set.seed(1234)
+
+    init.graph <- erdos.renyi.game(50,.1)
+    V(init.graph)$opinion <- runif(vcount(init.graph))
+
+    encs.per.iter <- 1
+    bc.thresh <- 1
+
+    foreach (encs.per.iter=1:8) %dopar% {
+      for (bc.thresh in 1) {
+        graphs <- sim.opinion.dynamics(init.graph,num.iter=20,
+            encounter.func=get.graph.neighbors.encounter.func(encs.per.iter),
+            victim.update.function=
+                get.bounded.confidence.update.victim.function(bc.thresh))
+            #encounter.func=get.mean.field.encounter.func(3))
+        plot.animation(graphs,"opinion",delay.between.frames=.5,
+            interactive=FALSE,
+            subtitle=paste0("encounter: ",encs.per.iter,
+                                            " graph neighbor per iteration\n",
+                "update: bounded confidence threshold ",bc.thresh),
+            animation.filename=paste0("polarGraph",encs.per.iter,"UpdateBC",
+                bc.thresh,".gif"),
+            overwrite.animation.file=TRUE
+        )
+      }
+    }
+
 #    plot.binary.opinions(graphs)
 }
