@@ -203,47 +203,66 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
     )
 }
 
-main <- function() {
-    init.graph <- erdos.renyi.game(50,.1)
-    V(init.graph)$opinion <- runif(vcount(init.graph))
-    graphs <<- sim.opinion.dynamics(init.graph,num.iter=7,
-        encounter.func=get.graph.neighbors.encounter.func(3))
-        #encounter.func=get.mean.field.encounter.func(3))
-    plot.animation(graphs,"opinion",delay.between.frames=.5)
-#    plot.binary.opinions(graphs)
+
+# Return a graph that has a fairly strongly connected group of liberals, a
+# fairly strongly connected group of conservatives, and num.connections
+# between the two groups.
+get.barely.connected.polarized.graph <- function(num.connections=2) {
+
+    liberal.peeps <- erdos.renyi.game(20,.16)
+    V(liberal.peeps)$name <- letters[1:20]
+    V(liberal.peeps)$opinion <- runif(vcount(liberal.peeps),0,.5)
+
+    conservative.peeps <- erdos.renyi.game(20,.16)
+    V(conservative.peeps)$name <- LETTERS[1:20]
+    V(conservative.peeps)$opinion <- runif(vcount(conservative.peeps),.5,1)
+
+    barely <- union(liberal.peeps,conservative.peeps)
+    V(barely)$opinion <- ifelse(is.na(V(barely)$opinion_1),
+        V(barely)$opinion_2, V(barely)$opinion_1)
+    for (i in 1:num.connections) {
+        barely <- barely + edge(letters[i],LETTERS[i])
+    }
+    return(barely)
 }
 
-param.sweep <- function() {
+
+get.plain.old.graph <- function() {
+
+    g <- erdos.renyi.game(50,.1)
+    V(g)$opinion <- runif(vcount(g))
+    return(g)
+}
+
+param.sweep <- function(init.graph) {
 
     library(doParallel)
     registerDoParallel(8)
 
-    set.seed(1234)
+    encs.per.iter <- 4
 
-    init.graph <- erdos.renyi.game(50,.1)
-    V(init.graph)$opinion <- runif(vcount(init.graph))
-
-    encs.per.iter <- 1
-    bc.thresh <- 1
-
-    foreach (encs.per.iter=1:8) %dopar% {
-      for (bc.thresh in 1) {
-        graphs <- sim.opinion.dynamics(init.graph,num.iter=20,
+    invisible(foreach (migration.factor=seq(0.2,1,.2)) %dopar% {
+      for (bc.thresh in seq(0.2,1,.2)) {
+        graphs <- sim.opinion.dynamics(init.graph,num.iter=50,
             encounter.func=get.graph.neighbors.encounter.func(encs.per.iter),
             victim.update.function=
-                get.bounded.confidence.update.victim.function(bc.thresh))
-            #encounter.func=get.mean.field.encounter.func(3))
-        plot.animation(graphs,"opinion",delay.between.frames=.5,
+                get.bounded.confidence.update.victim.function(bc.thresh,
+                    migration.factor=migration.factor))
+        plot.animation(graphs,"opinion",delay.between.frames=.25,
             interactive=FALSE,
             subtitle=paste0("encounter: ",encs.per.iter,
                                             " graph neighbor per iteration\n",
-                "update: bounded confidence threshold ",bc.thresh),
-            animation.filename=paste0("polarGraph",encs.per.iter,"UpdateBC",
-                bc.thresh,".gif"),
+                "update: bounded confidence threshold ",bc.thresh,",\n"),
+                "migration factor ",migration.factor),
+            animation.filename=paste0("barelyBC",bc.thresh,"MigFac",
+                migration.factor,".gif"),
             overwrite.animation.file=TRUE
         )
       }
-    }
+    })
+}
 
-#    plot.binary.opinions(graphs)
+main <- function() {
+    set.seed(11111)
+    param.sweep(get.barely.connected.polarized.graph())
 }
