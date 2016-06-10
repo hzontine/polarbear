@@ -27,6 +27,7 @@ X    - conversions happen only with fixed probability
         Question: can/should the "degree of activeness on Twitter" be modeled?
         (More likely to be influenced the more tweets you see.)
 
+Big question: does the graph change over time??
 
 
 
