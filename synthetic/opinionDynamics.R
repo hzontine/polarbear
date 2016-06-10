@@ -31,14 +31,6 @@ source("plotting.R")
 # "potential victim." It will return the (possibly new) value of the second
 # vetex.
 
-# SD: note that when we actually call sim.opinion.dynamics() to run a
-# simulation, we will be giving it an encounter.func of our choice. That
-# encounter.func must be a function that takes two arguments (a graph, and the
-# vertex for which you want to get encountered vertices) and returns a vector
-# of vertices that will be encountered (and which may, as a result, possibly
-# influence or be influenced by that vertex).
-
-
 sim.opinion.dynamics <- function(init.graph,
         num.iter=20,
         encounter.func=get.mean.field.encounter.func(3),
