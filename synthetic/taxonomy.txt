@@ -26,6 +26,11 @@ X    - conversions happen only with fixed probability
     - different nodes have different "stubbornness" attribute (Yildiz, Acemoglu 2011)
         Question: can/should the "degree of activeness on Twitter" be modeled?
         (More likely to be influenced the more tweets you see.)
+        - different ways to implement stubbornness:
+            - migration factor is lower for stubborn nodes
+            - BC thresh is lower for stubborn nodes
+            - is stubbornness a binary or continuous attribute?
+            - do nodes become stubborn over time?
 
 Big question: does the graph change over time??
 
