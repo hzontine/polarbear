@@ -61,6 +61,8 @@ SD: Any impact of WWW and social networks here?
                     Deffuant, Weisbuch and others (DW) model
                 b. Each agent moves to the average opinion of all agents which lie in her area of confidence (including herself).
                     Hegselman and Krause (HK) model 
+            
+
 	c. Political Polarization on Twitter
 		i. Methods for Collecting Data
 			1) "Classifying Political Orientation on Twitter"
