@@ -119,3 +119,27 @@ after reaching a period of steady state.
     Lorenz, J. 2007. "Continuous Opinion Dynamics under Bounded Confidence: A
         Survey." International Journal of Modern Physics C 18:1819-1838.
         doi:10.1142/S0129183107011789 .
+
+
+
+
+Deffuant et al. 2000. "Mixing beliefs among interacting agents".
+
+- Agents only interact if they are directly connected through a social pre-existing relation. 
+Facing the difficulty of inventing a credible instance of a social network as in the literature on 
+social binary choice [WEI 99], we adopted the standard simplification and we carried out our simulations 
+on square lattices: square lattices are simple, allow easy visualisation of opinion configurations and contain 
+many short loops, a property that they share with real social networks. (6)
+
+- inital random sampling of opinions from 0 to 1
+- a pair is randomly selected among connected agents anf opinons are updated if their distance is less than d
+- vector of opinions: binary
+    * Hamming distance: number of different bits among the two vectors
+    * Agents may interact and adjust opinions according to how many opinions they share.
+    * Adjustments occur when agents agree on d-1 subjects or less. All equal opinions are conserved. When
+    opinions on a subject differ, one agent (random) is convinced by the other. (8)
+    * polarization was not observed (9)
+- We thus observe than when opinion exchange is limited by similarity of opinions among agents, the 
+dynamics yield isolated clusters among initially randomly distributed opinions. Exchange finally 
+only occurs inside clusters as a the result of the exchange dynamics; initially all agents were communicating 
+either directly or indirectly through several directly connected agents (11)
