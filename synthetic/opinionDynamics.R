@@ -10,7 +10,8 @@ source("plotting.R")
 # Return a list of igraph objects, each giving the graph at a snapshot in
 # time. 
 # 
-# Agents have univariate opinions, which could be binary or weighted.
+# Agents have an opinion, which could be binary or weighted, and a stubbornness
+# attribute, which can be binary or weighted (coming soon).
 #
 # The probability of one agent successfully influencing another to change
 # their opinion is fixed, and not based on a homophilic threshold.
@@ -71,7 +72,7 @@ sim.opinion.dynamics <- function(init.graph,
 
 # (1) This could be a function that returns the "influencer's" value, period.
 # The generator function is called: get.automatically.update.victim.function()
-
+# Note: this function does not factor in a node's stubbornness
 get.automatically.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
@@ -94,6 +95,10 @@ get.automatically.update.victim.function <- function(){
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
+            # If the victim has a binary stubbornness value of 1...
+            if(V(graph)[victim.vertex]$stubbornness == 1){
+                return( V(graph)[victim.vertex]$opinion )
+            }
             probability.of.converting <- 1 / (neighbors(graph, vertex, mode="in"))
             if (runif(1, 1, probability.of.converting) == 1){
                     return( V(graph)[vertex]$opinion )
@@ -105,7 +110,7 @@ get.proportional.to.in.degree.update.victim.function <- function(){
     )
 }
 
-# If binary = FALSE:
+# If V(g)$opinions are continuous:
 # (3) This could be a function that returns a new value iff the distance
 # between my current ideology and yours is less than a threshold ("bounded
 # confidence"), otherwise the victim's current value.
@@ -134,18 +139,17 @@ get.bounded.confidence.update.victim.function <- function(threshold.value,
     return (
         function(graph, vertex, victim.vertex){
             return (
-                if(abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion)
-                    < threshold.value ){
-
+                if((abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion)
+                    > threshold.value) || (V(graph)[victim.vertex]$stubbornness == 1)){
+                    # "Sorry, either I'm stubborn or you violated my confidence bound.
+                    # Therefore, I'm staying put."
+                    V(graph)[victim.vertex]$opinion
+                } else {
                     # "Okay, you have a point."
                     diff.of.opinion <- V(graph)[vertex]$opinion -
                         V(graph)[victim.vertex]$opinion
                     diff.of.opinion * migration.factor +
                         V(graph)[victim.vertex]$opinion
-                } else {
-                    # "Sorry, you violated my confidence bound." I'm staying
-                    # put.
-                    V(graph)[victim.vertex]$opinion
                 }
             )
         }
@@ -227,6 +231,18 @@ get.barely.connected.polarized.graph <- function(num.connections=2) {
 }
 
 
+# Returns a graph whose nodes have a binary or continuous stubbornness attribute
+# stubborn.peeps -- a vector of values representing the stubbornness attributes
+# for each of the nodes in the graph
+get.stubborn.graph <- function(stubborn.peeps=rbinom(50, 1, 0.5)){
+    g <- erdos.renyi.game(length(stubborn.peeps), 0.1)
+    V(g)$opinion <- runif(vcount(g))
+    V(g)$stubbornness <- stubborn.peeps
+    return(g)
+}
+
+
+
 get.plain.old.graph <- function() {
 
     g <- erdos.renyi.game(50,.1)
@@ -252,7 +268,7 @@ param.sweep <- function(init.graph) {
             interactive=FALSE,
             subtitle=paste0("encounter: ",encs.per.iter,
                                             " graph neighbor per iteration\n",
-                "update: bounded confidence threshold ",bc.thresh,",\n"),
+                "update: bounded confidence threshold ",bc.thresh,",\n",
                 "migration factor ",migration.factor),
             animation.filename=paste0("barelyBC",bc.thresh,"MigFac",
                 migration.factor,".gif"),
@@ -264,5 +280,8 @@ param.sweep <- function(init.graph) {
 
 main <- function() {
     set.seed(11111)
-    param.sweep(get.barely.connected.polarized.graph())
+    #param.sweep(get.barely.connected.polarized.graph())
+    graphs <- sim.opinion.dynamics(get.stubborn.graph(), num.iter=20, encounter.func=get.graph.neighbors.encounter.func(4),
+        victim.update.function=get.bounded.confidence.update.victim.function(0.3, 0.2))
+    plot.animation(graphs, "opinion", delay.between.frames=.25)
 }
