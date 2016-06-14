@@ -5,6 +5,7 @@ model variations:
 how are opinions represented?
     - univariate 
 X         Binary: (Yildiz, Acemoglu 2011) 
+          Discrete: (??)
 X         Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000)
     - vector of opinions
         Binary: (Deffuant 2000)
@@ -23,14 +24,19 @@ X    - conversions happen only with fixed probability
        in-degree (i.e., if you're following a zillion people, it's less likely
        you'll be influenced by each one because that one person only occupies a
        small fraction of the ideas you're exposed to) (??)
-    - different nodes have different "stubbornness" attribute (Yildiz, Acemoglu 2011)
-        Question: can/should the "degree of activeness on Twitter" be modeled?
-        (More likely to be influenced the more tweets you see.)
+         - Question: can/should the "degree of activeness on Twitter" be 
+            modeled? (More likely to be influenced the more tweets you see.)
+     - different nodes have different "stubbornness" attribute (Yildiz, Acemoglu 2011)
         - different ways to implement stubbornness:
             - migration factor is lower for stubborn nodes
             - BC thresh is lower for stubborn nodes
             - is stubbornness a binary or continuous attribute?
             - do nodes become stubborn over time?
+            - dynamic stubbornness  (stubbornness on an opinion can change
+              over time) 
+                - stubbornness is sort of inherited from the influencer
+                - stubbornness proportional to # of times influenced (on that
+                  opinion)
 
 Big question: does the graph change over time??
 
