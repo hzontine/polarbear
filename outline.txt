@@ -51,17 +51,38 @@ SD: Any impact of WWW and social networks here?
                     Particles. European Physical Journal B, 15(4):723–732, 2000.
                 Katarzyna Sznajd-Weron and J ́ozef Sznajd. Opinion Evolution in a Closed Community. International Journal 
                     of Modern Physics C, 11(6):1157–1165, 2000.
+            - Binary: 
+                * Herd Behavior (Folmer 1974)
+                * The attractor will display uniformity of opinions, either 0 or 1, when interactions occur 
+                across the whole population. Clusters of opposite opinions appear when the dynamics occur 
+                on a social network with exchanges restricted to connected agents. Clustering is reinforced 
+                when agent diversity, such as a disparity in influence, is introduced. (Weisbuch et al 2)
+            
+
+
         iii. Continuous:
             - "Continuous opinions are more related to negotiation problems of fuzzy attitudes which do not really match
             with a yes or no decision" (Lorenz 18)
             - Bounded Confidence: "An agent is only willing to take those opinions into account which differ less than a
             certain bound of confidence E from her own opinion" (Lorenz 2)
-            - Repeated averaging under bounded confidence
-                a. Agents meet in random pairwise encounters after which they compromise or not.
-                    Deffuant, Weisbuch and others (DW) model
-                b. Each agent moves to the average opinion of all agents which lie in her area of confidence (including herself).
-                    Hegselman and Krause (HK) model 
-            
+            - Agent-based dynamics for a finite population of n agents
+               * state variable is an opinion profile which is a vector of vectors 
+               * DW Model: Deffuant, Weisbuch and others
+                    - Time as discrete and continuous resulted in similar solutions 
+                    - Agents meet in random pairwise encounters after which they compromise or not.
+               * HK Model: Hegselman and Krause model 
+                    - Each agent moves to the average opinion of all agents which lie in her area of confidence (including herself).
+                    - Discrete time resulted in solutions that differed qualitatively from continuous time solutions
+                    - In contrast to the DW model the mean opinion is not conserved.
+            - Density-based dynamics for a density function which determines the agents density in the opinion space        
+                * Taking the infinite limit of n -> (infinity) of agent based models
+                * State variable is a density function on the opinion space P(t,·) : S → R≥0 with  S P(t,x)dx = 1 for all t
+        iv. Binary vs. Continuous
+            - What kind of information is used by victims to validate their choice?
+                B: "the actual choice of other agents, a situation common in economic choice of brands:
+                    'do as the others do'" (Weisbuch et al. 2)
+                C: "the actual opinions of the other agents, about the value of the choice: 'establishing one's
+                    opinion according to what others think or say'" (Weisbuch et al. 2)
 
 	c. Political Polarization on Twitter
 		i. Methods for Collecting Data

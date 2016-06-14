@@ -143,3 +143,26 @@ many short loops, a property that they share with real social networks. (6)
 dynamics yield isolated clusters among initially randomly distributed opinions. Exchange finally 
 only occurs inside clusters as a the result of the exchange dynamics; initially all agents were communicating 
 either directly or indirectly through several directly connected agents (11)
+
+
+Weisbuch et al. 2001. "Interacting agents and Continuous opinion dynamics"
+
+- continuous, random pairwise interactions when difference of opinion is below a threshold
+- High thresholds yield convergence of opinions towards an average opinion, whereas low 
+thresholds result in several opinion clusters.
+- The purpose of this paper is to present results concerning continuous opinion dynamics subject 
+to the constraint that convergent opinion adjustment only proceeds when opinion difference is 
+below a given threshold
+- Components of this paper: 
+    1) Researchers expose a simple case of complete mixing among agents under a unique and constant 
+        threshold condition.
+        - For large thresholds (d > 0.3), they observed only one cluster at the average initial opinion.
+        - For lower thresholds, several clusters were observed. Consensus was not achieved.
+    2) Then they checked the genericity of the results obtained for the simplest model to other cases 
+        such as localised interactions, distribution of thresholds, varying thresholds and binary strings 
+        of opinions.
+- A previous paper (Deffuant et al. 2000) reported more complete results on mixing across a social network and on 
+binary strings of opinions.
+
+
+

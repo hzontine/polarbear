@@ -4,14 +4,14 @@ model variations:
 
 how are opinions represented?
     - univariate 
-X         Binary: (Yildiz, Acemoglu 2011) 
-X         Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000)
+X         Binary: (Yildiz, Acemoglu 2011) (Folmer 1974) (Weisbuch and Boudjema 1999)
+X         Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000) (Weisbuch et al. 2001)
     - vector of opinions
         Binary: (Deffuant 2000)
         Continuous: 
 how are the vertices that you encounter chosen?
     - pairwise
-X        - chosen uniformly from the global graph
+X        - chosen uniformly from the global graph (Weisbuch et al. 2001) 
 X        - chosen from graph neighbors (Yildiz, Acemoglui 2011) (Follmer 1974)
          - SD/HZ variant: weighted probability between global and neighbors
     - group influence (HK model)
