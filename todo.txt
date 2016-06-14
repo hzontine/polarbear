@@ -14,7 +14,7 @@ Hannah:
  * Sim.opinion.dynamics()
     - implement
         - discrete
-        - stubbornness (binary (if only to reproduce Yildiz) and continuous)
+        - stubbornness: continuous
     - analyze
         - put a little time into thinking about how to analyze
  * Read chapter 10 of K&C 
