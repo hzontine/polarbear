@@ -62,9 +62,14 @@ plot.animation <- function(graphs, attribute.name="ideology",
                 get.vertex.attribute(graphs[[i]],attribute.name) == 0,
                 "blue","red")
         } else {
-            V(graphs[[i]])$color <- 
-                colorRampPalette(c("blue","white","red"))(100)[ceiling(
-                    get.vertex.attribute(graphs[[i]],attribute.name) * 100)]
+            if(max(V(graphs[[1]])$opinion) > 1){
+                cat("Plotting.R line 133.....\n")
+                #V(graphs[[i]])$color <- 
+            } else {
+                V(graphs[[i]])$color <- 
+                    colorRampPalette(c("blue","white","red"))(100)[ceiling(
+                        get.vertex.attribute(graphs[[i]],attribute.name) * 100)]
+            }
         }
         if (!interactive) {
             png(paste0(base.filename,"plot",

@@ -230,23 +230,35 @@ get.barely.connected.polarized.graph <- function(num.connections=2) {
     return(barely)
 }
 
-
-# Returns a graph whose nodes have a binary or continuous stubbornness attribute
-# stubborn.peeps -- a vector of values representing the stubbornness attributes
-# for each of the nodes in the graph
-get.stubborn.graph <- function(stubborn.peeps=rbinom(50, 1, 0.5)){
-    g <- erdos.renyi.game(length(stubborn.peeps), 0.1)
-    V(g)$opinion <- runif(vcount(g))
-    V(g)$stubbornness <- stubborn.peeps
+# Returns a graph whose nodes have one ideology from the set, where the size of the
+# set is equal to num.ideologies. 
+# If stubborn=TRUE, nodes will have binary stubborn attribute values.
+# Default is binary: only two ideologies in the set.
+get.discrete.graph <- function(num.ideologies=2, stubborn=TRUE) {
+    if(stubborn){
+        g <- get.stubborn.graph(opinion=floor(runif(30, min=0, max=num.ideologies)))
+    } else {
+        g <- get.plain.old.graph(opinion=floor(runif(30, min=0, max=num.ideologies))
+    }
     return(g)
 }
 
 
+# Returns a graph whose nodes have a binary or continuous opinion and stubbornness attribute.
+# opinion -- vector of opinion values. Default is continuous.
+# stubborn.peeps -- a vector of binary stubbornness values (continuous not supported yet)
+get.stubborn.graph <- function(opinion=runif(50), stubborn.peeps=rbinom(50, 1, 0.5)){
+    g <- erdos.renyi.game(length(stubborn.peeps), 0.1)
+    V(g)$opinion <- opinion
+    V(g)$stubbornness <- stubborn.peeps
+    return(g)
+}
 
-get.plain.old.graph <- function() {
-
-    g <- erdos.renyi.game(50,.1)
-    V(g)$opinion <- runif(vcount(g))
+# Returns a graph whose nodes have a binary or continuous opinion attribute. 
+# Default is continuous
+get.plain.old.graph <- function(opinion=runif(50)) {
+    g <- erdos.renyi.game(length(opinion),.1)
+    V(g)$opinion <- opinion
     return(g)
 }
 
@@ -281,7 +293,8 @@ param.sweep <- function(init.graph) {
 main <- function() {
     set.seed(11111)
     #param.sweep(get.barely.connected.polarized.graph())
-    graphs <- sim.opinion.dynamics(get.stubborn.graph(), num.iter=20, encounter.func=get.graph.neighbors.encounter.func(4),
+    graphs <- sim.opinion.dynamics(get.discrete.graph(4), num.iter=20, 
+        encounter.func=get.graph.neighbors.encounter.func(4),
         victim.update.function=get.bounded.confidence.update.victim.function(0.3, 0.2))
     plot.animation(graphs, "opinion", delay.between.frames=.25)
 }
