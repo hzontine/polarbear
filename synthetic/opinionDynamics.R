@@ -74,6 +74,11 @@ sim.opinion.dynamics <- function(init.graph,
 # The generator function is called: get.automatically.update.victim.function()
 # Note: this function does not factor in a node's stubbornness
 get.automatically.update.victim.function <- function(){
+
+# low priority: SD thinks we could actually incorporate stubbornness here if
+# it's discrete: basically, if you're stubborn, never change, and if you're
+# not, always change.
+
     return (
         function(graph, vertex, victim.vertex){
             return(V(graph)[vertex]$opinion)
@@ -95,6 +100,7 @@ get.automatically.update.victim.function <- function(){
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
+# multiply probability of changing by 1-stubbornness.
             # If the victim has a binary stubbornness value of 1...
             if(V(graph)[victim.vertex]$stubbornness == 1){
                 return( V(graph)[victim.vertex]$opinion )
@@ -139,6 +145,9 @@ get.bounded.confidence.update.victim.function <- function(threshold.value,
     return (
         function(graph, vertex, victim.vertex){
             return (
+
+# if within the threshold value, then you have a probability of 1-stubbornness
+# to move at all. And if you move, you move according to migration factor.
                 if((abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion)
                     > threshold.value) || (V(graph)[victim.vertex]$stubbornness == 1)){
                     # "Sorry, either I'm stubborn or you violated my confidence bound.
@@ -247,10 +256,10 @@ get.discrete.graph <- function(num.ideologies=2, stubborn=TRUE) {
 # Returns a graph whose nodes have a binary or continuous opinion and stubbornness attribute.
 # opinion -- vector of opinion values. Default is continuous.
 # stubborn.peeps -- a vector of binary stubbornness values (continuous not supported yet)
-get.stubborn.graph <- function(opinion=runif(50), stubborn.peeps=rbinom(50, 1, 0.5)){
-    g <- erdos.renyi.game(length(stubborn.peeps), 0.1)
-    V(g)$opinion <- opinion
-    V(g)$stubbornness <- stubborn.peeps
+get.stubborn.graph <- function(opinions=runif(50), stubbornnesses=rbinom(50, 1, 0.5)){
+    g <- erdos.renyi.game(length(stubbornnesses), 0.1)
+    V(g)$opinion <- opinions
+    V(g)$stubbornness <- stubbornnesses
     return(g)
 }
 

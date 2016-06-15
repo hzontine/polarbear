@@ -43,6 +43,8 @@ plot.animation <- function(graphs, attribute.name="ideology",
         base.filename <- tempfile(pattern="polar")
     }
 
+# SD: check if all(values == floor(values)). If true, then assume discrete.
+
     # Detect binary graphs so we can plot colors differently.
     if (all(get.vertex.attribute(graphs[[1]],attribute.name) %in% c(0,1))) {
         binary <- TRUE
@@ -57,12 +59,18 @@ plot.animation <- function(graphs, attribute.name="ideology",
         } else {
             vertex.coords <- layout_with_kk(graphs[[i]],coords=NULL)
         }
+# get rid of the whole "binary" thing. It's not about binary vs. non-binary;
+# it's about discrete vs. continuous.
+# To get colors, you'll have to say "if there are exactly two discrete
+# opinions, use c("red","blue"). Otherwise, use brewer.pal(n,"Dark2")
+# (pick your palette. RColorBrewer.)
+
         if (binary) {
             V(graphs[[i]])$color <- ifelse(
                 get.vertex.attribute(graphs[[i]],attribute.name) == 0,
                 "blue","red")
         } else {
-            if(max(V(graphs[[1]])$opinion) > 1){
+            if(all(V(graphs[[1]])$opinion) %in% c(0,1)){
                 cat("Plotting.R line 133.....\n")
                 #V(graphs[[i]])$color <- 
             } else {
