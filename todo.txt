@@ -10,10 +10,11 @@ Hannah:
     - do people get stubborn over time? is that correlated to echo-chamberness? 
  * Lit Search
     - Find a political classifier
-    - vector of continuous opinions 
+    - vector of continuous opinions
+ * R: Task View
+    - is it worth the time to create a classifier? 
  * Sim.opinion.dynamics()
     - implement
-        - discrete
         - stubbornness: continuous
     - analyze
         - put a little time into thinking about how to analyze
