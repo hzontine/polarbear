@@ -100,13 +100,8 @@ get.automatically.update.victim.function <- function(){
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
-# multiply probability of changing by 1-stubbornness.
-            # If the victim has a binary stubbornness value of 1...
-            if(V(graph)[victim.vertex]$stubbornness == 1){
-                return( V(graph)[victim.vertex]$opinion )
-            }
-            probability.of.converting <- 1 / (neighbors(graph, vertex, mode="in"))
-            if (runif(1, 1, probability.of.converting) == 1){
+            probability.of.converting <- (( 1 / (neighbors(graph, vertex, mode="in"))) * (1- V(graph)[victim.vertex]$stubbornness))
+            if (rbinom(1, 1, probability.of.converting) == 1){
                     return( V(graph)[vertex]$opinion )
             } else {
                     # Victim vertex opinion value stays the same
@@ -145,20 +140,20 @@ get.bounded.confidence.update.victim.function <- function(threshold.value,
     return (
         function(graph, vertex, victim.vertex){
             return (
-
-# if within the threshold value, then you have a probability of 1-stubbornness
-# to move at all. And if you move, you move according to migration factor.
-                if((abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion)
-                    > threshold.value) || (V(graph)[victim.vertex]$stubbornness == 1)){
-                    # "Sorry, either I'm stubborn or you violated my confidence bound.
-                    # Therefore, I'm staying put."
-                    V(graph)[victim.vertex]$opinion
+                if(abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion) 
+                    <  threshold.value){ 
+                    probability.of.converting <- (1 - V(graph)[victim.vertex]$stubbornness)
+                    if (rbinom(1, 1, probability.of.converting) == 1){  
+                        # "Okay, you have a point."
+                        diff.of.opinion <- V(graph)[vertex]$opinion - 
+                            V(graph)[victim.vertex]$opinion
+                        diff.of.opinion * migration.factor + 
+                            V(graph)[victim.vertex]$opinion
+                    } else {
+                        V(graph)[victim.vertex]$opinion
+                    }
                 } else {
-                    # "Okay, you have a point."
-                    diff.of.opinion <- V(graph)[vertex]$opinion -
-                        V(graph)[victim.vertex]$opinion
-                    diff.of.opinion * migration.factor +
-                        V(graph)[victim.vertex]$opinion
+                    V(graph)[victim.vertex]$opinion
                 }
             )
         }
@@ -247,7 +242,7 @@ get.discrete.graph <- function(num.ideologies=2, stubborn=TRUE) {
     if(stubborn){
         g <- get.stubborn.graph(opinion=floor(runif(30, min=0, max=num.ideologies)))
     } else {
-        g <- get.plain.old.graph(opinion=floor(runif(30, min=0, max=num.ideologies))
+        g <- get.plain.old.graph(opinion=floor(runif(30, min=0, max=num.ideologies)))
     }
     return(g)
 }
