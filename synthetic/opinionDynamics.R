@@ -73,15 +73,16 @@ sim.opinion.dynamics <- function(init.graph,
 # (1) This could be a function that returns the "influencer's" value, period.
 # The generator function is called: get.automatically.update.victim.function()
 # Note: this function does not factor in a node's stubbornness
+
+# Stubbornness must be binary
 get.automatically.update.victim.function <- function(){
-
-# low priority: SD thinks we could actually incorporate stubbornness here if
-# it's discrete: basically, if you're stubborn, never change, and if you're
-# not, always change.
-
     return (
         function(graph, vertex, victim.vertex){
-            return(V(graph)[vertex]$opinion)
+            if(V(graph)[victim.vertex]$stubbornness == 0){
+                return(V(graph)[vertex]$opinion)
+            } else {
+                return(V(graph)[victim.vertex]$opinion)
+            }
         }
     )
 }
@@ -100,7 +101,8 @@ get.automatically.update.victim.function <- function(){
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
-            probability.of.converting <- (( 1 / (neighbors(graph, vertex, mode="in"))) * (1- V(graph)[victim.vertex]$stubbornness))
+            scaling.factor <- 1 / neighbors(graph, vertex, mode="in")
+            probability.of.converting <- scaling.factor * (1- V(graph)[victim.vertex]$stubbornness)
             if (rbinom(1, 1, probability.of.converting) == 1){
                     return( V(graph)[vertex]$opinion )
             } else {
@@ -135,27 +137,21 @@ get.proportional.to.in.degree.update.victim.function <- function(){
 # unchanged. If the migration.factor is 1, the victim's opinion is moved all
 # the way to .8.
 
-get.bounded.confidence.update.victim.function <- function(threshold.value,
-    migration.factor=.5){
+get.bounded.confidence.update.victim.function <- function(threshold.value=0.3,
+    migration.factor=0.5){
     return (
         function(graph, vertex, victim.vertex){
-            return (
-                if(abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion) 
-                    <  threshold.value){ 
-                    probability.of.converting <- (1 - V(graph)[victim.vertex]$stubbornness)
-                    if (rbinom(1, 1, probability.of.converting) == 1){  
-                        # "Okay, you have a point."
-                        diff.of.opinion <- V(graph)[vertex]$opinion - 
-                            V(graph)[victim.vertex]$opinion
-                        diff.of.opinion * migration.factor + 
-                            V(graph)[victim.vertex]$opinion
-                    } else {
-                        V(graph)[victim.vertex]$opinion
-                    }
+            if(abs(V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion) <  threshold.value){ 
+                probability.of.converting <- (1 - V(graph)[victim.vertex]$stubbornness)
+                if (rbinom(1, 1, probability.of.converting) == 1){  
+                    diff.of.opinion <- V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion
+                    return( diff.of.opinion * migration.factor + V(graph)[victim.vertex]$opinion)
                 } else {
-                    V(graph)[victim.vertex]$opinion
+                    return( V(graph)[victim.vertex]$opinion )
                 }
-            )
+            } else {
+                return( V(graph)[victim.vertex]$opinion )
+            }
         }
     )
 }
@@ -297,7 +293,7 @@ param.sweep <- function(init.graph) {
 main <- function() {
     set.seed(11111)
     #param.sweep(get.barely.connected.polarized.graph())
-    graphs <- sim.opinion.dynamics(get.discrete.graph(4), num.iter=20, 
+    graphs <- sim.opinion.dynamics(get.discrete.graph(4), num.iter=10, 
         encounter.func=get.graph.neighbors.encounter.func(4),
         victim.update.function=get.bounded.confidence.update.victim.function(0.3, 0.2))
     plot.animation(graphs, "opinion", delay.between.frames=.25)

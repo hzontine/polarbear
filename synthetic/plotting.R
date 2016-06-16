@@ -3,6 +3,7 @@
 # Stephen and Hannah
 
 library(igraph)
+library(RColorBrewer)
 
 # Given a list of graphs, plot them, ensuring that vertices are plotted in the
 # same location from graph to graph.
@@ -52,7 +53,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
         discrete <- FALSE
     }
 
-    discrete.num = 1 + max(get.vertex.attribute(graphs[[1]],attribute.name)) 
+    discrete.num = max(get.vertex.attribute(graphs[[1]],attribute.name)) 
 
     vertex.coords <- layout_with_kk(graphs[[1]])
     for (i in 1:length(graphs)) {
@@ -63,13 +64,14 @@ plot.animation <- function(graphs, attribute.name="ideology",
         }
         if (discrete) {
             if (max(get.vertex.attribute(graphs[[1]],attribute.name)) == 1){
-                # Binary
                 V(graphs[[i]])$color <- ifelse(
                     get.vertex.attribute(graphs[[i]],attribute.name) == 0,
                     "blue","red")
             } else {
-                # Discrete, not binary
-                V(graphs[[i]])$color <- brewer.pal(discrete.num, "Set3") 
+                colors <- brewer.pal(discrete.num+1, "Set3") 
+                for (num in 0:discrete.num){
+                    V(graphs[[i]])$color <- if(get.vertex.attribute(graphs[[i]],attribute.name) == num) colors[num+1]
+                }
             }
         } else {
             V(graphs[[i]])$color <- 
