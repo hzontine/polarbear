@@ -12,6 +12,7 @@ Hannah:
     - vector of continuous opinions
     - dynamic graphs
  * Sim.opinion.dynamics()
+    - reproduce lit search models in new file
     - stubbornness: continuous
     - vector of opinions
         * binary

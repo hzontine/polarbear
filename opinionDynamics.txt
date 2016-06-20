@@ -64,25 +64,29 @@ The model provided a good fit to both the synthetic and real data gathered from 
 
 "Stubborn" Voters
 
-- binary attribute: stubborn or not stubborn
-- non-stubborn nodes can have random encounters with neighbors where they may adopt
-the opinion of the stubborn node
-- Extension of classic voter model: "coalescing random walks with absorbing states given 
-by the stubborn agents"
-- "the expected value of the asymptotic opinion of agent i is given by the probability 
-that the dual random walk on G initiated at node i is absorbed by the stubborn set of type one."
-- dual approach: agent state evolution is related to a dual process defined through 
-coalescing random walks on the graph G
-- Stubborn agents of opposite ideologies prevent consensus in the society
-- Researchers use this framework to study the problem of optimal stubborn agent placement.
-  
+* "Discrete Opinion Dynamics with Stubborn Agents" Yildiz, Acemoglu, et al.
+    - binary attribute: stubborn or not stubborn
+    - non-stubborn nodes can have random encounters with neighbors where they may adopt
+    the opinion of the stubborn node
+    - Extension of classic voter model: "coalescing random walks with absorbing states given 
+    by the stubborn agents"
+    - "the expected value of the asymptotic opinion of agent i is given by the probability 
+    that the dual random walk on G initiated at node i is absorbed by the stubborn set of type one."
+    - dual approach: agent state evolution is related to a dual process defined through 
+    coalescing random walks on the graph G
+    - Stubborn agents of opposite ideologies prevent consensus in the society
+    - Researchers use this framework to study the problem of optimal stubborn agent placement.
 
-  Yildiz, Acemoglu, et al. "Discrete Opinion Dynamics with Stubborn Agents".
+* "Binary Opinion Dynamics with Stubborn Agents" Yildiz, Ozdagular, Acemoglu, et al.
+    - In this model, stubborn agents with opposing views prevent consensus in society. Moreover, 
+    the opinion of each individual does not necessarily settle into a fixed value.  
+
+
+
 
 
 Deffuant-Weisbucc Model
 Hegselmann-Krause Model
-
 
 There are two extensively studied models that explore continuous opinion
 dynamics under bounded confidence, the Deffuant-Weisbuch (DW) model (Deffuant
