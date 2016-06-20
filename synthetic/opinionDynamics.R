@@ -247,7 +247,7 @@ get.discrete.graph <- function(num.ideologies=2, stubborn=TRUE) {
 # Returns a graph whose nodes have a binary or continuous opinion and stubbornness attribute.
 # opinion -- vector of opinion values. Default is continuous.
 # stubborn.peeps -- a vector of binary stubbornness values (continuous not supported yet)
-get.stubborn.graph <- function(opinions=runif(50), stubbornnesses=rbinom(50, 1, 0.5)){
+get.stubborn.graph <- function(opinions=runif(30), stubbornnesses=rbinom(30, 1, 0.5)){
     g <- erdos.renyi.game(length(stubbornnesses), 0.1)
     V(g)$opinion <- opinions
     V(g)$stubbornness <- stubbornnesses
@@ -256,7 +256,7 @@ get.stubborn.graph <- function(opinions=runif(50), stubbornnesses=rbinom(50, 1, 
 
 # Returns a graph whose nodes have a binary or continuous opinion attribute. 
 # Default is continuous
-get.plain.old.graph <- function(opinion=runif(50)) {
+get.plain.old.graph <- function(opinion=runif(30)) {
     g <- erdos.renyi.game(length(opinion),.1)
     V(g)$opinion <- opinion
     return(g)
@@ -293,8 +293,9 @@ param.sweep <- function(init.graph) {
 main <- function() {
     set.seed(11111)
     #param.sweep(get.barely.connected.polarized.graph())
-    graphs <- sim.opinion.dynamics(get.discrete.graph(4), num.iter=10, 
+    graphs <- sim.opinion.dynamics(get.discrete.graph(10), num.iter=5, 
         encounter.func=get.graph.neighbors.encounter.func(4),
-        victim.update.function=get.bounded.confidence.update.victim.function(0.3, 0.2))
+        victim.update.function=get.proportional.to.in.degree.update.victim.function())
+        #victim.update.function=get.bounded.confidence.update.victim.function(0.5, 0.2))
     plot.animation(graphs, "opinion", delay.between.frames=.25)
 }

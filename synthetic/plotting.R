@@ -68,9 +68,18 @@ plot.animation <- function(graphs, attribute.name="ideology",
                     get.vertex.attribute(graphs[[i]],attribute.name) == 0,
                     "blue","red")
             } else {
-                colors <- brewer.pal(discrete.num+1, "Set3") 
-                for (num in 0:discrete.num){
-                    V(graphs[[i]])$color <- if(get.vertex.attribute(graphs[[i]],attribute.name) == num) colors[num+1]
+                if(discrete.num+1 > 9){
+                    colors <- brewer.pal(discrete.num+1, "Set3")
+                } else {
+                    colors <- brewer.pal(discrete.num+1, "Pastel1")
+                }
+                for (node in 1:vcount(graphs[[i]])){ 
+                    ideology <- vertex_attr(graphs[[i]],attribute.name,node)
+                    for (num in 0:discrete.num){
+                        if(ideology == num) {
+                            V(graphs[[i]])[node]$color <- colors[num+1]
+                        }
+                    }
                 }
             }
         } else {
@@ -84,7 +93,8 @@ plot.animation <- function(graphs, attribute.name="ideology",
             cat("Building frame",i,"of",length(graphs),"...\n")
         }
         if (discrete) {
-            if (discrete.num > 2) {
+            # Discrete num is one less than the number of potential ideologies
+            if (discrete.num > 1) {
                 plot(graphs[[i]],
                 layout=vertex.coords,
                 main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
