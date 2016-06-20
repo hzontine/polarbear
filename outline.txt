@@ -63,6 +63,8 @@ SD: Any impact of WWW and social networks here?
         iii. Continuous:
             - "Continuous opinions are more related to negotiation problems of fuzzy attitudes which do not really match
             with a yes or no decision" (Lorenz 18)
+            - "Although discrete variables are very suitable for modelling choices, the internal state of individuals, 
+            based on which discrete decisions are taken, may be continuous" (Sirbu et al. 2)
             - Bounded Confidence: "An agent is only willing to take those opinions into account which differ less than a
             certain bound of confidence E from her own opinion" (Lorenz 2)
             - Agent-based dynamics for a finite population of n agents
@@ -74,6 +76,8 @@ SD: Any impact of WWW and social networks here?
                     - Each agent moves to the average opinion of all agents which lie in her area of confidence (including herself).
                     - Discrete time resulted in solutions that differed qualitatively from continuous time solutions
                     - In contrast to the DW model the mean opinion is not conserved.
+               * Sirbu et al
+                    - Agreements and disagreements during pairwise interactions among nodes
             - Density-based dynamics for a density function which determines the agents density in the opinion space        
                 * Taking the infinite limit of n -> (infinity) of agent based models
                 * State variable is a density function on the opinion space P(t,·) : S → R≥0 with  S P(t,x)dx = 1 for all t

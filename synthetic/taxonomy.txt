@@ -9,7 +9,7 @@ X         Discrete:
 X         Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000) (Weisbuch et al. 2001)
     - vector of opinions
         Binary: (Deffuant 2000)
-        Continuous: 
+        Continuous: (Sirbu et al. 2013) 
 how are the vertices that you encounter chosen?
     - pairwise
 X        - chosen uniformly from the global graph (Weisbuch et al. 2001) 
@@ -38,6 +38,7 @@ X       - binary
                 - stubbornness is sort of inherited from the influencer
                 - stubbornness proportional to # of times influenced (on that
                   opinion)
+     - disagreement between nodes (Sirbu et al. 2013)
 
 Big question: does the graph change over time??
 

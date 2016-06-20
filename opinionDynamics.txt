@@ -169,4 +169,35 @@ below a given threshold
 binary strings of opinions.
 
 
+Sirbu et al. 2013. "Opinion Dynamics with Disagreement and Modulated Information." 
+    Journal of Statistical Physics.
+
+- Vector of continuous opinions (fixed number for all nodes)
+- "fully connected social network graph"
+- Each agent chooses between K possible opinions on a given subject. Each individual maintains a set of 
+probabilities for the K possibilities
+- Probability: the internal probability of individuals to choose between several discrete options
+- Interaction = 1) observing the actions of others, and 2) discussing with other agents where opinions 
+on the different choices are exchanged
+- NO bounded confidence implementation
+- Encounters: pairwise interaction between A and B where they will either agree or disagree on one issue
+    * Agreement: A changes his/her status as the result of an agreement with B. An interaction occurs when A
+    and B discuss an opinion. Its probability is decreased by the value α = 0.1 in A to become more similar
+    to B. The probabilities of the rest of the opinions are increased by equal amounts to conserve the unity sum. 
+    * Disagreement: An interaction occurs between A and B, where A and B have a disagreement. A's probability 
+    increases by the amount α = 0.1, decreasing its overlap with the B. Equivalently, the probabilities of 
+    the rest of the opinions are decreased by equal amounts to conserve the unity sum
+- α determines the flexibility of agents since it fixes the time scale for local agreement or disagreement. 
+The larger α is, the faster the two individuals will agree or get separated. This method allows for the 
+absolute value of the change on position l to be the same for agreement and disagreement.
+- Their model focuses on the interplay between the possibility of explicit disagreement, modulated in a 
+self-consistent way by the existing opinions’ overlaps between the interacting individuals, and the 
+effect of external information on the system
+- political opinions are determined by how a person synthesises the different sources of information and 
+biases, and comes up with a specific position to be eventually expressed as a vote whenever required
+- Although discrete variables are very suitable for modelling choices, the internal state of individuals, based on which discrete decisions are taken, may be continuous
+- Most of the original models deal with attractive dynamics, where individuals follow their neighbours. 
+However, in reality, both attractive and repulsive interactions can be observed, and it has been argued 
+that disagreement is a very important feature of a democratic society
+ 
 
