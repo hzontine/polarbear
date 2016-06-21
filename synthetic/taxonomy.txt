@@ -4,9 +4,10 @@ model variations:
 
 how are opinions represented?
     - univariate 
-X         Binary: (Yildiz, Acemoglu 2011) (Folmer 1974) (Weisbuch and Boudjema 1999)
-X         Discrete:
-X         Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000) (Weisbuch et al. 2001)
+X       Binary: (Yildiz et al. 2013) (Folmer 1974) (Weisbuch and Boudjema 1999)
+           * Binary Voter Model: (Holley and Liggett 1975) and (Clifford and Sudbury 1973)
+X       Discrete:
+X       Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000) (Weisbuch et al. 2001)
     - vector of opinions
         Binary: (Deffuant 2000)
         Continuous: (Sirbu et al. 2013) 

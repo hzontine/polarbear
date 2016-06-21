@@ -35,7 +35,8 @@ source("plotting.R")
 sim.opinion.dynamics <- function(init.graph,
         num.iter=20,
         encounter.func=get.mean.field.encounter.func(3),
-        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.)) {
+        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.),
+        binaryVoterModel=FALSE) {
 
     graphs <- list(length=num.iter)
     graphs[[1]] <- init.graph
@@ -52,7 +53,11 @@ sim.opinion.dynamics <- function(init.graph,
             encountered.vertices <- encounter.func(graphs[[i]],v)
             # For each of these encountered partners...
             for (ev in encountered.vertices) {
-                V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
+                if(binaryVoterModel==FALSE){
+                    V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
+                }else{
+                    V(graphs[[i]])[v]$opinion <- V(graphs[[i]])[ev]$opinion
+                }
             }
         }
     }
@@ -78,7 +83,8 @@ sim.opinion.dynamics <- function(init.graph,
 get.automatically.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
-            if(V(graph)[victim.vertex]$stubbornness == 0){
+            if(!list.vertex.attributes(graph) %in% "stubbornness" ||
+                V(graph)[victim.vertex]$stubbornness == 0){
                 return(V(graph)[vertex]$opinion)
             } else {
                 return(V(graph)[victim.vertex]$opinion)
@@ -101,7 +107,7 @@ get.automatically.update.victim.function <- function(){
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
-            scaling.factor <- 1 / neighbors(graph, vertex, mode="in")
+            scaling
             probability.of.converting <- scaling.factor * (1- V(graph)[victim.vertex]$stubbornness)
             if (rbinom(1, 1, probability.of.converting) == 1){
                     return( V(graph)[vertex]$opinion )
@@ -247,8 +253,14 @@ get.discrete.graph <- function(num.ideologies=2, stubborn=TRUE) {
 # Returns a graph whose nodes have a binary or continuous opinion and stubbornness attribute.
 # opinion -- vector of opinion values. Default is continuous.
 # stubborn.peeps -- a vector of binary stubbornness values (continuous not supported yet)
-get.stubborn.graph <- function(opinions=runif(30), stubbornnesses=rbinom(30, 1, 0.5)){
-    g <- erdos.renyi.game(length(stubbornnesses), 0.2)
+get.stubborn.graph <- function(opinions=runif(30), stubbornnesses=rbinom(30, 1, 0.5), 
+    probability.connected=0.2, dir=FALSE){
+    if(dir){
+        g <- erdos.renyi.game(length(stubbornnesses), probability.connected, 
+        type="gnp", directed=TRUE)
+    } else {
+        g <- erdos.renyi.game(length(stubbornnesses), probability.connected)
+    }
     V(g)$opinion <- opinions
     V(g)$stubbornness <- stubbornnesses
     return(g)
@@ -256,8 +268,8 @@ get.stubborn.graph <- function(opinions=runif(30), stubbornnesses=rbinom(30, 1, 
 
 # Returns a graph whose nodes have a binary or continuous opinion attribute. 
 # Default is continuous
-get.plain.old.graph <- function(opinion=runif(30)) {
-    g <- erdos.renyi.game(length(opinion),0.4)
+get.plain.old.graph <- function(opinion=runif(30), probability.connected=0.2) {
+    g <- erdos.renyi.game(length(opinion),probability.connected)
     V(g)$opinion <- opinion
     return(g)
 }

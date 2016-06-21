@@ -2,18 +2,17 @@ This Week (due by 6/24):
 ------------------------------------
 Hannah:
  * Read second 1/3 of the papers in the "hannah to read" Zotero folder.
- * Social psychology: how many people can a node reasonably recieve information from?
+ * Social psychology: talk to Kolar for key terms
+    - how many people can a node reasonably recieve information from?
     - how much time does a user spend looking through their timeline?
     - is there a positive correlation between number of tweets per day and amount time
       spent reading one's timeline?
     - do people get stubborn over time? is that correlated to echo-chamberness? 
  * Lit Search
-    - Find a political classifier
     - vector of continuous opinions
     - dynamic graphs
- * R: Task View
-    - is it worth the time to create a classifier? 
  * Sim.opinion.dynamics()
+    - reproduce lit search models
     - stubbornness: continuous
     - vector of opinions
         * binary
@@ -22,9 +21,11 @@ Hannah:
 
 Stephen:
  * Read first and second 1/3 of the papers in the "stephen to read" Zotero folder.
+ * R: Task View
+   - is it worth it to build a classifier?
  * Sim.opinion.dynamics()
    - analyze
-        - parameter sweep of final assortavity/mean/SD vs
+        * parameter sweep of final assortavity/mean/SD vs
             a) bounded confidence
             b) num.encounter.per.iter
             c) migration factor

@@ -37,8 +37,16 @@ SD Reproduce this:
     (Das, Gollapudi, Munagala. "Modeling Opinion Dynamics in Social Networks".)
 
 
-SLANT Model
+Binary Voter Model
+    - Victim influences vertex
+    - Binary opinion values
+    - Results: will always converge to a consensus
+        Aldous and Fill (1994) that agent states reach a consensus over any connected graph G
 
+
+
+
+SLANT Model
 
 The SLANT model is a modeling framework of opinion dynamics in socia media and social networking.
 "The proposed framework is based on two intuitive ideas: 1) user's opinions are hidden until 
@@ -61,28 +69,31 @@ The model provided a good fit to both the synthetic and real data gathered from 
         Opinion Dynamics in Social Networks."
 
 
-
-"Stubborn" Voters
-
+Yildiz: Binary Voter Model with "Stubborn" agents
 - binary attribute: stubborn or not stubborn
 - non-stubborn nodes can have random encounters with neighbors where they may adopt
-the opinion of the stubborn node
-- Extension of classic voter model: "coalescing random walks with absorbing states given 
-by the stubborn agents"
-- "the expected value of the asymptotic opinion of agent i is given by the probability 
-that the dual random walk on G initiated at node i is absorbed by the stubborn set of type one."
-- dual approach: agent state evolution is related to a dual process defined through 
-coalescing random walks on the graph G
-- Stubborn agents of opposite ideologies prevent consensus in the society
-- Researchers use this framework to study the problem of optimal stubborn agent placement.
-  
+    the opinion of the stubborn node
+- Results: Agent states do not necessarily reach a consensus since every agent is potentially 
+    (indirectly) connected to stubborn agents with distinct opinions which are never updated. 
+    Instead, we show that the agent state vector converges in distribution
+- Extension of classic voter model: Dual Approach
+    *"coalescing random walks with absorbing states given by the stubborn agents"
+    * "the expected value of the asymptotic opinion of agent i is given by the probability 
+    that the dual random walk on G initiated at node i is absorbed by the stubborn set of type one."
+    * dual approach: agent state evolution is related to a dual process defined through 
+    coalescing random walks on the graph G
+    - Stubborn agents of opposite ideologies prevent consensus in the society
+    - Researchers use this framework to study the problem of optimal stubborn agent placement.
+    - In this model, stubborn agents with opposing views prevent consensus in society. Moreover, 
+    the opinion of each individual does not necessarily settle into a fixed value.  
 
-  Yildiz, Acemoglu, et al. "Discrete Opinion Dynamics with Stubborn Agents".
+
+    "Binary Opinion Dynamics with Stubborn Agents" Yildiz, Ozdagular, Acemoglu, et al. 2013.
+
 
 
 Deffuant-Weisbucc Model
 Hegselmann-Krause Model
-
 
 There are two extensively studied models that explore continuous opinion
 dynamics under bounded confidence, the Deffuant-Weisbuch (DW) model (Deffuant
