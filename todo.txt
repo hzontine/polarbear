@@ -8,14 +8,11 @@ Hannah:
       spent reading one's timeline?
     - do people get stubborn over time? is that correlated to echo-chamberness? 
  * Lit Search
-    - Find a political classifier
     - vector of continuous opinions
     - dynamic graphs
  * Sim.opinion.dynamics()
     - reproduce lit search models in new file
     - stubbornness: continuous
-    - stubbornnes visualization
-        #  plot(g, vertex.shape=ifelse(V(g)$stubbornness), "circle", "square")
     - vector of opinions
         * binary
         * correlated opinions. (generate with mvnorm and then clip to (0,1) interval?)
@@ -27,7 +24,7 @@ Stephen:
    - is it worth it to build a classifier?
  * Sim.opinion.dynamics()
    - analyze
-        - parameter sweep of final assortavity/mean/SD vs
+        * parameter sweep of final assortavity/mean/SD vs
             a) bounded confidence
             b) num.encounter.per.iter
             c) migration factor
