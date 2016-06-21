@@ -3,8 +3,9 @@
 source("opinionDynamics.R")
 
 binary.voter <- function() {
-    # (Holley and Liggett 1975)  (Clifford and Sudbury 1973)
-    # Vertex always updates to victim's state
+    # Holley and Liggett 1975        Clifford and Sudbury 1973
+    # Vertex always changes her opinion to reflect that of the victim's opinion
+    # Only one encounter per iteration
     # Results: Opinions will always converge to a consensus
     set.seed(111234)
     init <- get.plain.old.graph(opinion=rbinom(50,1,0.5), probability.connected=0.2)
@@ -18,9 +19,9 @@ binary.voter <- function() {
 
 yildiz.discrete <- function(){
     # Yildoz, Acemoglu, et al. 2011
-    # Discrete Opinion Dynamics with Stubborn Agents
-    
-    #Binary Voter Model with Stubborn Agents
+    # Agent-based where each has a binary opinion and stubbornness value
+    # Results: opinions never reach a consensus because every agent is indirectly connected to
+    # stubborn agents who's opinions are never changed
     set.seed(2222)
     initial.graph <- get.stubborn.graph(opinion=rbinom(30,1,0.5), probability.connected=0.08, 
         dir=TRUE, stubbornness=rbinom(30,1,0.3))
