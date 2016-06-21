@@ -14,6 +14,8 @@ Hannah:
  * Sim.opinion.dynamics()
     - reproduce lit search models in new file
     - stubbornness: continuous
+    - stubbornnes visualization
+        #  plot(g, vertex.shape=ifelse(V(g)$stubbornness), "circle", "square")
     - vector of opinions
         * binary
         * correlated opinions. (generate with mvnorm and then clip to (0,1) interval?)

@@ -97,12 +97,14 @@ plot.animation <- function(graphs, attribute.name="ideology",
             if (discrete.num > 1) {
                 plot(graphs[[i]],
                 layout=vertex.coords,
+                vertex.shape=ifelse(V(graphs[[1]])$stubbornness, "circle", "square"),
                 main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
                 #legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
                 #fill=c("blue","white","red"))
             } else {
                 plot(graphs[[i]],
                     layout=vertex.coords,
+                    vertex.shape=ifelse(V(graphs[[1]])$stubbornness, "circle", "square"),
                     main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
                     legend("bottomright",legend=c("Liberal","Conservative"),
                     fill=c("blue","red"))
@@ -110,6 +112,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
         } else {
             plot(graphs[[i]],
                 layout=vertex.coords,
+                vertex.shape=ifelse(V(graphs[[1]])$stubbornness, "circle", "square"),
                 main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
                 legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
                 fill=c("blue","white","red"))
