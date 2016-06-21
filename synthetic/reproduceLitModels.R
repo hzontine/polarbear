@@ -11,8 +11,7 @@ binary.voter <- function() {
     init <- get.plain.old.graph(opinion=rbinom(50,1,0.5), probability.connected=0.2)
     graphs <<- sim.opinion.dynamics(init, num.iter=20,
         encounter.func=get.graph.neighbors.encounter.func(1),
-        victim.update.function=get.automatically.update.victim.function(),
-        binaryVoterModel=TRUE)
+        victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE))
     plot.animation(graphs, "opinion", delay.between.frames=.25)
 }
 
@@ -25,10 +24,11 @@ yildiz.discrete <- function(){
     set.seed(2222)
     initial.graph <- get.stubborn.graph(opinion=rbinom(30,1,0.5), probability.connected=0.08, 
         dir=TRUE, stubbornness=rbinom(30,1,0.3))
-    binary.voter.stubborn.graph <<- sim.opinion.dynamics(initial.graph, num.iter=50,
+    binary.voter.stubborn.graph <<- sim.opinion.dynamics(initial.graph, num.iter=20,
         encounter.func=get.graph.neighbors.encounter.func(1),
-        victim.update.function=get.automatically.update.victim.function(),
-        binaryVoterModel=TRUE)
+        victim.update.function=get.automatically.update.victim.function())
+        # TODO  Wait -- should A.is.victim be TRUE here? (after all, Yildiz was
+        # based on Holley.)
     plot.animation(binary.voter.stubborn.graph, "opinion", delay.between.frames=.25)
 }
 

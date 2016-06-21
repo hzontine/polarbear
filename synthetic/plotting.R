@@ -92,32 +92,45 @@ plot.animation <- function(graphs, attribute.name="ideology",
                 paste0(rep(0,3-floor(log10(i)+1)),collapse=""), i,".png"))
             cat("Building frame",i,"of",length(graphs),"...\n")
         }
+
+        if ("stubbornness" %in% list.vertex.attributes(graphs[[i]])) {
+            vertex.shape <- ifelse(V(graphs[[i]])$stubbornness, "square", "circle")
+            vertex.size <- ifelse(V(graphs[[i]])$stubbornness, 15, 18)
+        } else {
+            vertex.shape <- "circle"
+            vertex.size <- 15
+        }
+
         if (discrete) {
             if (discrete.num > 1) {
                 plot(graphs[[i]],
-                layout=vertex.coords,
-                vertex.shape=ifelse(V(graphs[[1]])$stubbornness, "circle", "square"),
-                vertex.size=ifelse(V(graphs[[1]])$stubbornness, 15, 18),
-                main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
-                #legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
-                #fill=c("blue","white","red"))
+                    layout=vertex.coords,
+                    vertex.shape=vertex.shape,
+                    vertex.size=vertex.size,
+                    main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
+                    #legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
+                    #fill=c("blue","white","red"))
             } else {
                 plot(graphs[[i]],
                     layout=vertex.coords,
-                    vertex.shape=ifelse(V(graphs[[1]])$stubbornness, "circle", "square"),
-                    vertex.size=ifelse(V(graphs[[1]])$stubbornness, 15, 18),
+                    vertex.shape=vertex.shape,
+                    vertex.size=vertex.size,
                     main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
-                    legend("bottomright",legend=c("Liberal","Conservative"),
+                legend("bottomright",legend=c("Liberal","Conservative"),
                     fill=c("blue","red"))
             }
         } else {
             plot(graphs[[i]],
                 layout=vertex.coords,
-                vertex.shape=ifelse(V(graphs[[1]])$stubbornness, "circle", "square"),
-                vertex.size=ifelse(V(graphs[[1]])$stubbornness, 15, 18),
+                vertex.shape=vertex.shape,
+                vertex.size=vertex.size,
                 main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
-                legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
+            legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
                 fill=c("blue","white","red"))
+        }
+        if ("stubbornness" %in% list.vertex.attributes(graphs[[i]])) {
+            legend("bottomleft",legend=c("Stubborn","Open-minded"),
+                pch=c(0,1))
         }
         if (interactive) {
             Sys.sleep(delay.between.frames)

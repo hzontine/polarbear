@@ -35,8 +35,7 @@ source("plotting.R")
 sim.opinion.dynamics <- function(init.graph,
         num.iter=20,
         encounter.func=get.mean.field.encounter.func(3),
-        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.),
-        binaryVoterModel=FALSE) {
+        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.)) {
 
     graphs <- list(length=num.iter)
     graphs[[1]] <- init.graph
@@ -53,11 +52,9 @@ sim.opinion.dynamics <- function(init.graph,
             encountered.vertices <- encounter.func(graphs[[i]],v)
             # For each of these encountered partners...
             for (ev in encountered.vertices) {
-                if(binaryVoterModel==FALSE){
-                    V(graphs[[i]])[ev]$opinion <- victim.update.function(graphs[[i]], v, ev)
-                }else{
-                    V(graphs[[i]])[v]$opinion <- V(graphs[[i]])[ev]$opinion
-                }
+                update.info <- victim.update.function(graphs[[i]], v, ev)
+                V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
+                    update.info$new.value
             }
         }
     }
@@ -68,8 +65,11 @@ sim.opinion.dynamics <- function(init.graph,
 # Terminology:
 #
 # ** victim update functions: a "victim update function" is one that takes a
-# graph, an influencing vertex, and a victim vertex, and returns the new value
-# for the victim's opinion.
+# graph, an influencing vertex, and a victim vertex, and returns a list with
+# two elements: (1) "new.value" is the new value for the victim's opinion, and
+# (2) "victim.vertex" is the vertex ID of the victim (i.e., the node that is
+# influenced). (Note that victim.vertex could be NULL, in which case the caller
+# can safely change the "no vertex"'s opinion.)
 #
 # ** victim update generator functions: a "victim update generator function"
 # is one that can be called to return a victim update function.
@@ -80,14 +80,23 @@ sim.opinion.dynamics <- function(init.graph,
 # Note: this function does not factor in a node's stubbornness
 
 # Stubbornness must be binary
-get.automatically.update.victim.function <- function(){
+get.automatically.update.victim.function <- function(A.is.victim=FALSE) {
     return (
-        function(graph, vertex, victim.vertex){
+        function(graph, vertex.A, vertex.B){
+            if (A.is.victim) {
+                vertex <- vertex.B
+                victim.vertex <- vertex.A
+            } else {
+                vertex <- vertex.A
+                victim.vertex <- vertex.B
+            }
             if(!"stubbornness" %in% list.vertex.attributes(graph) ||
                   V(graph)[victim.vertex]$stubbornness == 0){
-                return(V(graph)[vertex]$opinion)
+                return(list(new.value=V(graph)[vertex]$opinion,
+                    victim.vertex=victim.vertex))
             } else {
-                return(V(graph)[victim.vertex]$opinion)
+                # Nothing will get updated. We're too dang stubborn.
+                return(list(new.value=0,victim.vertex=NULL))
             }
         }
     )
@@ -110,10 +119,11 @@ get.proportional.to.in.degree.update.victim.function <- function(){
             scaling
             probability.of.converting <- scaling.factor * (1- V(graph)[victim.vertex]$stubbornness)
             if (rbinom(1, 1, probability.of.converting) == 1){
-                    return( V(graph)[vertex]$opinion )
+                    return(list(new.value=V(graph)[vertex]$opinion,
+                        victim.vertex=victim.vertex))
             } else {
                     # Victim vertex opinion value stays the same
-                    return( V(graph)[victim.vertex]$opinion )
+                    return(list(new.value=0,victim.vertex=NULL))
             }
         }
     )
@@ -151,13 +161,17 @@ get.bounded.confidence.update.victim.function <- function(threshold.value=0.3,
                 probability.of.converting <- (1 - V(graph)[victim.vertex]$stubbornness)
                 if (rbinom(1, 1, probability.of.converting) == 1){  
                     diff.of.opinion <- V(graph)[vertex]$opinion - V(graph)[victim.vertex]$opinion
-                    return( diff.of.opinion * migration.factor + V(graph)[victim.vertex]$opinion)
+                    new.value <- diff.of.opinion * migration.factor + V(graph)[victim.vertex]$opinion
                 } else {
-                    return( V(graph)[victim.vertex]$opinion )
+                    # We didn't pass our die roll. Don't update.
+                    new.value <- V(graph)[victim.vertex]$opinion
                 }
             } else {
-                return( V(graph)[victim.vertex]$opinion )
+                # This dude is too wacky for me to listen to him. Don't
+                # update.
+                new.value <- V(graph)[victim.vertex]$opinion
             }
+            return(list(new.value=new.value,victim.vertex=victim.vertex))
         }
     )
 }
