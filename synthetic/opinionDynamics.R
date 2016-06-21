@@ -83,8 +83,8 @@ sim.opinion.dynamics <- function(init.graph,
 get.automatically.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
-            if(!list.vertex.attributes(graph) %in% "stubbornness" ||
-                V(graph)[victim.vertex]$stubbornness == 0){
+            if(!"stubbornness" %in% list.vertex.attributes(graph) ||
+                  V(graph)[victim.vertex]$stubbornness == 0){
                 return(V(graph)[vertex]$opinion)
             } else {
                 return(V(graph)[victim.vertex]$opinion)
@@ -307,9 +307,11 @@ main <- function() {
     #param.sweep(get.barely.connected.polarized.graph())
 
     # Discrete Opinions
-     graphs <- sim.opinion.dynamics(get.discrete.graph(4), num.iter=20, 
-        encounter.func=get.graph.neighbors.encounter.func(4),
-        victim.update.function=get.proportional.to.in.degree.update.victim.function())
+    graphs <<- sim.opinion.dynamics(get.discrete.graph(2,stubborn=TRUE), num.iter=80, 
+        #encounter.func=get.graph.neighbors.encounter.func(2),
+        encounter.func=get.mean.field.encounter.func(3),
+        #victim.update.function=get.proportional.to.in.degree.update.victim.function())
+        victim.update.function=get.automatically.update.victim.function())
 
     # Continuous Opinions
     # graphs <- sim.opinion.dynamics(get.stubborn.graph(), num.iter=20,

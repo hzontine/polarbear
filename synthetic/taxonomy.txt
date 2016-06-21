@@ -33,12 +33,17 @@ X       - binary
         - different ways to implement stubbornness:
             - migration factor is lower for stubborn nodes
             - BC thresh is lower for stubborn nodes
-            - do nodes become stubborn over time?
             - dynamic stubbornness  (stubbornness on an opinion can change
               over time) 
+                - do you become stubborn randomly? (coin flip each turn if
+                  stubbornness=binary, or uptick in stubbornness if cont.)
                 - stubbornness is sort of inherited from the influencer
                 - stubbornness proportional to # of times influenced (on that
                   opinion)
+                - do you become increasingly stubborn when you interact with
+                  people of opposite (or same) opinion and don't change? (so
+                  instead of related to time, it's related to 
+                  num-of-interactions-w/o-changing)
      - disagreement between nodes (Sirbu et al. 2013)
 
 Big question: does the graph change over time??
