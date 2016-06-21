@@ -21,10 +21,10 @@ yildiz.discrete <- function(){
     # Discrete Opinion Dynamics with Stubborn Agents
     
     #Binary Voter Model with Stubborn Agents
-    set.seed(1111)
-    initial.graph <- get.stubborn.graph(opinion=rbinom(30,1,0.5), probability.connected=0.05, 
-        dir=TRUE, stubbornness=rbinom(30,1,0.4))
-    binary.voter.stubborn.graph <<- sim.opinion.dynamics(initial.graph, num.iter=20,
+    set.seed(2222)
+    initial.graph <- get.stubborn.graph(opinion=rbinom(30,1,0.5), probability.connected=0.08, 
+        dir=TRUE, stubbornness=rbinom(30,1,0.3))
+    binary.voter.stubborn.graph <<- sim.opinion.dynamics(initial.graph, num.iter=50,
         encounter.func=get.graph.neighbors.encounter.func(1),
         victim.update.function=get.automatically.update.victim.function(),
         binaryVoterModel=TRUE)

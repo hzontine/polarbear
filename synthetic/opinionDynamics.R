@@ -83,7 +83,8 @@ sim.opinion.dynamics <- function(init.graph,
 get.automatically.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
-            if(V(graph)[victim.vertex]$stubbornness == 0){
+            if(!list.vertex.attributes(graph) %in% "stubbornness" ||
+                V(graph)[victim.vertex]$stubbornness == 0){
                 return(V(graph)[vertex]$opinion)
             } else {
                 return(V(graph)[victim.vertex]$opinion)
@@ -106,7 +107,7 @@ get.automatically.update.victim.function <- function(){
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
-            scaling.factor <- 1 / neighbors(graph, vertex, mode="in")
+            scaling
             probability.of.converting <- scaling.factor * (1- V(graph)[victim.vertex]$stubbornness)
             if (rbinom(1, 1, probability.of.converting) == 1){
                     return( V(graph)[vertex]$opinion )

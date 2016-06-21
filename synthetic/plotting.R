@@ -93,11 +93,11 @@ plot.animation <- function(graphs, attribute.name="ideology",
             cat("Building frame",i,"of",length(graphs),"...\n")
         }
         if (discrete) {
-            # Discrete num is one less than the number of potential ideologies
             if (discrete.num > 1) {
                 plot(graphs[[i]],
                 layout=vertex.coords,
                 vertex.shape=ifelse(V(graphs[[1]])$stubbornness, "circle", "square"),
+                vertex.size=ifelse(V(graphs[[1]])$stubbornness, 15, 18),
                 main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
                 #legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
                 #fill=c("blue","white","red"))
@@ -105,6 +105,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
                 plot(graphs[[i]],
                     layout=vertex.coords,
                     vertex.shape=ifelse(V(graphs[[1]])$stubbornness, "circle", "square"),
+                    vertex.size=ifelse(V(graphs[[1]])$stubbornness, 15, 18),
                     main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
                     legend("bottomright",legend=c("Liberal","Conservative"),
                     fill=c("blue","red"))
@@ -113,6 +114,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
             plot(graphs[[i]],
                 layout=vertex.coords,
                 vertex.shape=ifelse(V(graphs[[1]])$stubbornness, "circle", "square"),
+                vertex.size=ifelse(V(graphs[[1]])$stubbornness, 15, 18),
                 main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
                 legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
                 fill=c("blue","white","red"))
