@@ -6,9 +6,9 @@ library(igraph)
 source("synthetic.R")
 source("plotting.R")
 
-# Run an opinion dynamics simulation with n agents for num.iter iterations.
-# Return a list of igraph objects, each giving the graph at a snapshot in
-# time. 
+# Run an opinion dynamics simulation with n agents for num.encounters
+# encounters. Return a list of igraph objects, each giving the graph at a
+# snapshot in time immediately following an encounter.
 # 
 # Agents have an opinion, which could be binary or weighted, and a stubbornness
 # attribute, which can be binary or weighted (coming soon).
@@ -20,7 +20,14 @@ source("plotting.R")
 # igraph object with an attribute on each vertex called "opinion". (The value
 # of the attribute can be binary or continuous.)
 #
-# num.iter -- the number of iterations to run the simulation.
+# num.encounters -- the number of encounters to run the simulation. (Note that
+# if this is not a multiple of the number of nodes, fewer than this number of
+# encounters may occur.)
+#
+# choose.randomly.each.encounter -- if TRUE, each encounter will have a
+# completely random "encountering vertex" chosen. If FALSE, all the vertices
+# will be chosen as the "encountering vertex" (in random order) before they
+# are all chosen again (i.e., no repeats are allowed.)
 #
 # encounter.func -- a function which takes a graph and a vertex ID. Returns a 
 # vector of vertex IDs of which the vector may randomly encounter in
@@ -33,22 +40,37 @@ source("plotting.R")
 # vetex.
 
 sim.opinion.dynamics <- function(init.graph,
-        num.iter=20,
+        num.encounters=200,
         encounter.func=get.mean.field.encounter.func(3),
-        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.)) {
+        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.),
+        choose.randomly.each.encounter=FALSE,
+        verbose=TRUE) {
 
-    graphs <- list(length=num.iter)
+    graphs <- list(length=(num.encounters/vcount(init.graph)))
     graphs[[1]] <- init.graph
 
-    # For each iteration of the sim...
-    for (i in 2:num.iter) {
+    encounter.num <- 0
 
-        cat("Iteration",i,"of",num.iter,"...\n")
+    # For each iteration of the sim...
+    for (i in 2:(num.encounters/vcount(init.graph))) {
+
+        if (verbose) cat("---------------------------------\n")
 
         # Create a new igraph object to represent this point in time.
         graphs[[i]] <- graphs[[i-1]]
         # Go through all the vertices, in random order:
         for (v in sample(1:gorder(graphs[[i]]))) {
+
+            if (choose.randomly.each.encounter) {
+                v <- sample(1:gorder(graphs[[i]]),1)
+            }
+
+            encounter.num <- encounter.num + 1
+            if (verbose) {
+                cat("Encounter",encounter.num,"of",num.encounters," (",
+                    v,")...\n")
+            }
+
             encountered.vertices <- encounter.func(graphs[[i]],v)
             # For each of these encountered partners...
             for (ev in encountered.vertices) {
@@ -297,7 +319,8 @@ param.sweep <- function(init.graph) {
 
     invisible(foreach (migration.factor=seq(0.2,1,.2)) %dopar% {
       for (bc.thresh in seq(0.2,1,.2)) {
-        graphs <- sim.opinion.dynamics(init.graph,num.iter=50,
+        graphs <- sim.opinion.dynamics(init.graph,
+            num.encounters=50*vcount(init.graph),
             encounter.func=get.graph.neighbors.encounter.func(encs.per.iter),
             victim.update.function=
                 get.bounded.confidence.update.victim.function(bc.thresh,
@@ -321,14 +344,16 @@ main <- function() {
     #param.sweep(get.barely.connected.polarized.graph())
 
     # Discrete Opinions
-    graphs <<- sim.opinion.dynamics(get.discrete.graph(2,stubborn=TRUE), num.iter=80, 
+    da.graph <- get.discrete.graph(2,stubborn=TRUE)
+    graphs <<- sim.opinion.dynamics(da.graph, 
+        num.encounters=80*vcount(da.graph), 
         #encounter.func=get.graph.neighbors.encounter.func(2),
         encounter.func=get.mean.field.encounter.func(3),
         #victim.update.function=get.proportional.to.in.degree.update.victim.function())
         victim.update.function=get.automatically.update.victim.function())
 
     # Continuous Opinions
-    # graphs <- sim.opinion.dynamics(get.stubborn.graph(), num.iter=20,
+    # graphs <- sim.opinion.dynamics(get.stubborn.graph(), num.encounters=200,
     #   encounter.func=get.graph.neighbors.encounter.func(4),
     #   victim.update.function=get.bounded.confidence.update.victim.function(0.5, 0.2))
 
