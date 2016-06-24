@@ -27,8 +27,7 @@ yildiz.discrete <- function(){
         dir=TRUE, stubbornness=rbinom(30,1,0.3))
     binary.voter.stubborn.graph <<- sim.opinion.dynamics(initial.graph, num.iter=50,
         encounter.func=get.graph.neighbors.encounter.func(1),
-        victim.update.function=get.automatically.update.victim.function(),
-        binaryVoterModel=TRUE)
+        victim.update.function=get.automatically.update.victim.function())
     plot.animation(binary.voter.stubborn.graph, "opinion", delay.between.frames=.25)
 }
 
