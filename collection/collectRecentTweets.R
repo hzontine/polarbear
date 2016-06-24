@@ -82,7 +82,6 @@ get.tweets.by.userid <- function(userid, num.tweets=200, verbose=FALSE) {
 main <- function(start.over=FALSE) {
     read.caches()
     users <- unique(collect(dplyr::select(screennames.cache, userid)))$userid
-users <- users[1:40]
     if (start.over) {
         main.tweets.memento <<- Memento$new()
     }
