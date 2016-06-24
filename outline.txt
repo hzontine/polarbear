@@ -78,7 +78,8 @@ SD: Any impact of WWW and social networks here?
                     - In contrast to the DW model the mean opinion is not conserved.
                * Sirbu et al
                     - Agreements and disagreements during pairwise interactions among nodes
-            - Density-based dynamics for a density function which determines the agents density in the opinion space        
+            - Density-based dynamics for a density function which determines
+              the agents density in the opinion space  (Lorenz 2007)       
                 * Taking the infinite limit of n -> (infinity) of agent based models
                 * State variable is a density function on the opinion space P(t,·) : S → R≥0 with  S P(t,x)dx = 1 for all t
         iv. Binary vs. Continuous

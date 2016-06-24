@@ -1,5 +1,35 @@
 This Week (due by 6/24):
 ------------------------------------
+
+TODO eventually:
+    1. Double check Holley 1975 (through Yildiz) & Clifford 1973 -- do they
+choose voters randomly each time step, or cycle through all? And does it
+matter?
+    2. Reproduce Vasquez & SR 2004
+
+    Run a bunch of tests to verify that Holley's original does in fact
+converge less rapidly than Zontine's.
+    Run tests to answer: does it matter that Holley chooses victim first,
+whereas we choose influencer first?
+
+    Find the freaking "Stephen model": i.e., there are n subjects, and the
+probability I'm influenced by you on subject k is related to how much we agree
+on the others. (Note this is NOT Sirbus 2013, because in theirs, the opinions
+on a subject have norm 1. In Stephen's they are independent.)
+
+    Do barbell graph with binary: can we get non-uniform equilibrium ever? (If
+graph is connected?) Dave thinks yes, Stephen boldly predicts no.
+
+    Dave's experiment: 
+        - Never change opinions (!)
+        - When you encounter a neighbor:
+            - if you agree, have victim add an edge to a random influencer's
+              neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
+            - if you disagree, break the edge
+    Dave is "morally certain" that this will "converge" to disconnected
+    all-blue and all-red halves.
+
+
 Hannah:
  * Read second 1/3 of the papers in the "hannah to read" Zotero folder.
  * Social psychology: talk to Kolar for key terms
