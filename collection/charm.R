@@ -233,13 +233,16 @@ get.charm <- function(verbose=TRUE) {
         # don't wear Twitter out by continually trying to blow through the
         # rate limit stop sign.
         if (verbose) {
-            cat("\nCharms exhausted. Chill before cycling through again.\n")
+            cat("\nCharms exhausted. Chill 13 minutes before cycling ",
+                "through again.\n")
             dt <- Sys.time() - last.time
             units(dt) <- "mins"
             cat("(That took",round(dt,2),"minutes out of your 15.)\n")
             print(Sys.time())
         }
-        Sys.sleep(15*60+1)
+        # Waiting 13 minutes after going through all charms seems empirically 
+        # safe.
+        Sys.sleep(13*60)  
         if (verbose) {
             last.time <<- Sys.time()
             print(last.time)

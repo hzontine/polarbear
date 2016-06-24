@@ -2,6 +2,7 @@
 source("manualApi.R")
 source("cache.R")
 
+library(igraph)
 library(methods)
 
 Memento <- setRefClass("Memento",
