@@ -3,6 +3,7 @@
 # Stephen and Hannah
 
 library(igraph)
+library(RColorBrewer)
 
 # Given a list of graphs, plot them, ensuring that vertices are plotted in the
 # same location from graph to graph.
@@ -26,10 +27,12 @@ library(igraph)
 # overwrite.animation.file -- controls whether to overwrite or error out if
 # file already exists. Only relevant if interactive is FALSE.
 #
+# subtitle -- an optional subtitle for the plot.
+#
 plot.animation <- function(graphs, attribute.name="ideology", 
     try.to.keep.vertex.positions=TRUE, delay.between.frames=.5, 
     interactive=TRUE, animation.filename="polar.gif",
-    overwrite.animation.file=FALSE) {
+    overwrite.animation.file=FALSE, subtitle="") {
 
     if (!interactive && !overwrite.animation.file) {
         if (file.exists(animation.filename)) {
@@ -37,12 +40,20 @@ plot.animation <- function(graphs, attribute.name="ideology",
         }
     }
 
-    # Detect binary graphs so we can plot colors differently.
-    if (all(get.vertex.attribute(graphs[[1]],attribute.name) %in% c(0,1))) {
-        binary <- TRUE
-    } else {
-        binary <- FALSE
+    if (!interactive) {
+        base.filename <- tempfile(pattern="polar")
     }
+
+
+    # Detect discrete graphs so we can plot colors differently.
+    values <- get.vertex.attribute(graphs[[1]],attribute.name)
+    if (all(values == floor(values))) {
+        discrete <- TRUE
+    } else {
+        discrete <- FALSE
+    }
+
+    discrete.num = max(get.vertex.attribute(graphs[[1]],attribute.name)) 
 
     vertex.coords <- layout_with_kk(graphs[[1]])
     for (i in 1:length(graphs)) {
@@ -51,25 +62,76 @@ plot.animation <- function(graphs, attribute.name="ideology",
         } else {
             vertex.coords <- layout_with_kk(graphs[[i]],coords=NULL)
         }
-        if (binary) {
-            V(graphs[[i]])$color <- ifelse(
-                get.vertex.attribute(graphs[[i]],attribute.name) == 0,
-                "blue","red")
+        if (discrete) {
+            if (max(get.vertex.attribute(graphs[[1]],attribute.name)) == 1){
+                V(graphs[[i]])$color <- ifelse(
+                    get.vertex.attribute(graphs[[i]],attribute.name) == 0,
+                    "blue","red")
+            } else {
+                if(discrete.num+1 > 9){
+                    colors <- brewer.pal(discrete.num+1, "Set3")
+                } else {
+                    colors <- brewer.pal(discrete.num+1, "Pastel1")
+                }
+                for (node in 1:vcount(graphs[[i]])){ 
+                    ideology <- vertex_attr(graphs[[i]],attribute.name,node)
+                    for (num in 0:discrete.num){
+                        if(ideology == num) {
+                            V(graphs[[i]])[node]$color <- colors[num+1]
+                        }
+                    }
+                }
+            }
         } else {
             V(graphs[[i]])$color <- 
                 colorRampPalette(c("blue","white","red"))(100)[ceiling(
-                    get.vertex.attribute(graphs[[i]],attribute.name) * 100)]
+                get.vertex.attribute(graphs[[i]],attribute.name) * 100)]
         }
         if (!interactive) {
-            png(paste0("plot",paste0(rep(0,3-floor(log10(i)+1)),collapse=""),
-                i,".png"))
+            png(paste0(base.filename,"plot",
+                paste0(rep(0,3-floor(log10(i)+1)),collapse=""), i,".png"))
             cat("Building frame",i,"of",length(graphs),"...\n")
         }
-        plot(graphs[[i]],
-            layout=vertex.coords,
-            main=paste("Iteration",i,"of",length(graphs)))
-        legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
-            fill=c("blue","white","red"))
+
+        if ("stubbornness" %in% list.vertex.attributes(graphs[[i]])) {
+            vertex.shape <- ifelse(V(graphs[[i]])$stubbornness, "square", "circle")
+            vertex.size <- ifelse(V(graphs[[i]])$stubbornness, 15, 18)
+        } else {
+            vertex.shape <- "circle"
+            vertex.size <- 15
+        }
+
+        if (discrete) {
+            if (discrete.num > 1) {
+                plot(graphs[[i]],
+                    layout=vertex.coords,
+                    vertex.shape=vertex.shape,
+                    vertex.size=vertex.size,
+                    main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
+                    #legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
+                    #fill=c("blue","white","red"))
+            } else {
+                plot(graphs[[i]],
+                    layout=vertex.coords,
+                    vertex.shape=vertex.shape,
+                    vertex.size=vertex.size,
+                    main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
+                legend("bottomright",legend=c("Liberal","Conservative"),
+                    fill=c("blue","red"))
+            }
+        } else {
+            plot(graphs[[i]],
+                layout=vertex.coords,
+                vertex.shape=vertex.shape,
+                vertex.size=vertex.size,
+                main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
+            legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
+                fill=c("blue","white","red"))
+        }
+        if ("stubbornness" %in% list.vertex.attributes(graphs[[i]])) {
+            legend("bottomleft",legend=c("Stubborn","Open-minded"),
+                pch=c(0,1))
+        }
         if (interactive) {
             Sys.sleep(delay.between.frames)
         } else {
@@ -78,10 +140,10 @@ plot.animation <- function(graphs, attribute.name="ideology",
     }
     if (!interactive) {
         cat("Assembling animation...\n")
-          system(paste0("convert -delay ",delay.between.frames*100,
-              " plot*.png ", animation.filename))
-          system("rm plot*.png")
-          cat("Animation in file ",animation.filename,".\n",sep="")
+        system(paste0("convert -delay ",delay.between.frames*100,
+            " ",base.filename,"plot*.png ", animation.filename))
+        system(paste0("rm ",base.filename,"plot*.png"))
+        cat("Animation in file ",animation.filename,".\n",sep="")
     }
 }
 

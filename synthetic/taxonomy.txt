@@ -4,15 +4,17 @@ model variations:
 
 how are opinions represented?
     - univariate 
-X        Binary: (Yildiz, Acemoglu 2011) 
-         Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000)
+X       Binary: (Yildiz et al. 2013) (Folmer 1974) (Weisbuch and Boudjema 1999)
+           * Binary Voter Model: (Holley and Liggett 1975) and (Clifford and Sudbury 1973)
+X       Discrete:
+X       Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000) (Weisbuch et al. 2001)
     - vector of opinions
         Binary: (Deffuant 2000)
-        Continuous: 
+        Continuous: (Sirbu et al. 2013) 
 how are the vertices that you encounter chosen?
     - pairwise
-X        - chosen uniformly from the global graph
-X        - chosen from graph neighbors (Yildiz, Acemoglui 2011)
+X        - chosen uniformly from the global graph (Weisbuch et al. 2001) 
+X        - chosen from graph neighbors (Yildiz, Acemoglui 2011) (Follmer 1974)
          - SD/HZ variant: weighted probability between global and neighbors
     - group influence (HK model)
 
@@ -23,10 +25,28 @@ X    - conversions happen only with fixed probability
        in-degree (i.e., if you're following a zillion people, it's less likely
        you'll be influenced by each one because that one person only occupies a
        small fraction of the ideas you're exposed to) (??)
-    - different nodes have different "stubbornness" attribute (Yildiz, Acemoglu 2011)
-        Question: can/should the "degree of activeness on Twitter" be modeled?
-        (More likely to be influenced the more tweets you see.)
+         - Question: can/should the "degree of activeness on Twitter" be 
+            modeled? (More likely to be influenced the more tweets you see.)
+     - different nodes have different "stubbornness" attribute (Yildiz, Acemoglu 2011)
+X       - binary
+        - continuous
+        - different ways to implement stubbornness:
+            - migration factor is lower for stubborn nodes
+            - BC thresh is lower for stubborn nodes
+            - dynamic stubbornness  (stubbornness on an opinion can change
+              over time) 
+                - do you become stubborn randomly? (coin flip each turn if
+                  stubbornness=binary, or uptick in stubbornness if cont.)
+                - stubbornness is sort of inherited from the influencer
+                - stubbornness proportional to # of times influenced (on that
+                  opinion)
+                - do you become increasingly stubborn when you interact with
+                  people of opposite (or same) opinion and don't change? (so
+                  instead of related to time, it's related to 
+                  num-of-interactions-w/o-changing)
+     - disagreement between nodes (Sirbu et al. 2013)
 
+Big question: does the graph change over time??
 
 
 

@@ -1,91 +1,107 @@
-This Week (due by 6/10):
--------------------------------------
-Hannah:
- * annotate the taxonomy.txt file with two things:
-    1) the paper(s) that had results for each item
-    2) a checkmark next to the things that sim.opinion.dynamics() supports.
- * schedule target due dates and owner (HZ or SD) for each specific piece of
-   functionality we want to add to the sim.opinion.dynamics() code.
- * Read first 1/3 of the papers in the "hannah to read" Zotero folder.
- * Read chapter 6 of K&C 
-Stephen:
- * Get data collection code running on caladan.
- * Acquire at least one entire (small-ish) Twitter data set that we can use to
-   calibrate the simulation.
- * Read first 1/3 of the papers in the "stephen to read" Zotero folder.
- * Read chapter 6 of K&C 
 
-
-
-Due by the end of the 1st Summer Term (6/17):
---------------------------------------
+This Week (due by 6/24):
+------------------------
 Hannah:
  * Read second 1/3 of the papers in the "hannah to read" Zotero folder.
- * Continue to add and edit outline.txt
- * Social psychology: how many people can a node reasonably recieve information from?
+ * Social psychology: talk to Kolar for key terms
+    - how many people can a node reasonably recieve information from?
     - how much time does a user spend looking through their timeline?
     - is there a positive correlation between number of tweets per day and amount time
       spent reading one's timeline?
- * More Lit Search on Sentiment Analysis
-    Find a political classifier
- * Synthetic
-     - analyze clustering coefficient
-     - parameter sweep of final assortavity vs
-         a) closeness.threshold
-         b) num.encounter.per.iter
-         c) num.vertices
-     - add code for edge deletion, appropriately parameterized
- * Read chapter 10 of K&C 
-
+    - do people get stubborn over time? is that correlated to echo-chamberness? 
+ * Lit Search
+    - vector of continuous opinions
+    - dynamic graphs
+ * Sim.opinion.dynamics()
+    - reproduce lit search models
 Stephen:
- * Read second 1/3 of the papers in the "stephen to read" Zotero folder.
- * Synthetic
-    - add code to represent ideologies as a vector of opinions, with each value
-    reflecting a user's opinion on a certain "hot topic"
-        * binary and continuous
- * Read chapter 10 of K&C 
-
-
-Due by 6/24:
-------------
-Hannah:
- * Read last 1/3 of the papers in the "hannah to read" Zotero folder.
- * Read chapter 7 of K&C 
-
-Stephen:
- * Read last 1/3 of the papers in the "stephen to read" Zotero folder.
- * Start the simulation with initial condition = Dave's political blog & book graph
- * Read chapter 7 of K&C 
+ * Stephen sucks, he's too busy
 
 
 Due by 7/1:
 ------------
 Hannah:
- * Read chapter 8 of K&C 
+ * Read chapter 10 of K&C 
+ * Continue to read papers in the "hannah to read" Zotero folder, and point
+   out aggressively to Stephen specific papers he needs to read in order to
+   not be a total loser on this project.
+ * Sim.opinion.dynamics()
+    - vector of opinions: continuous
+    - probability of converting: inversely proportional to victim's in-degree
+    - group influence (reading HK paper and figuring out whether we're
+        compatible at all with the way they do it)
+    - Double check Holley 1975 (through Yildiz) & Clifford 1973 -- do they
+        choose voters randomly each time step, or cycle through all? And does it
+        matter?
+    - stubbornness: continuous
+    - vector of opinions
+        * binary
+        * correlated opinions. (generate with mvnorm and then clip to (0,1) interval?)
+ * Lit Search
+    - Find the freaking "Stephen model," if it exists: i.e., there are n
+      subjects, and the probability I'm influenced by you on subject k is
+      related to how much we agree on the others. (Note this is NOT Sirbus
+      2013, because in theirs, the opinions on a subject have norm 1. In
+      Stephen's they are independent.)
 
 Stephen:
- * Read chapter 8 of K&C 
-
+ * Start the simulation with initial condition = Dave's political blog & book graph
+ * Read at least some of the papers in the "stephen to read" Zotero folder.
+ * Sim.opinion.dynamics()
+    - Reproduce Vasquez & SR 2004
+    - Implement Dave's experiment: 
+        - add code for edge addition and deletion, appropriately parameterized
+        - Never change opinions (!)
+        - When you encounter a neighbor:
+            - if you agree, have victim add an edge to a random influencer's
+              neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
+            - if you disagree, break the edge
+    Dave is "morally certain" that this will "converge" to disconnected
+    all-blue and all-red halves.
+    - analyze
+        * Confirm/deny that Holley's original does in fact converge less rapidly 
+            than Zontine's.
+        * Confirm/deny whether it matters that Holley chooses victim first,
+            whereas we choose influencer first?
+        * Do barbell graph with binary: can we get non-uniform equilibrium ever? (If
+            graph is connected?) Dave thinks yes, Stephen boldly predicts no.
+ * Data collection
+    - Kick off process to grab last n tweets (n=20?) of all users in the
+      Pelosi/Ryan graph and store in DB.
 
 Due by 7/8:
 ------------
 Hannah:
- * Read chapter 9 of K&C 
+ * Read chapter 7 of K&C 
 
 Stephen:
- * Read chapter 9 of K&C 
+ * Read chapter 7 of K&C 
+
+
+Due by 7/15:
+------------
+Hannah:
+ * Read chapter 8 of K&C 
+
+Stephen:
+ * Read chapter 8 of K&C 
 
 
 By the end of SSI (7/20):
 -------------------------------------------
 Hannah:
  * Poster and Powerpoint presentation
+ * Read chapter 9 of K&C 
+
+Stephen:
+ * Read chapter 9 of K&C 
+ * Final analysis, including parameter sweep of final assortavity/mean/SD vs
+     a) bounded confidence
+     b) num.encounter.per.iter
+     c) migration factor
+     d) number of connections
 
 
-
-This Fall:
---------------
- * Play with data mining classification. (wait for Stephen on this)
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

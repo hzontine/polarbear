@@ -37,8 +37,16 @@ SD Reproduce this:
     (Das, Gollapudi, Munagala. "Modeling Opinion Dynamics in Social Networks".)
 
 
-SLANT Model
+Binary Voter Model
+    - Victim influences vertex
+    - Binary opinion values
+    - Results: will always converge to a consensus
+        Aldous and Fill (1994) that agent states reach a consensus over any connected graph G
 
+
+
+
+SLANT Model
 
 The SLANT model is a modeling framework of opinion dynamics in socia media and social networking.
 "The proposed framework is based on two intuitive ideas: 1) user's opinions are hidden until 
@@ -61,11 +69,31 @@ The model provided a good fit to both the synthetic and real data gathered from 
         Opinion Dynamics in Social Networks."
 
 
+Yildiz: Binary Voter Model with "Stubborn" agents
+- binary attribute: stubborn or not stubborn
+- non-stubborn nodes can have random encounters with neighbors where they may adopt
+    the opinion of the stubborn node
+- Results: Agent states do not necessarily reach a consensus since every agent is potentially 
+    (indirectly) connected to stubborn agents with distinct opinions which are never updated. 
+    Instead, we show that the agent state vector converges in distribution
+- Extension of classic voter model: Dual Approach
+    *"coalescing random walks with absorbing states given by the stubborn agents"
+    * "the expected value of the asymptotic opinion of agent i is given by the probability 
+    that the dual random walk on G initiated at node i is absorbed by the stubborn set of type one."
+    * dual approach: agent state evolution is related to a dual process defined through 
+    coalescing random walks on the graph G
+    - Stubborn agents of opposite ideologies prevent consensus in the society
+    - Researchers use this framework to study the problem of optimal stubborn agent placement.
+    - In this model, stubborn agents with opposing views prevent consensus in society. Moreover, 
+    the opinion of each individual does not necessarily settle into a fixed value.  
 
 
-Deffuant-Weisbuch Model
+    "Binary Opinion Dynamics with Stubborn Agents" Yildiz, Ozdagular, Acemoglu, et al. 2013.
+
+
+
+Deffuant-Weisbucc Model
 Hegselmann-Krause Model
-
 
 There are two extensively studied models that explore continuous opinion
 dynamics under bounded confidence, the Deffuant-Weisbuch (DW) model (Deffuant
@@ -106,3 +134,81 @@ after reaching a period of steady state.
     Lorenz, J. 2007. "Continuous Opinion Dynamics under Bounded Confidence: A
         Survey." International Journal of Modern Physics C 18:1819-1838.
         doi:10.1142/S0129183107011789 .
+
+
+
+
+Deffuant et al. 2000. "Mixing beliefs among interacting agents".
+
+- Agents only interact if they are directly connected through a social pre-existing relation. 
+Facing the difficulty of inventing a credible instance of a social network as in the literature on 
+social binary choice [WEI 99], we adopted the standard simplification and we carried out our simulations 
+on square lattices: square lattices are simple, allow easy visualisation of opinion configurations and contain 
+many short loops, a property that they share with real social networks. (6)
+
+- inital random sampling of opinions from 0 to 1
+- a pair is randomly selected among connected agents anf opinons are updated if their distance is less than d
+- vector of opinions: binary
+    * Hamming distance: number of different bits among the two vectors
+    * Agents may interact and adjust opinions according to how many opinions they share.
+    * Adjustments occur when agents agree on d-1 subjects or less. All equal opinions are conserved. When
+    opinions on a subject differ, one agent (random) is convinced by the other. (8)
+    * polarization was not observed (9)
+- We thus observe than when opinion exchange is limited by similarity of opinions among agents, the 
+dynamics yield isolated clusters among initially randomly distributed opinions. Exchange finally 
+only occurs inside clusters as a the result of the exchange dynamics; initially all agents were communicating 
+either directly or indirectly through several directly connected agents (11)
+
+
+Weisbuch et al. 2001. "Interacting agents and Continuous opinion dynamics"
+
+- continuous, random pairwise interactions when difference of opinion is below a threshold
+- High thresholds yield convergence of opinions towards an average opinion, whereas low 
+thresholds result in several opinion clusters.
+- The purpose of this paper is to present results concerning continuous opinion dynamics subject 
+to the constraint that convergent opinion adjustment only proceeds when opinion difference is 
+below a given threshold
+- Components of this paper: 
+    1) Researchers expose a simple case of complete mixing among agents under a unique and constant 
+        threshold condition.
+        - For large thresholds (d > 0.3), they observed only one cluster at the average initial opinion.
+        - For lower thresholds, several clusters were observed. Consensus was not achieved.
+    2) Then they checked the genericity of the results obtained for the simplest model to other cases 
+        such as localised interactions, distribution of thresholds, varying thresholds and binary strings 
+        of opinions.
+- A previous paper (Deffuant et al. 2000) reported more complete results on mixing across a social network and on 
+binary strings of opinions.
+
+
+Sirbu et al. 2013. "Opinion Dynamics with Disagreement and Modulated Information." 
+    Journal of Statistical Physics.
+
+- Vector of continuous opinions (fixed number for all nodes)
+- "fully connected social network graph"
+- Each agent chooses between K possible opinions on a given subject. Each individual maintains a set of 
+probabilities for the K possibilities
+- Probability: the internal probability of individuals to choose between several discrete options
+- Interaction = 1) observing the actions of others, and 2) discussing with other agents where opinions 
+on the different choices are exchanged
+- NO bounded confidence implementation
+- Encounters: pairwise interaction between A and B where they will either agree or disagree on one issue
+    * Agreement: A changes his/her status as the result of an agreement with B. An interaction occurs when A
+    and B discuss an opinion. Its probability is decreased by the value α = 0.1 in A to become more similar
+    to B. The probabilities of the rest of the opinions are increased by equal amounts to conserve the unity sum. 
+    * Disagreement: An interaction occurs between A and B, where A and B have a disagreement. A's probability 
+    increases by the amount α = 0.1, decreasing its overlap with the B. Equivalently, the probabilities of 
+    the rest of the opinions are decreased by equal amounts to conserve the unity sum
+- α determines the flexibility of agents since it fixes the time scale for local agreement or disagreement. 
+The larger α is, the faster the two individuals will agree or get separated. This method allows for the 
+absolute value of the change on position l to be the same for agreement and disagreement.
+- Their model focuses on the interplay between the possibility of explicit disagreement, modulated in a 
+self-consistent way by the existing opinions’ overlaps between the interacting individuals, and the 
+effect of external information on the system
+- political opinions are determined by how a person synthesises the different sources of information and 
+biases, and comes up with a specific position to be eventually expressed as a vote whenever required
+- Although discrete variables are very suitable for modelling choices, the internal state of individuals, based on which discrete decisions are taken, may be continuous
+- Most of the original models deal with attractive dynamics, where individuals follow their neighbours. 
+However, in reality, both attractive and repulsive interactions can be observed, and it has been argued 
+that disagreement is a very important feature of a democratic society
+ 
+

@@ -9,6 +9,7 @@ source("db.R")
 # mysql> create table followees (userid varchar(20), followee varchar(20));
 # mysql> create table nodata_users (userid varchar(20));
 # mysql> create table screennames (userid varchar(20), screenname varchar(16));
+# mysql> create table tweets (userid varchar(20), tweet varchar(200));
 
 
 # TODO: if we already have a userid's followers cached, and we already have
@@ -22,6 +23,7 @@ read.caches <- function(force=FALSE) {
     followers.cache <<- tbl(db.src,"followers")
     screennames.cache <<- tbl(db.src,"screennames")
     nodata.cache <<- tbl(db.src,"nodata_users")
+    tweets.cache <<- tbl(db.src,"tweets")
 }
 
 exists.in.cache <- function(the.userid, cache, check.nodata=TRUE) {
@@ -56,7 +58,8 @@ add.to.cache <- function(userid, values, cache.name) {
     conn <- get.connection(TRUE)
     dbGetQuery(conn,
         paste0("insert into ", mysql.table.name, " values (",
-            paste("'",userid,"','",values,"'",sep="",collapse="),("),")"))
+            paste("'",userid,"','",dbEscapeStrings(conn,values),"'",
+                    sep="",collapse="),("),")"))
     dbDisconnect(conn)
 }
 
