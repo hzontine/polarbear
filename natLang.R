@@ -5,6 +5,47 @@
 
 # First I'd remove all punctuation (DocumentTermMatrix will do that for you, but I don't like the way it does it).
 
+red.docs <- c(
+    "I love Donald Trump",
+    "Donald Trump for President",
+    "Oh I love that big bad guy Donald Trump",
+    "Go Donald!",
+    "Here's to the Donald!",
+    "GOP -- Destination: White House",
+    "I'm in a red state",
+    "Conservatism all the way, bruh!",
+    "I love Trump because he's conservative",
+    "Build the wall!",
+    "Benghazi Benghazi Benghazi",
+    "Vote for Trump! We want the wall!")
+
+blue.docs <- c(
+    "Hillary for President",
+    "Here's to another Clinton in the White House!",
+    "Liberal 4ever",
+    "Go Hillary!",
+    "It's about time we had a woman in the White House!",
+    "Trump is a crook!",
+    "I love Hillary Clinton",
+    "Hillary is my homey",
+    "We want Clinton!",
+    "C'mon Hillary, pick Liz Warren!",
+    "I'm dodger blue in this election, baby")
+
+unknown.docs <- c(
+    "Donald Trump is da man!",
+    "Hicks for Hillary!",
+    "How about a woman for a change?"
+)
+
+docs <- c(red.docs, blue.docs, unknown.docs)
+
+classes <- c(
+    rep("red",length(red.docs)),
+    rep("blue",length(blue.docs)),
+    rep(NA,length(unknown.docs)))
+
+    
 docs <- gsub("[^a-z]"," ",tolower(docs))    # you can muck about with this, particularly if you want digits, or whatever.
 
 # It is completely unnecessary, but I like to get rid of extra spaces:
@@ -46,9 +87,22 @@ colnames(dtm)
 
 library(ranger)    # Alternatively, use randomForest
 
+training.size <- length(red.docs) + length(blue.docs)
+
+training.data <- cbind(as.data.frame(as.matrix(dtm)[1:training.size,]),
+        Class=as.factor(classes)[1:training.size])
+
+test.data <- cbind(as.data.frame(as.matrix(dtm)[-(1:training.size),]),
+        Class=as.factor(classes)[-(1:training.size)])
+
 rf <- ranger(Class ~ .,
-   data=cbind(as.data.frame(as.matrix(dtm)),Class=as.factor(classes)),
-   importance='impurity')
+   data=training.data,
+   importance='impurity',
+   write.forest=TRUE)
+
+
+prediction <- predict(rf,test.data[,-ncol(test.data)])
+print(prediction)
 
 # look at the most important words:
 vi <- rf$variable.importance

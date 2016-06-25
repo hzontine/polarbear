@@ -9,6 +9,7 @@ source("db.R")
 # mysql> create table followees (userid varchar(20), followee varchar(20));
 # mysql> create table nodata_users (userid varchar(20));
 # mysql> create table screennames (userid varchar(20), screenname varchar(16));
+# mysql> create table tweets (userid varchar(20), tweet varchar(200));
 
 
 # TODO: if we already have a userid's followers cached, and we already have
@@ -17,11 +18,15 @@ source("db.R")
 
 read.caches <- function(force=FALSE) {
 
-    db.src <- src_mysql("polarbear",user="stephen",password="iloverae")
+    if (!exists("mysql.db.name")) {
+        source("mysql_config.R")
+    }
+    db.src <- src_mysql(mysql.db.name,user=mysql.user,password=mysql.password)
     followees.cache <<- tbl(db.src,"followees")
     followers.cache <<- tbl(db.src,"followers")
     screennames.cache <<- tbl(db.src,"screennames")
     nodata.cache <<- tbl(db.src,"nodata_users")
+    tweets.cache <<- tbl(db.src,"tweets")
 }
 
 exists.in.cache <- function(the.userid, cache, check.nodata=TRUE) {
@@ -54,9 +59,33 @@ add.to.cache <- function(userid, values, cache.name) {
 
     mysql.table.name <- str_match(cache.name, "(.*)\\.cache")[[2]]
     conn <- get.connection(TRUE)
-    dbGetQuery(conn,
-        paste0("insert into ", mysql.table.name, " values (",
-            paste("'",userid,"','",values,"'",sep="",collapse="),("),")"))
+    retry <- FALSE
+    retries.left <- 1
+    repeat { 
+        tryCatch(
+            dbGetQuery(conn,
+                paste0("insert into ", mysql.table.name, " values (",
+                    paste("'",userid,"','",dbEscapeStrings(conn,values),"'",
+                            sep="",collapse="),("),")"))
+            , error = function(e) {
+                cat("The error message is:\n")
+                print(e)
+                retry <<- TRUE
+            }
+        )
+        if (retry) {
+            if (retries.left < 5) {
+                cat("Retrying...getting new connection...\n")
+                conn <<- get.connection(TRUE)
+                retries.left <- retries.left + 1
+            } else {
+                cat("Giving up.\n")
+                break
+            }
+        } else {
+            break
+        }
+    }
     dbDisconnect(conn)
 }
 
