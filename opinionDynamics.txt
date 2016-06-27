@@ -38,11 +38,84 @@ SD Reproduce this:
 
 
 Binary Voter Model
+    - Introduced independently by Holly and Ligget (1975) and Clifford (1973)
     - Victim influences vertex
     - Binary opinion values
     - Results: will always converge to a consensus
         Aldous and Fill (1994) that agent states reach a consensus over any connected graph G
+    - "It is assumed that the process spends forever in that state once it is attained." (Majmudar 3)
+    - "Holley and Ligget (43) and Liggett (44) proved the following result.
+        In d ≤ 2, the voter model approaches complete consensus; that is, if x ≠ y then P[ξt(x) ≠ ξt(y)] → 0. 
+        In d≥3, if the voter model starts from product measure with density p [i.e., __  are independent and 
+        equal to one with probability p], then __  converges in distribution to a limit νp, which is a stationary 
+        distribution for the voter model." (Durrett)
 
+Holme-Newman Model
+    - Each vertex has an opinion from a set of G possible opinions.
+    - "On each step of the process, a vertex x is picked at random. If its degree d(x) = 0, nothing happens. 
+    For d(x) > 0, (i) with probability α an edge attached to vertex x is selected and the other end of that 
+    edge is moved to a vertex chosen at random from those with opinion E(x); (ii) otherwise (i.e., with 
+    probability 1 − α) a random neighbor y of x is selected and we set the opinion of x [ E(x) ] equal to 
+    the opinion of y [ E(y) ]."
+    - "For α = 0, this system reduces to the voter model on a static graph. If we suppose that the initial 
+    graph is an Erdös– Rényi random graph in which each vertex has average degree λ > 1, then there is a 
+    'giant component' that contains a positive fraction, μN, of the vertices and the second largest component 
+    is small having only O(log N) vertices. The voter model on the giant component will reach consensus in 
+    O(N^2) steps."
+    - "We expect consensus to be reached in O(N log N) steps when α = 1 and in O(N^2) steps when α = 0."
+    - "We define the boundary between the fast and slow consensus regimes to be the value of α, where the 
+    average number of steps needed to reach consensus is N^(3∕2) (any power between one and two would 
+    give the same results when N → ∞).
+    - When an edge is chosen between voters with different opinions, then a rewiring event does not change the number 
+    of ones, whereas a voting event will increase and decrease the number of ones with equal probability; i.e., the 
+    number of ones is a random walk that on each step stays constant with probability α."
+    - "Holme and Newman showed that there is a critical value αc so that for α > αc all of the opinions have 
+    a small number of followers at the end of the process, whereas for α < αc “a giant community of like-minded 
+    individuals forms” (Holme, Newman. "Nonequilibrium phase transition in the coevolution of networks and opinions". 2006.)
+
+    (Durrett, Gleeson, et al. "Graph fission in an evolving voter model." 2012.)
+
+
+Rewiring of "Holme-Newman Model"
+    - Durrett, Gleeson, et al. 2012.
+    - "Rewire-to-same" Model
+        - How it differs from Holme-Newman Model:
+        1) We consider two opinions (called 0 and 1) instead of a number proportional to the size of the graph
+        2) "on each step, we pick a discordant edge (x,y) at random rather than a vertex, avoiding the problem 
+        of picking vertices with degree zero or vertices that agree with all of their neighbors. With probability 
+        1 − α, the voter at x adopts the opinion of the voter at y. Otherwise (i.e., with probability α), x breaks 
+        its connection to y and makes a new connection to a voter chosen at random from those that share its opinion. 
+        The process continues until there are no edges connecting voters that disagree."
+            * edge deletion!
+    - "Rewire-to-random" Model
+        - How it differs from rewire-to-same model:
+        1) x makes its new connection to a voter chosen at random from all of the vertices in the graph.
+        - This small difference leads to fundamentally different outcomes. See Figure 1 and 2.
+
+    (Durrett, Gleeson, et al. "Graph fission in an evolving voter model." 2012.)
+
+Jump Voter Model
+    - Modification of classic voter model to incorporate the influence of mass media
+    - Undirected, complete graph
+    - Binary opinion space
+    - Discrete time process
+    - Update Rules:
+        1) With a probablility of 1 - p, a single node is randomly selected and adopts the state of one of its
+        neighbors chosen randomly. This rule captures the node to node interaction from the classic voter model.
+        2) With probability p, either a random number of 0 opinion nodes update their opinions to 1 or a random 
+        number of 1 opinion nodes update their opinions to 0. A signed form of this random variable (Z) follows 
+        the convention that it is negative in the case of the former update, and positive for the latter. This
+        rule captures the influence of mass media. Media attention in society is observed to be irregular, 
+        with its sporadicity depending on, among other things, the opinion context.
+            * The process is said to reach consensus when either all nodes have opinion 0 or opinion 1, and it is 
+            assumed that the process spends forever in that state once it is attained. Consensus on opinion 1 is 
+            called fixation for convenience. The mean of Z need not be zero. A non-zero mean could be indicative of 
+            actual events or of biases in the media. The variance of Z represents the strength of the media influence.
+    - Diffusion approximations are the key tool for deriving the jump diffusion process.
+    - They approximate the model as a jump diffusion process and determine a fixed probability and expected 
+    consensus time.  
+
+    (Majmudar, Krone, et al. "The Voter Model and Jump Diffusion". 2015.) 
 
 
 
