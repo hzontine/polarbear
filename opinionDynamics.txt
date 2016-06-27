@@ -35,6 +35,13 @@ SD Reproduce this:
     the distance of these opinions from the subject’s own"
     
     (Das, Gollapudi, Munagala. "Modeling Opinion Dynamics in Social Networks".)
+SDHZ Last sentence of section 1
+    1. DeGroot -- Markov chain w/ weight matrix each vertex puts on every other's opinion
+        Friedkin (add innate/unvoiced opinion)
+    2. "Flocking" (?)  Bounded confidence, HK/DW
+    3. Voter model -- copy, don't drift.
+        Yildiz -- stubborn
+SDHZ last part of 2.2 -- the Stephen model?
 
 
 Binary Voter Model

@@ -11,29 +11,37 @@ X       Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000) (Weisbuch et al. 2
     - vector of opinions
         Binary: (Deffuant 2000)
         Continuous: (Sirbu et al. 2013) 
-how are the vertices that you encounter chosen?
-    - pairwise
-X        - chosen uniformly from the global graph (Weisbuch et al. 2001) 
-X        - chosen from graph neighbors (Yildiz, Acemoglui 2011) (Follmer 1974)
-         - SD/HZ variant: weighted probability between global and neighbors
-    - group influence (HK model)
+    - Friedkin variant: you have a "hidden/latent" opinion that may differ from your expressed opinion
+
+which vertices influence you?
+    - do you interact with the whole graph, or with just neighbors?
+        - whole graph: DeGroot; HK; DW; Weisbuch
+        - graph neighbors: Clifford; Holley; Yildiz; Follmer
+        - (note: SD/HZ variant: weighted probability between global and neighbors)
+    - do you choose randomly from this set, or do you interact with the entire set?
+        - whole set at once: DeGroot; HK
+        - pairwise at a time: Clifford; Holley; DW; Yildiz; Weisbuch
+    (note: no examples of interacting with just neighbors and all at once.)
+
 
 how effectual are encounters?
 X    - conversions happen on every encounter
 X    - conversions happen only with fixed probability
-     - there is a prob. of converting which is inversely proportional to node's
+     - "bounded confidence" (HK,DW) -- conversions only happen if difference of opinion is below threshold
+     - SD/HZ variant: there is a prob. of converting which is inversely proportional to node's
        in-degree (i.e., if you're following a zillion people, it's less likely
        you'll be influenced by each one because that one person only occupies a
        small fraction of the ideas you're exposed to) (??)
          - Question: can/should the "degree of activeness on Twitter" be 
             modeled? (More likely to be influenced the more tweets you see.)
      - different nodes have different "stubbornness" attribute (Yildiz, Acemoglu 2011)
-X       - binary
-        - continuous
+X       - binary (Yildiz)
+        - continuous (?)
         - different ways to implement stubbornness:
-            - migration factor is lower for stubborn nodes
-            - BC thresh is lower for stubborn nodes
-            - dynamic stubbornness  (stubbornness on an opinion can change
+            - stubborn nodes are just plain infinitely stubborn (Yildiz)
+            - HZ/SD: migration factor is lower for stubborn nodes
+            - HZ/SD: BC thresh is lower for stubborn nodes
+            - HZ/SD: dynamic stubbornness  (stubbornness on an opinion can change
               over time) 
                 - do you become stubborn randomly? (coin flip each turn if
                   stubbornness=binary, or uptick in stubbornness if cont.)
@@ -44,9 +52,24 @@ X       - binary
                   people of opposite (or same) opinion and don't change? (so
                   instead of related to time, it's related to 
                   num-of-interactions-w/o-changing)
-     - disagreement between nodes (Sirbu et al. 2013)
+     - "disagreement" (divergence of opinions after an interaction) between nodes (Sirbu et al. 2013)
+
+which way does influence go?
+        - unidirectional influence for each encounter
+        - bidirectional (DW)
 
 Big question: does the graph change over time??
+
+
+
+
+
+The known ways to avoid uniformity in the model:
+------------------------------------------------
+1. Bounded confidence (low threshold)
+2. Stubbornness
+3. Innate opinion != expressed opinion (Friedkin & SLANT are two different ways of doing this)
+
 
 
 
@@ -58,3 +81,15 @@ probability of converting at each step
 number of encounters per step
 
 initial condition (opinion distribution within population)
+
+
+
+Big things we haven't seen:
+---------------------------
+
+The graph updating at all (i.e. homophily, or any other effect, driving edges)
+
+Stubbornness increasing with age
+
+choose sometimes from entire population, sometimes from graph neighbors.
+

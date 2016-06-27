@@ -1,4 +1,6 @@
 
+library(RTextTools)
+
 # Ok, here's what I'd do. First, assume docs is a vector of strings (one string per document). 
 # I also assume the class labels are in the variable classes, one per document.
 
@@ -35,8 +37,7 @@ blue.docs <- c(
 unknown.docs <- c(
     "Donald Trump is da man!",
     "Hicks for Hillary!",
-    "How about a woman for a change?",
-    "elephant donkey"
+    "How about a woman for a change?"
 )
 
 docs <- c(red.docs, blue.docs, unknown.docs)

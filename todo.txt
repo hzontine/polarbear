@@ -1,16 +1,14 @@
 This Week (Due by 7/1):
 -----------------------
 Hannah:
+ * Identify what you want your end-of-SSI poster to be about. Come up with 2-4
+   different ideas, and tell SD. And we'll decide.
  * Continue to read papers in the "hannah to read" Zotero folder, and point
    out aggressively to Stephen specific papers he needs to read in order to
    not be a total loser on this project.
- * Social psychology: talk to Kolar for key terms
-    - how many people can a node reasonably recieve information from?
-    - how much time does a user spend looking through their timeline?
-    - is there a positive correlation between number of tweets per day and amount time
-      spent reading one's timeline?
-    - do people get stubborn over time? is that correlated to echo-chamberness? 
  * Sim.opinion.dynamics()
+    - start building scaffolding for your end-of-SSI topic
+
     - reproduce lit search models
     - vector of opinions: continuous
     - probability of converting: inversely proportional to victim's in-degree
@@ -23,8 +21,6 @@ Hannah:
         one of her neighbors and adopts her opinion." (Yildiz 2)
         "At each Poisson arrival, she chooses one of her neighbors uniformly" (Yildiz 5)
 
-
-    - stubbornness: continuous
     - vector of opinions
         * binary
         * correlated opinions. (generate with mvnorm and then clip to (0,1) interval?)
@@ -95,6 +91,14 @@ Stephen:
      d) number of connections
 
 
+Some day:
+---------
+ * Social psychology: talk to Kolar for key terms
+    - how many people can a node reasonably recieve information from?
+    - how much time does a user spend looking through their timeline?
+    - is there a positive correlation between number of tweets per day and amount time
+      spent reading one's timeline?
+    - do people get stubborn over time? is that correlated to echo-chamberness? 
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
