@@ -138,7 +138,8 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE) {
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
-            scaling
+
+            scaling.factor <- 1 / length(neighbors(graph, victim.vertex, mode="in"))
             probability.of.converting <- scaling.factor * (1- V(graph)[victim.vertex]$stubbornness)
             if (rbinom(1, 1, probability.of.converting) == 1){
                     return(list(new.value=V(graph)[vertex]$opinion,
@@ -300,6 +301,18 @@ get.stubborn.graph <- function(opinions=runif(30), stubbornnesses=rbinom(30, 1, 
     V(g)$opinion <- opinions
     V(g)$stubbornness <- stubbornnesses
     return(g)
+}
+
+# Binary Opinions
+get.vector.opinions.graph <- function(num.opinions=3, num.nodes=40, prob.connect=0.2, dir=FALSE){
+    g <- erdos.renyi.game(num.nodes, prob.connect)
+    alpha <- c("a","b","c","d","e","f","g","h","i","j","k")
+    for( i in 1:num.opinions ) {
+        for( node in 1:num.nodes ) {
+            set_vertex_attr(g, alpha[i], node, sample(c(0,1),1))
+        }
+    }
+    return(g) 
 }
 
 # Returns a graph whose nodes have a binary or continuous opinion attribute. 

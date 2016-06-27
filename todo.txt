@@ -10,7 +10,6 @@ Hannah:
     - start building scaffolding for your end-of-SSI topic
 
     - reproduce lit search models
-    - vector of opinions: continuous
     - probability of converting: inversely proportional to victim's in-degree
     - group influence (reading HK paper and figuring out whether we're
         compatible at all with the way they do it)
@@ -20,9 +19,9 @@ Hannah:
         "At each date, some randomly chosen individual observes or communicates with 
         one of her neighbors and adopts her opinion." (Yildiz 2)
         "At each Poisson arrival, she chooses one of her neighbors uniformly" (Yildiz 5)
-
     - vector of opinions
         * binary
+        * continuous
         * correlated opinions. (generate with mvnorm and then clip to (0,1) interval?)
  * Lit Search
     - vector of continuous opinions

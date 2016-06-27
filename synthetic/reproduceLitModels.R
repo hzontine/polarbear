@@ -17,8 +17,8 @@ binary.voter <- function() {
 }
 
 
-yildiz.discrete <- function(){
-    # Yildoz, Acemoglu, et al. 2011
+yildiz.binary <- function(){
+    # Yildoz, Acemoglu, et al. 2013
     # Agent-based where each has a binary opinion and stubbornness value
     # Results: opinions never reach a consensus because every agent is indirectly connected to
     # stubborn agents who's opinions are never changed
