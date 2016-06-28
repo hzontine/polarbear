@@ -53,6 +53,7 @@ sim.opinion.dynamics <- function(init.graph,
         encounter.func=get.mean.field.encounter.func(3),
         victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.),
         choose.randomly.each.encounter=FALSE,
+        edge.update.function=dave.edge.update.function(),
         verbose=TRUE) {
 
     graphs <- list(length=(num.encounters/vcount(init.graph)))
@@ -273,14 +274,29 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
 # ** edge update generator functions: an "edge update generator function" is 
 # one that can be called to return an edge update function.
 
-dave.edge.update.function <- function(g,vertex.ID) {
+dave.edge.update.function <- function() {
+    return(
+        function(g, vertex.ID){
+            neighbors <- neighbors(g,vertex.ID,mode="in")
+            for (n in 1:length(neighbors)){
+                if( V(g)[neighbors[n]]$opinion == V(g)[vertex.ID]$opinion ){
+                    foaf <- neighbors(g,neighbors[n],mode="in")
+                    foaf <- foaf[-(n==vertex.ID]
+                    foaf <- foaf[-(which(neighbors %in% foaf))] 
+                    new.edges <- c(new.edges, foaf)
+                } else {
+                
+
+                }
+            }
+            return(list())
+        }
+    )
 
     # loop through all vertex.ID's neighbors. For each one:
     #           - if you agree, have victim add an edge to a random influencer's
     #             neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
     #           - if you disagree, break the edge
-
-
 }
 
 
