@@ -1,14 +1,29 @@
+
 Political Polarization
     - The great debate
-Opinion Dynamics
-    - Discrete vs. continious opinion values
-    - Univariate vs. vector of opinions
-    - Pairwise interactions vs. group influence
-Synthetic Data 
-    - A agent holds a univariate or vector of opinions, which is represented by 
-    binary or continuous values.
-    - At each iteration, one victim is chosen who will interact with either one node, 
-        all of it's graph neighbors, or all of the nodes in the graph.
+
+Models of Opinion Dynamics
+    - Modeling a population of users as a graph
+    - What edges represent (briefly mention directed vs undirected)
+    - Representing the opinion itself: discrete or continuous? univariate or
+      multivariate? 
+    - How vertices influence each other: Pairwise interactions, or group
+      influence? 
+    - Other modeling features: stubbornness, bounded confidence
+
+Simulating Opinion Dynamics
+    - Two reasons to simulate a model:
+        a. To determine whether certain micro-behaviors are sufficient to
+           produce known macro-observations. ("backwards")
+        b. To determine the macro-consequences of certain micro-behaviors.
+           ("forwards")
+      In our case:
+        a. What modeling assumptions will produce the phenomena we see today
+           in the political sphere? (entrenched polarization; alignment on
+           seemingly diverse issues)
+        b. In a politically polarized population, what "interventions" might
+           be effective to mitigate that polarization?
+
     - We reproduced models from the literature.
         * Ex: Binary Voter Model, DW, HK, BVM with stubborn agents, etc.
         * Will converge to consensus after some amount of time
@@ -17,6 +32,7 @@ Synthetic Data
         * Will never reach a fixed state
             - Bounded Confidence: if the threshold is too low
             - Stubborn Agents: never change their own opinions
+
 Emperical Data
     - How was the data collected?
     - How was the seed set chosen?
