@@ -7,10 +7,13 @@ Opinion Dynamics
 Synthetic Data 
     - A agent holds a univariate or vector of opinions, which is represented by 
     binary or continuous values.
+    - At each iteration, one victim is chosen who will interact with either one node, 
+        all of it's graph neighbors, or all of the nodes in the graph.
     - We reproduced models from the literature.
         * Ex: Binary Voter Model, DW, HK, BVM with stubborn agents, etc.
         * Will converge to consensus after some amount of time
             - Binary Voter Model: agent adopts a neighbor's opinion
+            - Bounded Confidence: if the threshold is large enough
         * Will never reach a fixed state
             - Bounded Confidence: if the threshold is too low
             - Stubborn Agents: never change their own opinions
@@ -21,8 +24,11 @@ Emperical Data
     - Compare and contrast graph metrics between our graphs.
 Text Classification
     - What is Sentiment Analysis?
+    - Types of Classifiers
     - Training Data
         * Manually labeled tweets thanks to our fellow SSI students
     - Test Data
+    - How accurate were our predictions?
 Dynamic Networks
+    - shiny app demo
 
