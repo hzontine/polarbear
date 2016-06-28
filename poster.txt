@@ -1,0 +1,28 @@
+Political Polarization
+    - The great debate
+Opinion Dynamics
+    - Discrete vs. continious opinion values
+    - Univariate vs. vector of opinions
+    - Pairwise interactions vs. group influence
+Synthetic Data 
+    - A agent holds a univariate or vector of opinions, which is represented by 
+    binary or continuous values.
+    - We reproduced models from the literature.
+        * Ex: Binary Voter Model, DW, HK, BVM with stubborn agents, etc.
+        * Will converge to consensus after some amount of time
+            - Binary Voter Model: agent adopts a neighbor's opinion
+        * Will never reach a fixed state
+            - Bounded Confidence: if the threshold is too low
+            - Stubborn Agents: never change their own opinions
+Emperical Data
+    - How was the data collected?
+    - How was the seed set chosen?
+    - What constraints did we inflict during data collection?
+    - Compare and contrast graph metrics between our graphs.
+Text Classification
+    - What is Sentiment Analysis?
+    - Training Data
+        * Manually labeled tweets thanks to our fellow SSI students
+    - Test Data
+Dynamic Networks
+
