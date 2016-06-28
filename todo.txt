@@ -1,14 +1,28 @@
 This Week (Due by 7/1):
 -----------------------
 Hannah:
- * Identify what you want your end-of-SSI poster to be about. Come up with 2-4
-   different ideas, and tell SD. And we'll decide.
+ * Sim.opinion.dynamics()
+    - start building scaffolding for your end-of-SSI topic
+        - Implement Dave's experiment: 
+            - add code for edge addition and deletion, appropriately parameterized
+            - Never change opinions (!)
+            - When you encounter a neighbor:
+                - if you agree, have victim add an edge to a random influencer's
+                  neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
+                - if you disagree, break the edge
+        Dave is "morally certain" that this will "converge" to disconnected
+        all-blue and all-red halves.
+
+SD's thoughts:
+    - For summer, ignore the following: everything else. :)
+        - stubbornness
+        - vector of opinions
+        - choosing from the whole population
+
+
  * Continue to read papers in the "hannah to read" Zotero folder, and point
    out aggressively to Stephen specific papers he needs to read in order to
    not be a total loser on this project.
- * Sim.opinion.dynamics()
-    - start building scaffolding for your end-of-SSI topic
-
     - reproduce lit search models
     - probability of converting: inversely proportional to victim's in-degree
     - group influence (reading HK paper and figuring out whether we're
@@ -37,15 +51,6 @@ Stephen:
  * Read at least some of the papers in the "stephen to read" Zotero folder.
  * Sim.opinion.dynamics()
     - Reproduce Vasquez & SR 2004
-    - Implement Dave's experiment: 
-        - add code for edge addition and deletion, appropriately parameterized
-        - Never change opinions (!)
-        - When you encounter a neighbor:
-            - if you agree, have victim add an edge to a random influencer's
-              neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
-            - if you disagree, break the edge
-    Dave is "morally certain" that this will "converge" to disconnected
-    all-blue and all-red halves.
     - analyze
         * Confirm/deny that Holley's original does in fact converge less rapidly 
             than Zontine's.

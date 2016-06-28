@@ -38,6 +38,15 @@ source("plotting.R")
 # cause the second vertex's opinion to be updated) and the second is the
 # "potential victim." It will return the (possibly new) value of the second
 # vetex.
+#
+# edge.update.function -- a function which takes a graph and a vertex ID. It
+# will return information about who the vertex should connect to, and
+# disconnect to.
+# A list of two elements:
+#    $new.edges -- vertex IDs this vertex is currently not connected to, but
+#    should be.
+#    $old.edges -- vertex IDs this vertex is currently connected to, but
+#    shouldn't be.
 
 sim.opinion.dynamics <- function(init.graph,
         num.encounters=200,
@@ -249,6 +258,32 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
         }
     )
 }
+
+
+# Terminology:
+#
+# ** edge update functions: an "edge update function" is one that takes a 
+# graph and a vertex, and returns information about who the vertex should 
+# connect to, and disconnect to. This is a list of two elements:
+#    $new.edges -- vertex IDs this vertex is currently not connected to, but
+#    should be.
+#    $old.edges -- vertex IDs this vertex is currently connected to, but
+#    shouldn't be.
+#
+# ** edge update generator functions: an "edge update generator function" is 
+# one that can be called to return an edge update function.
+
+dave.edge.update.function <- function(g,vertex.ID) {
+
+    # loop through all vertex.ID's neighbors. For each one:
+    #           - if you agree, have victim add an edge to a random influencer's
+    #             neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
+    #           - if you disagree, break the edge
+
+
+}
+
+
 
 
 # Return a graph that has a fairly strongly connected group of liberals, a
