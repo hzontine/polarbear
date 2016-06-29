@@ -52,15 +52,10 @@ Stephen:
  * Sim.opinion.dynamics()
     - Reproduce Vasquez & SR 2004
     - analyze
-        * Confirm/deny that Holley's original does in fact converge less rapidly 
-            than Zontine's.
         * Confirm/deny whether it matters that Holley chooses victim first,
             whereas we choose influencer first?
         * Do barbell graph with binary: can we get non-uniform equilibrium ever? (If
             graph is connected?) Dave thinks yes, Stephen boldly predicts no.
- * Data collection
-    - Kick off process to grab last n tweets (n=20?) of all users in the
-      Pelosi/Ryan graph and store in DB.
 
 Due by 7/8:
 ------------
@@ -69,6 +64,7 @@ Hannah:
 
 Stephen:
  * Read chapter 7 of K&C 
+ * Put together scaffolding for SSI "hosting" activity.
 
 
 Due by 7/15:
