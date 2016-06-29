@@ -81,12 +81,27 @@ sim.opinion.dynamics <- function(init.graph,
                     v,")...\n")
             }
 
-            encountered.vertices <- encounter.func(graphs[[i]],v)
-            # For each of these encountered partners...
-            for (ev in encountered.vertices) {
-                update.info <- victim.update.function(graphs[[i]], v, ev)
-                V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
-                    update.info$new.value
+            if(){
+                list.of.edges <- edge.update.function(graphs[[i]],v)
+                new <- list.of.edges[[1]]
+                old <- list.of.edges[[2]]
+                for(e in 1:length(new)){
+                    # Probability
+                    add_edges(graphs[[i]],v,new[e])
+                }
+                for(o in 1:length(new)){
+                    # Probability
+                    delete_edges(graphs[[i]],get.edge.ids(graphs[[i]],c(v,old[o]),directed=TRUE))
+                }
+            } else {
+                encountered.vertices <- encounter.func(graphs[[i]],v)
+                # For each of these encountered partners...
+                for (ev in encountered.vertices) {
+                    update.info <- victim.update.function(graphs[[i]], v, ev)
+                    V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
+                        update.info$new.value
+                }
+
             }
         }
     }
@@ -278,25 +293,25 @@ dave.edge.update.function <- function() {
     return(
         function(g, vertex.ID){
             neighbors <- neighbors(g,vertex.ID,mode="in")
+            new.edges <- vector()
+            old.edges <- vector()
             for (n in 1:length(neighbors)){
                 if( V(g)[neighbors[n]]$opinion == V(g)[vertex.ID]$opinion ){
                     foaf <- neighbors(g,neighbors[n],mode="in")
-                    foaf <- foaf[-(n==vertex.ID]
-                    foaf <- foaf[-(which(neighbors %in% foaf))] 
+                    foaf <- foaf[-(n==vertex.ID)]
+                    foaf <- foaf[-(which(neighbors %in% foaf))]
                     new.edges <- c(new.edges, foaf)
                 } else {
-                
-
+                    old.edges <- c(old.edges, neighbors[n])
                 }
             }
-            return(list())
+            return(list(new.edges, old.edges))
         }
     )
-
     # loop through all vertex.ID's neighbors. For each one:
-    #           - if you agree, have victim add an edge to a random influencer's
-    #             neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
-    #           - if you disagree, break the edge
+    #   - if you agree, have victim add an edge to a random influencer's
+    #       neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
+    #   - if you disagree, break the edge
 }
 
 
