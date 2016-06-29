@@ -62,9 +62,15 @@ sim.opinion.dynamics <- function(init.graph,
     encounter.num <- 0
 
     # For each iteration of the sim...
-    for (i in 2:(num.encounters/vcount(init.graph))) {
+    num.iter <- num.encounters/vcount(init.graph)
+    for (i in 2:num.iter) {
 
-        if (verbose) cat("---------------------------------\n")
+        if (verbose) {
+            cat("---------------------------------\n")
+        } else {
+            cat("Iteration ",i,"/",num.iter," (",round(i/num.iter,2)*100,
+                "%)\n", sep="")
+        }
 
         # Create a new igraph object to represent this point in time.
         graphs[[i]] <- graphs[[i-1]]
