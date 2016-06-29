@@ -81,28 +81,30 @@ sim.opinion.dynamics <- function(init.graph,
                     v,")...\n")
             }
 
-            if(){
+            #if(){
                 list.of.edges <- edge.update.function(graphs[[i]],v)
                 new <- list.of.edges[[1]]
                 old <- list.of.edges[[2]]
                 for(e in 1:length(new)){
-                    # Probability
-                    add_edges(graphs[[i]],v,new[e])
+                    # Probability ?
+                    graphs[[i]] <- add_edges(graphs[[i]],
+                        c(V(graphs[[i]])[v], V(graphs[[i]])[new[e]]))
                 }
+                    cat("#################\n")
                 for(o in 1:length(new)){
-                    # Probability
+                    # Probability ?
                     delete_edges(graphs[[i]],get.edge.ids(graphs[[i]],c(v,old[o]),directed=TRUE))
                 }
-            } else {
-                encountered.vertices <- encounter.func(graphs[[i]],v)
+            #} else {
+            #    encountered.vertices <- encounter.func(graphs[[i]],v)
                 # For each of these encountered partners...
-                for (ev in encountered.vertices) {
-                    update.info <- victim.update.function(graphs[[i]], v, ev)
-                    V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
-                        update.info$new.value
-                }
+            #    for (ev in encountered.vertices) {
+            #        update.info <- victim.update.function(graphs[[i]], v, ev)
+            #        V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
+            #            update.info$new.value
+            #    }
 
-            }
+            #}
         }
     }
     graphs
@@ -370,21 +372,25 @@ get.stubborn.graph <- function(opinions=runif(30), stubbornnesses=rbinom(30, 1, 
 }
 
 # Binary Opinions
-get.vector.opinions.graph <- function(num.opinions=3, num.nodes=40, prob.connect=0.2, dir=FALSE){
-    g <- erdos.renyi.game(num.nodes, prob.connect)
-    alpha <- c("a","b","c","d","e","f","g","h","i","j","k")
-    for( i in 1:num.opinions ) {
-        for( node in 1:num.nodes ) {
-            set_vertex_attr(g, alpha[i], node, sample(c(0,1),1))
-        }
-    }
-    return(g) 
-}
+#get.vector.opinions.graph <- function(num.opinions=3, num.nodes=40, prob.connect=0.2, dir=FALSE){
+#    g <- erdos.renyi.game(num.nodes, prob.connect)
+#    alpha <- c("a","b","c","d","e","f","g","h","i","j","k")
+#    for( i in 1:num.opinions ) {
+#        for( node in 1:num.nodes ) {
+#            set_vertex_attr(g, alpha[i], node, sample(c(0,1),1))
+#        }
+#    }
+#    return(g) 
+#}
 
 # Returns a graph whose nodes have a binary or continuous opinion attribute. 
 # Default is continuous
-get.plain.old.graph <- function(opinion=runif(30), probability.connected=0.2) {
-    g <- erdos.renyi.game(length(opinion),probability.connected)
+get.plain.old.graph <- function(opinion=runif(30), probability.connected=0.2, dir=FALSE) {
+    if(dir){
+        g <- erdos.renyi.game(length(opinion),probability.connected, directed=TRUE)
+    } else {
+        g <- erdos.renyi.game(length(opinion),probability.connected)
+    }
     V(g)$opinion <- opinion
     return(g)
 }

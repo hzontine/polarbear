@@ -35,4 +35,3 @@ yildiz.binary <- function(){
     plot.animation(binary.voter.stubborn.graph, "opinion", delay.between.frames=.25)
 }
 
-dave.model <- 
