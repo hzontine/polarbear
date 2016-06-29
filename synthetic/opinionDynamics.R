@@ -90,7 +90,6 @@ sim.opinion.dynamics <- function(init.graph,
                     graphs[[i]] <- add_edges(graphs[[i]],
                         c(V(graphs[[i]])[v], V(graphs[[i]])[new[e]]))
                 }
-                    cat("#################\n")
                 for(o in 1:length(new)){
                     # Probability ?
                     delete_edges(graphs[[i]],get.edge.ids(graphs[[i]],c(v,old[o]),directed=TRUE))
