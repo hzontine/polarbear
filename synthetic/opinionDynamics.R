@@ -57,7 +57,7 @@ sim.opinion.dynamics <- function(init.graph,
         verbose=TRUE,
         edge.update=FALSE) {
 
-    graphs <- list(length=(num.encounters/vcount(init.graph)))
+    graphs <- vector("list",length=(num.encounters/vcount(init.graph)))
     graphs[[1]] <- init.graph
 
     encounter.num <- 0
