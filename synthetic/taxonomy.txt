@@ -1,8 +1,6 @@
 
-model variations:
------------------
-
-how are opinions represented?
+How are opinions represented?
+-----------------------------
     - univariate 
 X       Binary: (Yildiz et al. 2013) (Folmer 1974) (Weisbuch and Boudjema 1999)
            * Binary Voter Model: (Holley and Liggett 1975) and (Clifford and Sudbury 1973)
@@ -13,7 +11,9 @@ X       Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000) (Weisbuch et al. 2
         Continuous: (Sirbu et al. 2013) 
     - Friedkin variant: you have a "hidden/latent" opinion that may differ from your expressed opinion
 
-which vertices influence you?
+
+Which vertices influence you?
+-----------------------------
     - do you interact with the whole graph, or with just neighbors?
         - whole graph: DeGroot; HK; DW; Weisbuch
         - graph neighbors: Clifford; Holley; Yildiz; Follmer
@@ -21,13 +21,16 @@ which vertices influence you?
     - do you choose randomly from this set, or do you interact with the entire set?
         - whole set at once: DeGroot; HK
         - pairwise at a time: Clifford; Holley; DW; Yildiz; Weisbuch
+        - is the victim randomly chosen first, then influencer, or the other
+          way around?
     (note: no examples of interacting with just neighbors and all at once.)
 
 
-how effectual are encounters?
+How effectual are encounters?
+-----------------------------
+    1. What is the probability of the victim converting?
 X    - conversions happen on every encounter
 X    - conversions happen only with fixed probability
-     - "bounded confidence" (HK,DW) -- conversions only happen if difference of opinion is below threshold
      - SD/HZ variant: there is a prob. of converting which is inversely proportional to node's
        in-degree (i.e., if you're following a zillion people, it's less likely
        you'll be influenced by each one because that one person only occupies a
@@ -39,29 +42,52 @@ X       - binary (Yildiz)
         - continuous (?)
         - different ways to implement stubbornness:
             - stubborn nodes are just plain infinitely stubborn (Yildiz)
-            - HZ/SD: migration factor is lower for stubborn nodes
             - HZ/SD: BC thresh is lower for stubborn nodes
-            - HZ/SD: dynamic stubbornness  (stubbornness on an opinion can change
-              over time) 
-                - do you become stubborn randomly? (coin flip each turn if
-                  stubbornness=binary, or uptick in stubbornness if cont.)
-                - stubbornness is sort of inherited from the influencer
-                - stubbornness proportional to # of times influenced (on that
-                  opinion)
-                - do you become increasingly stubborn when you interact with
-                  people of opposite (or same) opinion and don't change? (so
-                  instead of related to time, it's related to 
-                  num-of-interactions-w/o-changing)
-     - "disagreement" (divergence of opinions after an interaction) between nodes (Sirbu et al. 2013)
+        * continuous only:
+     - "bounded confidence" (HK,DW) -- conversions only happen if difference of opinion is below threshold
 
-which way does influence go?
+    2. What happens on a conversion?
+     * discrete only:
+         - flip to influencer's opinion
+         - multiple influencers (probably a vertex's set of neighbors): flip to
+           "majority rule" (higher threshold than 50% to change vs. stay?)
+         - vector opinions only: some subset of your opinions flip
+         - (SD's dumb idea: flip to opposite of influencer's opinion)
+     * continuous only:
+         - "move partway"
+             - HZ/SD: migration factor (maybe lower for stubborn nodes)
+         - "disagreement" (divergence of opinions after an interaction) between nodes (Sirbu et al. 2013)
+    
+
+Which way does influence go?
+----------------------------
         - unidirectional influence for each encounter
         - bidirectional (DW)
 
 Big question: does the graph change over time??
 
 
+Initial condition:
+------------------
+    - What kind of graph is it? (ER, Barabasi, empirical, etc.)
+    - How are the initial opinions distributed? (All indep, stoch block model
+      to impose some assortativity, etc)
 
+
+
+
+Future work:
+    - HZ/SD: dynamic stubbornness  (stubbornness on an opinion can change
+      over time) 
+        - do you become stubborn randomly? (coin flip each turn if
+          stubbornness=binary, or uptick in stubbornness if cont.)
+        - stubbornness is sort of inherited from the influencer
+        - stubbornness proportional to # of times influenced (on that
+          opinion)
+        - do you become increasingly stubborn when you interact with
+          people of opposite (or same) opinion and don't change? (so
+          instead of related to time, it's related to 
+          num-of-interactions-w/o-changing)
 
 
 The known ways to avoid uniformity in the model:

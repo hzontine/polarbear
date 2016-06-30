@@ -1,0 +1,16 @@
+
+Binary opinions only.
+No graph changing (opinion flips is the only dynamic.)
+Start with empirical graph (PR) and all indep coin flips for initial opinions.
+Test these victim update functions:
+    1. Auto update victim from a single (random) neighbor.
+    2. Auto update victim from majority opinion of neighbors.
+See whether the level of polarization present in empirical graph can be
+    achieved by either of these.
+If so, declare (limited) victory.
+If not, start the graph with assortativity > 0 (HZ's stoch block model idea
+    from communities detected.) See how high it has to start in order to reach
+    the empirical assortativity. (Two params to sweep here: (1) initial prob
+    of red/blue for each cluster, (2) number of clusters we find to start.)
+Or...start the initial condition half (or so) with opinions that we actually
+    know go with that Twitter user, and the other half (or so) random.
