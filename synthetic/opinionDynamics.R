@@ -54,7 +54,8 @@ sim.opinion.dynamics <- function(init.graph,
         victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.),
         choose.randomly.each.encounter=FALSE,
         edge.update.function=dave.edge.update.function(),
-        verbose=TRUE) {
+        verbose=TRUE,
+        edge.update=FALSE) {
 
     graphs <- list(length=(num.encounters/vcount(init.graph)))
     graphs[[1]] <- init.graph
@@ -87,7 +88,7 @@ sim.opinion.dynamics <- function(init.graph,
                     v,")...\n")
             }
 
-            #if(){
+            if(edge.update){
                 list.of.edges <- edge.update.function(graphs[[i]],v)
                 new <- list.of.edges[[1]]
                 old <- list.of.edges[[2]]
@@ -100,16 +101,16 @@ sim.opinion.dynamics <- function(init.graph,
                     # Probability ?
                     delete_edges(graphs[[i]],get.edge.ids(graphs[[i]],c(v,old[o]),directed=TRUE))
                 }
-            #} else {
-            #    encountered.vertices <- encounter.func(graphs[[i]],v)
+            } else {
+                encountered.vertices <- encounter.func(graphs[[i]],v)
                 # For each of these encountered partners...
-            #    for (ev in encountered.vertices) {
-            #        update.info <- victim.update.function(graphs[[i]], v, ev)
-            #        V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
-            #            update.info$new.value
-            #    }
+                for (ev in encountered.vertices) {
+                    update.info <- victim.update.function(graphs[[i]], v, ev)
+                    V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
+                        update.info$new.value
+                }
 
-            #}
+            }
         }
     }
     graphs
