@@ -2,6 +2,7 @@
 Binary opinions only.
 No graph changing (opinion flips is the only dynamic.)
 Start with empirical graph (PR) and all indep coin flips for initial opinions.
+# Choose randomly each encounter?
 Test these victim update functions:
     1. Auto update victim from a single (random) neighbor.
     2. Auto update victim from majority opinion of neighbors.
