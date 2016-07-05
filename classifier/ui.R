@@ -12,10 +12,12 @@ shinyUI(fluidPage(
             radioButtons("classification","Classify user",
                 list("Liberal","Conservative","Unsure"), inline=TRUE),
             actionButton("classify","Classify"),
-            htmlOutput("tweets")
+            htmlOutput("trainingtweets")
         ),
         tabPanel("Test",
-            h3(textOutput("test"))
+            actionButton("test","Show auto-classification"),
+            htmlOutput("prediction"),
+            htmlOutput("testtweets")
         )
     )
 ))
