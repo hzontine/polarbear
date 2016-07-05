@@ -10,6 +10,8 @@ source("db.R")
 # mysql> create table nodata_users (userid varchar(20));
 # mysql> create table screennames (userid varchar(20), screenname varchar(16));
 # mysql> create table tweets (userid varchar(20), tweet varchar(200));
+# mysql> create table training (userid varchar(20), class char(1), timest
+# timestamp);
 
 
 # TODO: if we already have a userid's followers cached, and we already have
@@ -27,6 +29,7 @@ read.caches <- function(force=FALSE) {
     screennames.cache <<- tbl(db.src,"screennames")
     nodata.cache <<- tbl(db.src,"nodata_users")
     tweets.cache <<- tbl(db.src,"tweets")
+    training.cache <<- tbl(db.src,"training")
 }
 
 exists.in.cache <- function(the.userid, cache, check.nodata=TRUE) {
