@@ -38,23 +38,40 @@ source("plotting.R")
 # cause the second vertex's opinion to be updated) and the second is the
 # "potential victim." It will return the (possibly new) value of the second
 # vetex.
+#
+# edge.update.function -- a function which takes a graph and a vertex ID. It
+# will return information about who the vertex should connect to, and
+# disconnect to.
+# A list of two elements:
+#    $new.edges -- vertex IDs this vertex is currently not connected to, but
+#    should be.
+#    $old.edges -- vertex IDs this vertex is currently connected to, but
+#    shouldn't be.
 
 sim.opinion.dynamics <- function(init.graph,
         num.encounters=200,
         encounter.func=get.mean.field.encounter.func(3),
         victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.),
         choose.randomly.each.encounter=FALSE,
-        verbose=TRUE) {
+        edge.update.function=dave.edge.update.function(),
+        verbose=TRUE,
+        edge.update=FALSE) {
 
-    graphs <- list(length=(num.encounters/vcount(init.graph)))
+    graphs <- vector("list",length=(num.encounters/vcount(init.graph)))
     graphs[[1]] <- init.graph
 
     encounter.num <- 0
 
     # For each iteration of the sim...
-    for (i in 2:(num.encounters/vcount(init.graph))) {
+    num.iter <- num.encounters/vcount(init.graph)
+    for (i in 2:num.iter) {
 
-        if (verbose) cat("---------------------------------\n")
+        if (verbose) {
+            cat("---------------------------------\n")
+        } else {
+            cat("Iteration ",i,"/",num.iter," (",round(i/num.iter,2)*100,
+                "%)\n", sep="")
+        }
 
         # Create a new igraph object to represent this point in time.
         graphs[[i]] <- graphs[[i-1]]
@@ -71,12 +88,28 @@ sim.opinion.dynamics <- function(init.graph,
                     v,")...\n")
             }
 
-            encountered.vertices <- encounter.func(graphs[[i]],v)
-            # For each of these encountered partners...
-            for (ev in encountered.vertices) {
-                update.info <- victim.update.function(graphs[[i]], v, ev)
-                V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
-                    update.info$new.value
+            if(edge.update){
+                list.of.edges <- edge.update.function(graphs[[i]],v)
+                new <- list.of.edges[[1]]
+                old <- list.of.edges[[2]]
+                for(e in 1:length(new)){
+                    # Probability ?
+                    graphs[[i]] <- add_edges(graphs[[i]],
+                        c(V(graphs[[i]])[v], V(graphs[[i]])[new[e]]))
+                }
+                for(o in 1:length(new)){
+                    # Probability ?
+                    delete_edges(graphs[[i]],get.edge.ids(graphs[[i]],c(v,old[o]),directed=TRUE))
+                }
+            } else {
+                encountered.vertices <- encounter.func(graphs[[i]],v)
+                # For each of these encountered partners...
+                for (ev in encountered.vertices) {
+                    update.info <- victim.update.function(graphs[[i]], v, ev)
+                    V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
+                        update.info$new.value
+                }
+
             }
         }
     }
@@ -138,7 +171,8 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE) {
 get.proportional.to.in.degree.update.victim.function <- function(){
     return (
         function(graph, vertex, victim.vertex){
-            scaling
+
+            scaling.factor <- 1 / length(neighbors(graph, victim.vertex, mode="in"))
             probability.of.converting <- scaling.factor * (1- V(graph)[victim.vertex]$stubbornness)
             if (rbinom(1, 1, probability.of.converting) == 1){
                     return(list(new.value=V(graph)[vertex]$opinion,
@@ -250,6 +284,47 @@ get.graph.neighbors.encounter.func <- function(num.vertices) {
 }
 
 
+# Terminology:
+#
+# ** edge update functions: an "edge update function" is one that takes a 
+# graph and a vertex, and returns information about who the vertex should 
+# connect to, and disconnect to. This is a list of two elements:
+#    $new.edges -- vertex IDs this vertex is currently not connected to, but
+#    should be.
+#    $old.edges -- vertex IDs this vertex is currently connected to, but
+#    shouldn't be.
+#
+# ** edge update generator functions: an "edge update generator function" is 
+# one that can be called to return an edge update function.
+
+dave.edge.update.function <- function() {
+    return(
+        function(g, vertex.ID){
+            neighbors <- neighbors(g,vertex.ID,mode="in")
+            new.edges <- vector()
+            old.edges <- vector()
+            for (n in 1:length(neighbors)){
+                if( V(g)[neighbors[n]]$opinion == V(g)[vertex.ID]$opinion ){
+                    foaf <- neighbors(g,neighbors[n],mode="in")
+                    foaf <- foaf[-(n==vertex.ID)]
+                    foaf <- foaf[-(which(neighbors %in% foaf))]
+                    new.edges <- c(new.edges, foaf)
+                } else {
+                    old.edges <- c(old.edges, neighbors[n])
+                }
+            }
+            return(list(new.edges, old.edges))
+        }
+    )
+    # loop through all vertex.ID's neighbors. For each one:
+    #   - if you agree, have victim add an edge to a random influencer's
+    #       neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
+    #   - if you disagree, break the edge
+}
+
+
+
+
 # Return a graph that has a fairly strongly connected group of liberals, a
 # fairly strongly connected group of conservatives, and num.connections
 # between the two groups.
@@ -302,10 +377,26 @@ get.stubborn.graph <- function(opinions=runif(30), stubbornnesses=rbinom(30, 1, 
     return(g)
 }
 
+# Binary Opinions
+#get.vector.opinions.graph <- function(num.opinions=3, num.nodes=40, prob.connect=0.2, dir=FALSE){
+#    g <- erdos.renyi.game(num.nodes, prob.connect)
+#    alpha <- c("a","b","c","d","e","f","g","h","i","j","k")
+#    for( i in 1:num.opinions ) {
+#        for( node in 1:num.nodes ) {
+#            set_vertex_attr(g, alpha[i], node, sample(c(0,1),1))
+#        }
+#    }
+#    return(g) 
+#}
+
 # Returns a graph whose nodes have a binary or continuous opinion attribute. 
 # Default is continuous
-get.plain.old.graph <- function(opinion=runif(30), probability.connected=0.2) {
-    g <- erdos.renyi.game(length(opinion),probability.connected)
+get.plain.old.graph <- function(opinion=runif(30), probability.connected=0.2, dir=FALSE) {
+    if(dir){
+        g <- erdos.renyi.game(length(opinion),probability.connected, directed=TRUE)
+    } else {
+        g <- erdos.renyi.game(length(opinion),probability.connected)
+    }
     V(g)$opinion <- opinion
     return(g)
 }
