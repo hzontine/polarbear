@@ -8,9 +8,9 @@ shinyServer(function(input,output,session) {
 
     output$trainingtweets <- renderUI({
         input$classify
-        userid.to.classify <<- dplyr::sample_n(
+        userid.to.classify <<- dplyr::sample_n(unique(
             collect(anti_join(select(tweets.cache,userid), 
-                select(training.cache,userid))),
+                select(training.cache,userid)))),
             1)[[1]]
         return(get.tweets.page.for(userid.to.classify))
     })
@@ -37,9 +37,9 @@ shinyServer(function(input,output,session) {
     })
     
     observeEvent(input$test, {
-        prediction <- auto.classify()
+        prediction <- auto.classify(regenerate=TRUE)
         output$prediction <- renderUI(paste0(prediction$userid,
-            " => ",prediction$FORESTS_LABEL))
+            " => ",prediction$class))
         output$testtweets <- renderUI(get.tweets.page.for(
             as.numeric(prediction$userid)))
     })
