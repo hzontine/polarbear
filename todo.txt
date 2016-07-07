@@ -2,6 +2,16 @@ This Week (Due by 7/1):
 -----------------------
 Hannah:
  * Sim.opinion.dynamics()
+    - in terms of binary opinions, what are the different ways thought of for
+    changing the attribute?
+
+
+
+
+
+
+
+
     - start building scaffolding for your end-of-SSI topic
         - Implement Dave's experiment: 
             - add code for edge addition and deletion, appropriately parameterized
