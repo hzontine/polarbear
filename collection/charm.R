@@ -235,16 +235,24 @@ get.charm <- function(verbose=TRUE) {
         if (verbose) {
             cat("\nCharms exhausted. Chill 13 minutes before cycling ",
                 "through again.\n")
-            dt <- Sys.time() - last.time
-            units(dt) <- "mins"
-            cat("(That took",round(dt,2),"minutes out of your 15.)\n")
-            print(Sys.time())
         }
-        # Waiting 13 minutes after going through all charms seems empirically 
-        # safe.
-        Sys.sleep(13*60)  
+        dt <- Sys.time() - last.time
+        units(dt) <- "mins"
         if (verbose) {
-            last.time <<- Sys.time()
+            cat("(That took",round(dt,2),"minutes out of your 15.)\n")
+                print(Sys.time())
+            if (16-dt > 0) {
+                cat("\nCharms exhausted. Chill", 16-dt,"minutes before ",
+                    "cycling through again.\n")
+            } else {
+                cat("\nCharms exhausted. Begin again immediately.\n")
+            }
+        }
+        if (16-dt > 0) {
+            Sys.sleep((16-dt)*60)  
+        }
+        last.time <<- Sys.time()
+        if (verbose) {
             print(last.time)
         }
     }
