@@ -1,6 +1,14 @@
 I. Introduction
 	a. "social bubble"
     b. Definition of polarization. Are there competing definitions?
+        Observed phenomenon which causes people to become more narrow minded.
+        Social media allows a user to cultivate a platform to receive and share information.
+        Users tend to follow other users with political views similar to their own.
+        “Echo chamber”: As users aggregate in communities of interest, they diverge from those whom they disagree with. 
+        This fosters confirmation bias among a small community, because controversial theories, biased views, and selective 
+        news are reinforced and undisputed.
+        Over time, political opinions diverge into tight clusters of ideological extremes. As opinions are reinforced, more 
+        strong-minded and stubborn they become.
 	c. Why should we care if the American public is becoming polarized?
 II. Lit search
 	a. The Great Debate: Polarization
