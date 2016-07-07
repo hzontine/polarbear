@@ -28,14 +28,24 @@ shinyServer(function(input,output) {
             }
             userid.to.classify <<- dplyr::sample_n(
                 setdiff(unique(select(tweets.cache,userid)), 
-                    unique(select(training.cache,userid))),
+                    unique(collect(select(training.cache,userid)))),
                 1)[[1]]
             cat("We are going to classify ", userid.to.classify, "next.\n")
-            output$userid <- renderUI({
-                paste("userid ",userid.to.classify)
-            })
-            return(get.tweets.page.for(userid.to.classify))
+            screenname <- collect(screennames.cache %>% 
+                    dplyr::filter(userid==userid.to.classify) %>%
+                    dplyr::select(screenname))[[1]][1]
+            if (is.na(screenname) || length(screenname) != 1) {
+                output$userid <- renderText({
+                    paste0("<b>Twitter user #",userid.to.classify,"</b>")
+                })
+            } else {
+                output$userid <- renderText({
+                    paste0("<b>Twitter user #", userid.to.classify, " (@",
+                        screenname,")</b>")
+                })
+            }
         })
+            return(get.tweets.page.for(userid.to.classify))
     })
 
     get.tweets.page.for <- function(the.userid) {
@@ -58,18 +68,24 @@ shinyServer(function(input,output) {
             as.numeric(prediction$userid)))
     })
 
-    output$waitmessage <- renderText({
-        return("")
-    })
 
     output$topterms <- renderTable({
-        input$analyze
-        isolate({
-            my.rf.model <- build.classifier(use.real.data=TRUE,
-                classification=input$classificationanalyze)
-            imps <- sort(my.rf.model$variable.importance, decreasing=TRUE)
-            topterms <- imps[imps > 0]
-            return(xtable(data.frame(importance=topterms)))
-        })
+        if (input$analyze > 0) {
+          withProgress(message="Please wait...", value=0, min=0, max=1, {
+            isolate({
+                output$waitmessage <<- renderText({
+                    return("Please wait...")
+                })
+                my.rf.model <- build.classifier(use.real.data=TRUE,
+                    classification=input$classificationanalyze)
+                imps <- sort(my.rf.model$variable.importance, decreasing=TRUE)
+                topterms <- imps[imps > 0]
+                output$waitmessage <<- renderText({
+                    return("Done!")
+                })
+                return(xtable(data.frame(importance=topterms)))
+            })
+          })
+        }
     })
 })

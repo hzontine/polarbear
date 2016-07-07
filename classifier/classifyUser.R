@@ -2,11 +2,12 @@
 library(RTextTools)
 library(tm)
 library(ranger)
+library(stringr)
 
-setwd("../collection")
+    setwd("../collection")
 source("cache.R")
 read.caches()
-setwd("../classifier")
+    setwd("../classifier")
 
 test.classifications <- data.frame(
     userid=character(0),
@@ -52,14 +53,16 @@ auto.classify <- function(userid=NULL, regenerate=TRUE) {
 build.classifier <- function(regenerate=FALSE, use.real.data=TRUE,
     classification=1) {
 
+    setProgress(.1, "Compiling tweets...")
 cat("bc1\n")
     user.content <<- tweets.cache %>% group_by(userid) %>%
         summarize(content=paste(tweet, collapse=" "))
 
+    setProgress(.2, "Compiling classifications...")
 cat("bc2\n")
     class.column.name <- paste0("daclass",classification)
     whole.set <<- left_join(user.content,
-        dplyr::select(training.cache, -timest))
+        collect(dplyr::select(training.cache, -timest)))
 
         if (use.real.data) {
             classes <<- whole.set[[class.column.name]]
@@ -68,6 +71,10 @@ cat("bc2\n")
                 ifelse(str_detect(whole.set$content, "(?i)trump"),"C","L")
         }
 
+        # Count "Not sure" as NA.
+        classes <<- ifelse(classes == "Not sure", NA, classes)
+
+    setProgress(.3, "Cleaning tweets...")
 cat("bc3\n")
     if (regenerate || !exists("docs")) {
         cat("regenerating docs\n")
@@ -81,9 +88,11 @@ cat("bc3\n")
         docs <<- gsub("(^\\s)|(\\s$)","",docs)
     }
 
+    setProgress(.4, "Computing number of observations...")
 cat("bc4\n")
     training.size <- sum(!is.na(classes))
 
+    setProgress(.5, "Generating term-doc matrix...")
 cat("bc5\n")
     if (regenerate || !exists("dtm")) {
         cat("regenerating dtm\n")
@@ -96,20 +105,24 @@ cat("bc5\n")
         dtm <<- removeSparseTerms(dtm0,.99)
     }
 
+    setProgress(.6, "Assembling term-doc matrix...")
 cat("bc6\n")
     training.data <- cbind(as.data.frame(as.matrix(dtm)[!is.na(classes),]),
             daclass=as.factor(classes)[!is.na(classes)])
 
+    setProgress(.7, "Assembling term-doc matrix...")
 cat("bc7\n")
     test.data <- cbind(as.data.frame(as.matrix(dtm)[is.na(classes),]),
             daclass=as.factor(classes)[is.na(classes)])
 
+    setProgress(.8, "Building random forest...")
 cat("bc8\n")
     rf.model <<- ranger(daclass ~ .,
        data=training.data,
        importance='impurity',
        write.forest=TRUE)
 
+    setProgress(.9)
 cat("bc9\n")
     return(rf.model)
 }

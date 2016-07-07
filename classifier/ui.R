@@ -15,7 +15,7 @@ shinyUI(fluidPage(
                 radioButtons("classification2","",
                     list("Educated","Uneducated","Not sure"), inline=TRUE),
                 radioButtons("classification3","",
-                    list("Optimistic","Pessimistic","Not sure"), inline=TRUE),
+                    list("Male","Female","Other / Not sure"), inline=TRUE),
                 radioButtons("classification4","",
                     list("Nice","Jerk","Not sure"), inline=TRUE),
                 actionButton("classify","Classify")
@@ -33,12 +33,12 @@ shinyUI(fluidPage(
 #        ),
         tabPanel("Analyze",
             radioButtons("classificationanalyze","Choose:",
-                list("Ideology"=1,"Education"=2,"Optimistic-ness"=3,
+                list("Ideology"=1,"Education"=2,"Gender"=3,
                 "Niceness"=4), inline=TRUE),
             actionButton("analyze","Show top terms"),
             htmlOutput("waitmessage"),
-            htmlOutput("topterms"),
-            h3("Calculating...please be patient...")
+            htmlOutput("topterms")
+#            h3("Calculating...please be patient...")
         )
     )
 ))
