@@ -10,7 +10,8 @@ source("db.R")
 # mysql> create table nodata_users (userid varchar(20));
 # mysql> create table screennames (userid varchar(20), screenname varchar(16));
 # mysql> create table tweets (userid varchar(20), tweet varchar(200));
-# mysql> create table training (userid varchar(20), class char(1), timest
+# mysql> create table training (userid varchar(20), daclass1 varchar(20),
+# daclass2 varchar(20), daclass3 varchar(20), daclass4 varchar(20), timest
 # timestamp);
 
 
@@ -28,8 +29,10 @@ read.caches <- function(force=FALSE) {
     followers.cache <<- tbl(db.src,"followers")
     screennames.cache <<- tbl(db.src,"screennames")
     nodata.cache <<- tbl(db.src,"nodata_users")
-    tweets.cache <<- tbl(db.src,"tweets")
-    training.cache <<- tbl(db.src,"training")
+    if (!exists("tweets.cache") || nrow(tweets.cache) < 10000) {
+        tweets.cache <<- collect(tbl(db.src,"tweets_smaller"))
+        training.cache <<- collect(tbl(db.src,"training"))
+    }
 }
 
 exists.in.cache <- function(the.userid, cache, check.nodata=TRUE) {
