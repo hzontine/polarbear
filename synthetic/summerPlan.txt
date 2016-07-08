@@ -24,3 +24,13 @@ If not, start the graph with assortativity > 0 (HZ's stoch block model idea
     of red/blue for each cluster, (2) number of clusters we find to start.)
 Or...start the initial condition half (or so) with opinions that we actually
     know go with that Twitter user, and the other half (or so) random.
+
+
+To do:
+1. Run a larger (n=50?) number of trials of 1 vs. 2. Significant difference in
+convergence rate? Show boxplot.
+2. Ditto, comparing different values for num.vertices (maybe 1 through 5).
+3. Ditto, comparing the #2 stuff with "all=TRUE."
+
+Note: make sure that we're measuring time in the same way (i.e., number of
+encounters).

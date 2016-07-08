@@ -54,6 +54,10 @@ verify.zontine.variant.converges.faster <- function(results=NULL,
 
     if (is.null(results)) {
         pair.of.result.sets <- 
+# It'll be something like this:
+#  lapply(list(list(1,FALSE),list(3,FALSE),list(1,TRUE)), function(num.ver,all
+
+(TRUE,FALSE), function(choose.randomly.each.encounter) {
           lapply(c(TRUE,FALSE), function(choose.randomly.each.encounter) {
             results <- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
                 cat("\n----------------------------\n")
