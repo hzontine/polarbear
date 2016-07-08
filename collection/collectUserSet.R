@@ -323,7 +323,10 @@ local.peeps <- c(
 
 r.people <- c("hadleywickham","GaborCsardi","robjhyndman")
 
+# 18916432, 15764644
 political.people <- c("SpeakerRyan","NancyPelosi")
+
+# 15356407, 2933760046
 political.people <- c("RobWittman","RepComstock")
 
 # Run this line only if you want to manually whack older results and start

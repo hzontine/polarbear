@@ -29,9 +29,9 @@ read.caches <- function(force=FALSE) {
     followers.cache <<- tbl(db.src,"followers")
     screennames.cache <<- tbl(db.src,"screennames")
     nodata.cache <<- tbl(db.src,"nodata_users")
+    training.cache <<- tbl(db.src,"training")
     if (!exists("tweets.cache") || nrow(tweets.cache) < 10000) {
         tweets.cache <<- collect(tbl(db.src,"tweets_smaller"))
-        training.cache <<- collect(tbl(db.src,"training"))
     }
 }
 
