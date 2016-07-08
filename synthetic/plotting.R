@@ -141,7 +141,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
     if (!interactive) {
         cat("Assembling animation...\n")
         system(paste0("convert -delay ",delay.between.frames*100,
-            " ",base.filename,"plot*.png ", animation.filename))
+            " -loop 0 ",base.filename,"plot*.png ", animation.filename))
         system(paste0("rm ",base.filename,"plot*.png"))
         cat("Animation in file ",animation.filename,".\n",sep="")
     }

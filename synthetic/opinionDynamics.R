@@ -55,6 +55,7 @@ sim.opinion.dynamics <- function(init.graph,
         choose.randomly.each.encounter=FALSE,
         edge.update.function=dave.edge.update.function(),
         verbose=TRUE,
+        majority=FALSE,
         edge.update=FALSE) {
 
     graphs <- vector("list",length=(num.encounters+1))
@@ -100,13 +101,18 @@ sim.opinion.dynamics <- function(init.graph,
                 }
             } else {
                 encountered.vertices <- encounter.func(graphs[[i]],v)
-                # For each of these encountered partners...
-                for (ev in encountered.vertices) {
-                    update.info <- victim.update.function(graphs[[i]], v, ev)
+                if(majority){
+                    update.info <- victim.update.function(graphs[[i]], v, encountered.vertices[1])
                     V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
                         update.info$new.value
+                } else {
+                    # For each of these encountered partners...
+                    for (ev in encountered.vertices) {
+                        update.info <- victim.update.function(graphs[[i]], v, ev)
+                        V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
+                            update.info$new.value
+                    }
                 }
-
             }
         }
     }
@@ -150,6 +156,34 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE) {
                 # Nothing will get updated. We're too dang stubborn.
                 return(list(new.value=0,victim.vertex=NULL))
             }
+        }
+    )
+}
+
+get.update.majority.neighbors.function <- function(){
+    return (
+        function(graph, vertex.A, vertex.B){
+            victim.vertex <- vertex.A
+            neighbors <- neighbors(graph, victim.vertex, mode="out")
+            if(!"stubbornness" %in% list.vertex.attributes(graph) ||
+                    V(graph)[victim.vertex]$stubbornness == 0){
+                zero <- 0
+                one <- 1
+                for(n in 1:length(neighbors)){
+                    if(V(graph)[neighbors[n]]$opinion == 0){
+                        zero <- zero + 1
+                    } else{
+                        one <- one + 1
+                    }
+                } 
+                new.opinion <- ifelse(zero > one, 0, 1)
+                return(list(new.value=new.opinion,
+                         victim.vertex=victim.vertex))
+            } else {
+                # Nothing will get updated. We're too dang stubborn.
+                return(list(new.value=0,victim.vertex=NULL))
+            }
+
         }
     )
 }
@@ -260,14 +294,14 @@ get.mean.field.encounter.func <- function(num.vertices) {
         }
     )
 }
-get.graph.neighbors.encounter.func <- function(num.vertices) {
+get.graph.neighbors.encounter.func <- function(num.vertices=0, all=FALSE) {
     return(
         function(graph,vertex) {
             # Each vertex encounters some others at random from a vector
             # of its "outgoing" neighbors, of whom he may pass 
             # information to/influence.
             outgoing.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
-            if(length(outgoing.neighbors) <= num.vertices){
+            if(length(outgoing.neighbors) <= num.vertices || all){
                 return (
                     outgoing.neighbors
                 )

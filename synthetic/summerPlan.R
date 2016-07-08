@@ -6,17 +6,20 @@ source("opinionDynamics.R")
 pelryan <- function() {
 
     #download.file("http://cs.umw.edu/~stephen/pelosiRyan.RData", "pelosiRyan.RData")
-    load("pelosiRyan.RData")
+    #load("pelosiRyan.RData")
 
-    first.g <<- U
+    #first.g <<- U
+    first.g <<- erdos.renyi.game(100,0.05)
     V(first.g)$opinion <<- sample(c(0,1),vcount(first.g),replace=TRUE)
     pel.graphs <<- sim.opinion.dynamics(first.g,
-        num.encounters=5,
+        num.encounters=10,
         encounter.func=get.graph.neighbors.encounter.func(1),
-        victim.update.function=get.automatically.update.victim.function(),
+        victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
         edge.update=FALSE,
-        choose.randomly.each.encounter=TRUE)
-    #plot.animation(pel.graphs,"opinion",delay.between.frames=.15)
+        majority=FALSE,
+        choose.randomly.each.encounter=FALSE)
+    plot.animation(pel.graphs,"opinion",delay.between.frames=.15)#, 
+        #interactive=FALSE, animation.filename="graphA.gif")
     plot.polarization(pel.graphs, "opinion")
     plot.binary.opinions(pel.graphs)
 }

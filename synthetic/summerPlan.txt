@@ -1,11 +1,20 @@
 
 Binary opinions only.
 No graph changing (opinion flips is the only dynamic.)
-Start with empirical graph (PR) and all indep coin flips for initial opinions.
-# Choose randomly each encounter?
-Test these victim update functions:
-    1. Auto update victim from a single (random) neighbor.
-    2. Auto update victim from majority opinion of neighbors.
+Start with empirical graph with 100 nodes and all indep coin flips for 
+initial opinions.
+Choose randomly each encounter=FALSE is faster.
+Test these victim update functions: ( 100 nodes, 0.05 connected )
+    1. Auto update a single random neighbor to your own opinion. 
+        [graphA.gif] -- A.is.victim=FALSE 
+    2. Auto update influenced by a single random neighbor.    
+        [graphB.gif] -- A.is.victim=TRUE
+    3. Auto update three random neighbors to your own opinion.
+        [graphC.gif] -- A.is.victim=FALSE
+    4. Auto update all of your neighbors to your opinion.
+        [graphD.gif] -- A.is.victim=FALSE
+    5. Auto update victim influenced by the majority opinion of neighbors.
+        [graphE.gif] -- A.is.victim=TRUE    majority=TRUE
 See whether the level of polarization present in empirical graph can be
     achieved by either of these.
 If so, declare (limited) victory.
