@@ -160,7 +160,9 @@ plot.polarization <- function(graphs, attribute.name="ideology") {
         assortativity(graph,
             types1=get.vertex.attribute(graph,attribute.name))
     })
-    plot(1:length(graphs),assortativities, type="l",ylim=c(-1,1),
+    time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+
+    plot(time.pts,assortativities, type="l",ylim=c(-1,1),
         main="Polarization over time", xlab="time (iteration)",
         ylab=paste("Assortativity of",attribute.name))
 }
@@ -177,8 +179,10 @@ plot.binary.opinions <- function(graphs) {
 
     frac.1s <- sapply(graphs, frac.opinion)
 
-    plot(1:length(graphs),frac.1s,ylim=c(0,1),type="l",col="blue",
-        xlab="time (iteration)",ylab="Fraction of agents with opinion 1")
+    time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+
+    plot(time.pts,frac.1s,ylim=c(0,1),type="l",col="blue",
+        xlab="time (encounters)",ylab="Fraction of agents with opinion 1")
     abline(h=.5, lty="dashed", col="grey")
 }
 

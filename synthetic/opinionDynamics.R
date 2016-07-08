@@ -55,66 +55,68 @@ sim.opinion.dynamics <- function(init.graph,
         choose.randomly.each.encounter=FALSE,
         edge.update.function=dave.edge.update.function(),
         verbose=TRUE,
-        majority=FALSE,
         edge.update=FALSE) {
 
-    graphs <- vector("list",length=(num.encounters+1))
+    graphs <- vector("list",length=trunc((num.encounters/gorder(init.graph))+1))
     graphs[[1]] <- init.graph
+    graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
     encounter.num <- 0
+    graph.num <- 1
 
     # For each iteration of the sim...
-    num.iter <- num.encounters+1
-    for (i in 2:num.iter) {
+    while (encounter.num < num.encounters) {
 
         if (verbose) {
             cat("---------------------------------\n")
         }
 
-        # Create a new igraph object to represent this point in time.
-        graphs[[i]] <- graphs[[i-1]]
+        # Create a new igraph object to represent this point in time. 
+        graphs[[graph.num+1]] <- graphs[[graph.num]]
+        graph.num <- graph.num + 1
+
         # Go through all the vertices, in random order:
-        for (v in sample(1:gorder(graphs[[i]]))) {
+        for (v in sample(1:gorder(graphs[[graph.num]]))) {
 
+            # If Holley variant, then choose a random vertex instead of the
+            # one from our shuffling, above.
             if (choose.randomly.each.encounter) {
-                v <- sample(1:gorder(graphs[[i]]),1)
-            }
-
-            encounter.num <- encounter.num + 1
-            if (verbose) {
-                cat("Encounter",encounter.num,"of",num.encounters*vcount(init.graph)," (",
-                    v,")...\n")
+                v <- sample(1:gorder(graphs[[graph.num]]),1)
             }
 
             if(edge.update){
-                list.of.edges <- edge.update.function(graphs[[i]],v)
+                list.of.edges <- edge.update.function(graphs[[graph.num]],v)
                 new <- list.of.edges[[1]]
                 old <- list.of.edges[[2]]
                 for(e in 1:length(new)){
                     # Probability ?
-                    graphs[[i]] <- add_edges(graphs[[i]],
-                        c(V(graphs[[i]])[v], V(graphs[[i]])[new[e]]))
+                    graphs[[graph.num]] <- add_edges(graphs[[graph.num]],
+                        c(V(graphs[[graph.num]])[v], V(graphs[[graph.num]])[new[e]]))
                 }
                 for(o in 1:length(new)){
                     # Probability ?
-                    delete_edges(graphs[[i]],get.edge.ids(graphs[[i]],c(v,old[o]),directed=TRUE))
+                    delete_edges(graphs[[graph.num]],get.edge.ids(graphs[[graph.num]],c(v,old[o]),directed=TRUE))
                 }
             } else {
-                encountered.vertices <- encounter.func(graphs[[i]],v)
-                if(majority){
-                    update.info <- victim.update.function(graphs[[i]], v, encountered.vertices[1])
-                    V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
-                        update.info$new.value
-                } else {
-                    # For each of these encountered partners...
-                    for (ev in encountered.vertices) {
-                        update.info <- victim.update.function(graphs[[i]], v, ev)
-                        V(graphs[[i]])[update.info$victim.vertex]$opinion <- 
-                            update.info$new.value
+                encountered.vertices <- encounter.func(graphs[[graph.num]],v)
+                # For each of these encountered partners...
+                for (ev in encountered.vertices) {
+                    encounter.num <- encounter.num + 1
+                    if (verbose) {
+                        cat("Encounter ",encounter.num," of ",num.encounters," (",
+                            v,")...\n", sep="")
                     }
+                    update.info <- victim.update.function(graphs[[graph.num]], v, ev)
+                    V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
+                        update.info$new.value
                 }
             }
         }
+        # Annotate the graph object with a graph attribute indicating the
+        # number of encounters that had taken place at the time this snapshot
+        # was taken.
+        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+            "num.encounters", encounter.num)
     }
     graphs
 }
@@ -176,7 +178,7 @@ get.update.majority.neighbors.function <- function(){
                         one <- one + 1
                     }
                 } 
-                new.opinion <- ifelse(zero > one, 0, 1)
+                new.opinion <- ifelse(zero > one, 0, 1) # HZ TODO: flip coin
                 return(list(new.value=new.opinion,
                          victim.vertex=victim.vertex))
             } else {
