@@ -96,7 +96,7 @@ assocs <- function(dtm=NULL) {
     }
 }
 
-# Return a named vector of values, one for each word in the corups. Each value
+# Return a named vector of values, one for each word in the corpus. Each value
 # is the ratio of the fraction of users in class 1 who used the word to the
 # fraction in class 2. (I think.)
 indicative.words <- function(classification=1,data=training.data) {
