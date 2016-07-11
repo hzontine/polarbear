@@ -54,17 +54,18 @@ param.sweep <- function(results=NULL, num.trials=20) {
     #if (is.null(results)) {
     #    pair.of.result.sets <- 
     #}
-    result <- lapply(list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
+    init.graph <- erdos.renyi.game(100,0.05)
+    V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
+
+    result <<- lapply(c(TRUE,FALSE), function(a.is.victim) {
+        #list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
         #list(2,FALSE,FALSE), list(3,FALSE,FALSE),
         #list(4,FALSE,FALSE), list(5,FALSE,FALSE), list(1,TRUE,TRUE)), 
-            init.graph <- erdos.renyi.game(100,0.05)
-            V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
-            results <- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+                        results <- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
                     cat("\n----------------------------\n")
                     cat("Trial #",trial,"\n",sep="")
-            browser()
                     graphs <- sim.opinion.dynamics(init.graph, num.encounters=40000,
-                        encounter.func=get.graph.neighbors.encounter.func(num.vertices=num.ver),
+                        encounter.func=get.graph.neighbors.encounter.func(1),
                         victim.update.function=get.automatically.update.victim.function(a.is.victim),
                         edge.update=FALSE,
                         choose.randomly.each.encounter=FALSE)
@@ -81,8 +82,8 @@ param.sweep <- function(results=NULL, num.trials=20) {
          })
         #results <- as.data.frame(
         #rbind(pair.of.result.sets[[1]],pair.of.result.sets[[2]]))
-        rownames(results) <- 1:nrow(results)
-        colnames(results) <- c("A.is.victim","iter.to.consensus")
+        #rownames(results) <- 1:nrow(results)
+        #colnames(results) <- c("A.is.victim","iter.to.consensus")
 
     #print(ggplot(results, aes(x=choose.randomly, y=iter.to.consensus,
     #        fill=choose.randomly)) +
