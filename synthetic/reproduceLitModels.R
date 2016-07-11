@@ -46,48 +46,51 @@ binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
 # iterations it took for the graph to reach uniformity; Inf if it never did in
 # the required number of iterations.)
 
-verify.zontine.variant.converges.faster <- function(results=NULL,
-    num.trials=20) {
+param.sweep <- function(results=NULL, num.trials=20) {
 
     library(doParallel)
     registerDoParallel(8)
 
-    if (is.null(results)) {
-        pair.of.result.sets <- 
-# It'll be something like this:
-#  lapply(list(list(1,FALSE),list(3,FALSE),list(1,TRUE)), function(num.ver,all
-
-(TRUE,FALSE), function(choose.randomly.each.encounter) {
-          lapply(c(TRUE,FALSE), function(choose.randomly.each.encounter) {
+    #if (is.null(results)) {
+    #    pair.of.result.sets <- 
+    #}
+    result <- lapply(list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
+        #list(2,FALSE,FALSE), list(3,FALSE,FALSE),
+        #list(4,FALSE,FALSE), list(5,FALSE,FALSE), list(1,TRUE,TRUE)), 
+            init.graph <- erdos.renyi.game(100,0.05)
+            V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
             results <- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
-                cat("\n----------------------------\n")
-                cat("Trial #",trial,"\n",sep="")
-                graphs <- binary.voter(choose.randomly.each.encounter,
-                    plot=FALSE)
-                num.iter.before.consensus <- Inf
-                for (iter in 1:length(graphs)) {
-                    if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
-                        num.iter.before.consensus <- iter
-                        break
+                    cat("\n----------------------------\n")
+                    cat("Trial #",trial,"\n",sep="")
+            browser()
+                    graphs <- sim.opinion.dynamics(init.graph, num.encounters=40000,
+                        encounter.func=get.graph.neighbors.encounter.func(num.vertices=num.ver),
+                        victim.update.function=get.automatically.update.victim.function(a.is.victim),
+                        edge.update=FALSE,
+                        choose.randomly.each.encounter=FALSE)
+                    # binary.voter(choose.randomly.each.encounter, plot=FALSE)
+                    num.iter.before.consensus <- Inf
+                    for (iter in 1:length(graphs)) {
+                        if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
+                            num.iter.before.consensus <- iter
+                            break
+                        }
                     }
-                }
-                return(data.frame(choose.randomly.each.encounter, 
-                    num.iter.before.consensus))
-            }
-        })
-        results <- as.data.frame(
-            rbind(pair.of.result.sets[[1]],pair.of.result.sets[[2]]))
+                    return(data.frame(a.is.victim, num.iter.before.consensus))
+             }
+         })
+        #results <- as.data.frame(
+        #rbind(pair.of.result.sets[[1]],pair.of.result.sets[[2]]))
         rownames(results) <- 1:nrow(results)
-        colnames(results) <- c("choose.randomly","iter.to.consensus")
-    }
+        colnames(results) <- c("A.is.victim","iter.to.consensus")
 
-    print(ggplot(results, aes(x=choose.randomly, y=iter.to.consensus,
-            fill=choose.randomly)) +
-        geom_boxplot(notch=TRUE) +
-        ggtitle(paste0("Holley vs. Zontine variants (n=",2*num.trials,")")) +
-        ylab("# of iterations to convergence") +
-        scale_fill_discrete(name="Variant", breaks=c(TRUE,FALSE),
-            labels=c("Holley","Zontine")))
+    #print(ggplot(results, aes(x=choose.randomly, y=iter.to.consensus,
+    #        fill=choose.randomly)) +
+    #    geom_boxplot(notch=TRUE) +
+    #    ggtitle(paste0("Influence 1 neighbor(A) vs. Influenced by 1 neighbor(B) (n=",2*num.trials,")")) +
+    #    ylab("# of iterations to convergence") +
+    #    scale_fill_discrete(name="Variant", breaks=c(TRUE,FALSE),
+    #        labels=c("Graph A","Graph B")))
     
     return(results)
 }
