@@ -4,12 +4,13 @@ library(tm)
 library(ranger)
 library(stringr)
 library(dplyr)
+library(e1071)
 
 
-load("trainingData.RData")
+load("trainingData.RData")   # Load "training.data".
 
-# Environment should now have "training.data" variable in it, which is a data
-# frame that has one row per Twitter user with the following columns:
+# The environment should have a "training.data" variable in it, which is a
+# data frame that has one row per Twitter user with the following columns:
 #
 # userid -- Twitter userid
 # content -- unprocessed content (concatenation of all tweets)
@@ -27,7 +28,7 @@ build.classifier <- function(classification=1,dtm=NULL,data=training.data) {
     classes <- data[[class.column.name]]
 
     # Count "Not sure" as NA.
-    classes <- ifelse(classes == "Not sure", NA, classes)
+    classes <- ifelse(str_count(classes, "Not sure") == 1, NA, classes)
 
     if (is.null(dtm)) {
         dtm <- build.dtm(data)
@@ -50,6 +51,8 @@ build.classifier <- function(classification=1,dtm=NULL,data=training.data) {
     return(list(dtm=dtm,model=rf.model))
 }
 
+# Preprocess the data frame passed (see description above) and return a 
+# DocumentTermMatrix object for it.
 build.dtm <- function(data=training.data) {
 
     cat("Preprocessing tweets...\n")
@@ -74,10 +77,12 @@ build.dtm <- function(data=training.data) {
                     removeDigits=FALSE,
                     stemming=FALSE,
                     wordLengths=c(3,Inf)))
-    dtm <- removeSparseTerms(dtm0,.99)
+    dtm <- removeSparseTerms(dtm0,.9)
     return(dtm)
 }
 
+# Allow the user to interactively explore co-occurrences. For each word the
+# user enters, print the top 20 most commonly associated other words.
 assocs <- function(dtm=NULL) {
     if (is.null(dtm)) {
         dtm <- build.classifier(1)$dtm
@@ -89,4 +94,31 @@ assocs <- function(dtm=NULL) {
             1:(min(length(associations),20))])
         term <- readline("Enter a term (or 'done'): ")
     }
+}
+
+# Return a named vector of values, one for each word in the corups. Each value
+# is the ratio of the fraction of users in class 1 who used the word to the
+# fraction in class 2. (I think.)
+indicative.words <- function(classification=1,data=training.data) {
+
+    class.column.name <- paste0("daclass",classification)
+    classes <- data[[class.column.name]]
+
+    # Count "Not sure" as NA.
+    classes <- ifelse(str_count(classes, "Not sure") == 1, NA, classes)
+    data <- data[!is.na(classes),-1]
+    classes <- classes[!is.na(classes)]
+
+    data <- data[,1:(ncol(data)-4)]
+
+    dtm <- build.dtm(data)
+
+    nb <- naiveBayes(as.matrix(dtm),classes)
+
+    measures <- sapply(names(nb$tables), function(word) {
+        table <- nb$tables[[word]]
+        return(unname(table[1,1] / table[2,1]))
+    })
+
+    return(measures)
 }
