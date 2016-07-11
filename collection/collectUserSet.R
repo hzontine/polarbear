@@ -250,6 +250,7 @@ get.screennames <- function(userids, verbose=FALSE) {
             screennames[i] <- 
                 as.data.frame(collect(
                     get.cached.values(userids[i], screennames.cache)))[1,2]
+cat(screennames[i]," in cache\n")
         } else {
             userid.indices.we.need.to.bug.twitter.for <- 
                 c(userid.indices.we.need.to.bug.twitter.for, i)
@@ -281,6 +282,7 @@ get.screennames <- function(userids, verbose=FALSE) {
                     collapse=",")), verbose)
         screennames.we.bugged.twitter.for[chunk.range] <- 
             lookup.call$screen_name
+cat("got: ", lookup.call$screen_name[1:5], "\n")
         add.to.cache(userids.we.need.to.bug.twitter.for,
             screennames.we.bugged.twitter.for, "screennames.cache")
     }
@@ -328,6 +330,8 @@ political.people <- c("SpeakerRyan","NancyPelosi")
 
 # 15356407, 2933760046
 political.people <- c("RobWittman","RepComstock")
+
+political.people <- c("SpeakerRyan","NancyPelosi")
 
 # Run this line only if you want to manually whack older results and start
 # over.
