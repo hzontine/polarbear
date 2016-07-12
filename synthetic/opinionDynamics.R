@@ -47,6 +47,12 @@ source("plotting.R")
 #    should be.
 #    $old.edges -- vertex IDs this vertex is currently connected to, but
 #    shouldn't be.
+#
+# generate.graph.per.encounter -- if TRUE, return a graph for every single
+# encounter that takes place. If FALSE, only return one graph for an entire
+# "iteration," where "iteration" is defined as "as many encounters as there
+# are vertices." (This effectively means "every vertex gets a chance to
+# influence" if choose.randomly.each.encounter is FALSE.)
 
 sim.opinion.dynamics <- function(init.graph,
         num.encounters=200,
@@ -54,9 +60,15 @@ sim.opinion.dynamics <- function(init.graph,
         victim.update.function=get.no.update.victim.function(),
         choose.randomly.each.encounter=FALSE,
         edge.update.function=get.no.edge.update.function(),
+        generate.graph.per.encounter=FALSE,
         verbose=TRUE) {
 
-    graphs <- vector("list",length=trunc((num.encounters/gorder(init.graph))+1))
+    if (generate.graph.per.encounter) {
+        graphs <- vector("list",length=num.encounters)
+    } else {
+        graphs <- 
+            vector("list",length=trunc((num.encounters/gorder(init.graph))+1))
+    }
     graphs[[1]] <- init.graph
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
@@ -76,6 +88,11 @@ sim.opinion.dynamics <- function(init.graph,
 
         # Go through all the vertices, in random order:
         for (v in sample(1:gorder(graphs[[graph.num]]))) {
+
+            if (generate.graph.per.encounter) {
+                graphs[[graph.num+1]] <- graphs[[graph.num]]
+                graph.num <- graph.num + 1
+            }
 
             # If Holley variant, then choose a random vertex instead of the
             # one from our shuffling, above.
@@ -108,6 +125,10 @@ sim.opinion.dynamics <- function(init.graph,
                 update.info <- victim.update.function(graphs[[graph.num]], v, ev)
                 V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
                     update.info$new.value
+            }
+            if (generate.graph.per.encounter) {
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                    "num.encounters", encounter.num)
             }
         }
         # Annotate the graph object with a graph attribute indicating the
