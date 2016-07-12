@@ -57,17 +57,19 @@ param.sweep <- function(results=NULL, num.trials=20) {
     init.graph <- erdos.renyi.game(100,0.05)
     V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
 
-    result <<- lapply(c(TRUE,FALSE), function(a.is.victim) {
+    result <<- lapply(c(1,2,3,4), function(num.vert) {
+	#lapply(c(TRUE,FALSE), function(a.is.victim) {
         #list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
         #list(2,FALSE,FALSE), list(3,FALSE,FALSE),
         #list(4,FALSE,FALSE), list(5,FALSE,FALSE), list(1,TRUE,TRUE)), 
-                        results <- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+               results <- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
                     cat("\n----------------------------\n")
                     cat("Trial #",trial,"\n",sep="")
-                    graphs <- sim.opinion.dynamics(init.graph, num.encounters=40000,
-                        encounter.func=get.graph.neighbors.encounter.func(1),
-                        victim.update.function=get.automatically.update.victim.function(a.is.victim),
+                    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
+                        encounter.func=get.graph.neighbors.encounter.func(num.vert),
+			victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
                         edge.update=FALSE,
+			verbose=FALSE,
                         choose.randomly.each.encounter=FALSE)
                     # binary.voter(choose.randomly.each.encounter, plot=FALSE)
                     num.iter.before.consensus <- Inf
@@ -92,8 +94,9 @@ param.sweep <- function(results=NULL, num.trials=20) {
     #    ylab("# of iterations to convergence") +
     #    scale_fill_discrete(name="Variant", breaks=c(TRUE,FALSE),
     #        labels=c("Graph A","Graph B")))
-    
-    return(results)
+
+    save(result, file="todo2.RData")
+    return(result)
 }
 
 yildiz.binary <- function(){
