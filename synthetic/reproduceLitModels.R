@@ -56,7 +56,6 @@ param.sweep <- function(results=NULL, num.trials=20) {
     #}
     init.graph <- erdos.renyi.game(100,0.05)
     V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
-
     result <<- lapply(c(1,2,3,4), function(num.vert) {
 	#lapply(c(TRUE,FALSE), function(a.is.victim) {
         #list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
@@ -79,7 +78,7 @@ param.sweep <- function(results=NULL, num.trials=20) {
                             break
                         }
                     }
-                    return(data.frame(a.is.victim, num.iter.before.consensus))
+                    return(data.frame(num.neigbors.encountered, num.iter.before.consensus))
              }
          })
         #results <- as.data.frame(
