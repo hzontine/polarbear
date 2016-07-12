@@ -82,17 +82,8 @@ sim.opinion.dynamics <- function(init.graph,
             cat("---------------------------------\n")
         }
 
-        # Create a new igraph object to represent this point in time. 
-        graphs[[graph.num+1]] <- graphs[[graph.num]]
-        graph.num <- graph.num + 1
-
         # Go through all the vertices, in random order:
         for (v in sample(1:gorder(graphs[[graph.num]]))) {
-
-            if (generate.graph.per.encounter) {
-                graphs[[graph.num+1]] <- graphs[[graph.num]]
-                graph.num <- graph.num + 1
-            }
 
             # If Holley variant, then choose a random vertex instead of the
             # one from our shuffling, above.
@@ -126,11 +117,24 @@ sim.opinion.dynamics <- function(init.graph,
                 V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
                     update.info$new.value
             }
+
             if (generate.graph.per.encounter) {
+                # Create a new igraph object to represent this point in time. 
+                graphs[[graph.num+1]] <- graphs[[graph.num]]
+                graph.num <- graph.num + 1
+
+                # Annotate the graph object with a graph attribute indicating
+                # the number of encounters that had taken place at the time
+                # this snapshot was taken.
                 graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
                     "num.encounters", encounter.num)
             }
         }
+
+        # Create a new igraph object to represent this point in time. 
+        graphs[[graph.num+1]] <- graphs[[graph.num]]
+        graph.num <- graph.num + 1
+
         # Annotate the graph object with a graph attribute indicating the
         # number of encounters that had taken place at the time this snapshot
         # was taken.
@@ -366,7 +370,14 @@ get.no.edge.update.function <- function() {
     )
 }
 
-get.dave.edge.update.function <- function(verbose=FALSE) {
+# The Dave Model(tm).
+# Loop through all vertex.ID's neighbors. For each one:
+#   - if you agree, have victim add an edge to a random influencer's
+#       neighbor (FOAF)  (the foafs.must.agree parameter controls whether that
+#       FOAF must already agree with us in order to be added.)
+#   - if you disagree, break the edge
+get.dave.edge.update.function <- function(verbose=FALSE, 
+        foafs.must.agree=FALSE) {
     return(
         function(g, vertex.ID){
             neighbors <- neighbors(g,vertex.ID,mode="in")
@@ -377,8 +388,14 @@ get.dave.edge.update.function <- function(verbose=FALSE) {
                     foaf <- neighbors(g,neighbor,mode="in")
                     foaf <- foaf[foaf!=vertex.ID]
                     foaf <- foaf[!(foaf %in% neighbors)]
-                    # (Even if these new neighbors don't agree with us? Dave?)
-                    new.edges <- union(new.edges, foaf)
+                    # Only add friends-of-a-friend who already agree with us.
+                    if (foafs.must.agree) {
+                        new.edges <- union(new.edges, 
+                            foaf[(V(g)[foaf]$opinion == 
+                                                    V(g)[vertex.ID]$opinion)])
+                    } else {
+                        new.edges <- union(new.edges, foaf)
+                    }
                 } else {
                     old.edges <- union(old.edges, neighbor)
                 }
@@ -395,10 +412,6 @@ get.dave.edge.update.function <- function(verbose=FALSE) {
             return(list(new.edges, old.edges))
         }
     )
-    # loop through all vertex.ID's neighbors. For each one:
-    #   - if you agree, have victim add an edge to a random influencer's
-    #       neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
-    #   - if you disagree, break the edge
 }
 
 
