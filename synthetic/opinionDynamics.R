@@ -47,17 +47,28 @@ source("plotting.R")
 #    should be.
 #    $old.edges -- vertex IDs this vertex is currently connected to, but
 #    shouldn't be.
+#
+# generate.graph.per.encounter -- if TRUE, return a graph for every single
+# encounter that takes place. If FALSE, only return one graph for an entire
+# "iteration," where "iteration" is defined as "as many encounters as there
+# are vertices." (This effectively means "every vertex gets a chance to
+# influence" if choose.randomly.each.encounter is FALSE.)
 
 sim.opinion.dynamics <- function(init.graph,
         num.encounters=200,
-        encounter.func=get.mean.field.encounter.func(3),
-        victim.update.function=get.bounded.confidence.update.victim.function(threshold.val=1.),
+        encounter.func=get.mean.field.encounter.func(1),
+        victim.update.function=get.no.update.victim.function(),
         choose.randomly.each.encounter=FALSE,
-        edge.update.function=dave.edge.update.function(),
-        verbose=TRUE,
-        edge.update=FALSE) {
+        edge.update.function=get.no.edge.update.function(),
+        generate.graph.per.encounter=FALSE,
+        verbose=TRUE) {
 
-    graphs <- vector("list",length=trunc((num.encounters/gorder(init.graph))+1))
+    if (generate.graph.per.encounter) {
+        graphs <- vector("list",length=num.encounters)
+    } else {
+        graphs <- 
+            vector("list",length=trunc((num.encounters/gorder(init.graph))+1))
+    }
     graphs[[1]] <- init.graph
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
@@ -71,10 +82,6 @@ sim.opinion.dynamics <- function(init.graph,
             cat("---------------------------------\n")
         }
 
-        # Create a new igraph object to represent this point in time. 
-        graphs[[graph.num+1]] <- graphs[[graph.num]]
-        graph.num <- graph.num + 1
-
         # Go through all the vertices, in random order:
         for (v in sample(1:gorder(graphs[[graph.num]]))) {
 
@@ -84,34 +91,50 @@ sim.opinion.dynamics <- function(init.graph,
                 v <- sample(1:gorder(graphs[[graph.num]]),1)
             }
 
-            if(edge.update){
-                list.of.edges <- edge.update.function(graphs[[graph.num]],v)
-                new <- list.of.edges[[1]]
-                old <- list.of.edges[[2]]
-                for(e in 1:length(new)){
-                    # Probability ?
-                    graphs[[graph.num]] <- add_edges(graphs[[graph.num]],
-                        c(V(graphs[[graph.num]])[v], V(graphs[[graph.num]])[new[e]]))
+            list.of.edges <- edge.update.function(graphs[[graph.num]],v)
+            new <- list.of.edges[[1]]
+            old <- list.of.edges[[2]]
+            for(n in new){
+                # Probability ?
+                graphs[[graph.num]] <- add_edges(graphs[[graph.num]],
+                    c(V(graphs[[graph.num]])[v], V(graphs[[graph.num]])[n]))
+            }
+            for(o in old) {
+                # Probability ?
+                graphs[[graph.num]] <- delete_edges(graphs[[graph.num]],
+                    get.edge.ids(graphs[[graph.num]],c(v,o),directed=TRUE))
+            }
+
+            encountered.vertices <- encounter.func(graphs[[graph.num]],v)
+            # For each of these encountered partners...
+            for (ev in encountered.vertices) {
+                encounter.num <- encounter.num + 1
+                if (verbose) {
+                    cat("Encounter ",encounter.num," of ",num.encounters," (",
+                        v,")...\n", sep="")
                 }
-                for(o in 1:length(new)){
-                    # Probability ?
-                    delete_edges(graphs[[graph.num]],get.edge.ids(graphs[[graph.num]],c(v,old[o]),directed=TRUE))
-                }
-            } else {
-                encountered.vertices <- encounter.func(graphs[[graph.num]],v)
-                # For each of these encountered partners...
-                for (ev in encountered.vertices) {
-                    encounter.num <- encounter.num + 1
-                    if (verbose) {
-                        cat("Encounter ",encounter.num," of ",num.encounters," (",
-                            v,")...\n", sep="")
-                    }
-                    update.info <- victim.update.function(graphs[[graph.num]], v, ev)
-                    V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
-                        update.info$new.value
-                }
+                update.info <- victim.update.function(graphs[[graph.num]], v, ev)
+                V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
+                    update.info$new.value
+            }
+
+            if (generate.graph.per.encounter) {
+                # Create a new igraph object to represent this point in time. 
+                graphs[[graph.num+1]] <- graphs[[graph.num]]
+                graph.num <- graph.num + 1
+
+                # Annotate the graph object with a graph attribute indicating
+                # the number of encounters that had taken place at the time
+                # this snapshot was taken.
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                    "num.encounters", encounter.num)
             }
         }
+
+        # Create a new igraph object to represent this point in time. 
+        graphs[[graph.num+1]] <- graphs[[graph.num]]
+        graph.num <- graph.num + 1
+
         # Annotate the graph object with a graph attribute indicating the
         # number of encounters that had taken place at the time this snapshot
         # was taken.
@@ -140,6 +163,15 @@ sim.opinion.dynamics <- function(init.graph,
 # Note: this function does not factor in a node's stubbornness
 
 # Stubbornness must be binary
+
+get.no.update.victim.function <- function() {
+    return (
+        function(graph, vertex.A, vertex.B){
+            return(list(new.value=0,victim.vertex=NULL))
+        }
+    )
+}
+
 get.automatically.update.victim.function <- function(A.is.victim=FALSE) {
     return (
         function(graph, vertex.A, vertex.B){
@@ -330,29 +362,56 @@ get.graph.neighbors.encounter.func <- function(num.vertices=0, all=FALSE) {
 # ** edge update generator functions: an "edge update generator function" is 
 # one that can be called to return an edge update function.
 
-dave.edge.update.function <- function() {
+get.no.edge.update.function <- function() {
+    return(
+        function(g, vertex.ID){
+            return(list(NULL,NULL))
+        }
+    )
+}
+
+# The Dave Model(tm).
+# Loop through all vertex.ID's neighbors. For each one:
+#   - if you agree, have victim add an edge to a random influencer's
+#       neighbor (FOAF)  (the foafs.must.agree parameter controls whether that
+#       FOAF must already agree with us in order to be added.)
+#   - if you disagree, break the edge
+get.dave.edge.update.function <- function(verbose=FALSE, 
+        foafs.must.agree=FALSE) {
     return(
         function(g, vertex.ID){
             neighbors <- neighbors(g,vertex.ID,mode="in")
             new.edges <- vector()
             old.edges <- vector()
-            for (n in 1:length(neighbors)){
-                if( V(g)[neighbors[n]]$opinion == V(g)[vertex.ID]$opinion ){
-                    foaf <- neighbors(g,neighbors[n],mode="in")
-                    foaf <- foaf[-(n==vertex.ID)]
-                    foaf <- foaf[-(which(neighbors %in% foaf))]
-                    new.edges <- c(new.edges, foaf)
+            for (neighbor in neighbors){
+                if( V(g)[neighbor]$opinion == V(g)[vertex.ID]$opinion ){
+                    foaf <- neighbors(g,neighbor,mode="in")
+                    foaf <- foaf[foaf!=vertex.ID]
+                    foaf <- foaf[!(foaf %in% neighbors)]
+                    # Only add friends-of-a-friend who already agree with us.
+                    if (foafs.must.agree) {
+                        new.edges <- union(new.edges, 
+                            foaf[(V(g)[foaf]$opinion == 
+                                                    V(g)[vertex.ID]$opinion)])
+                    } else {
+                        new.edges <- union(new.edges, foaf)
+                    }
                 } else {
-                    old.edges <- c(old.edges, neighbors[n])
+                    old.edges <- union(old.edges, neighbor)
+                }
+            }
+            if (verbose) {
+                cat("Updating edges from node ", vertex.ID, ":\n", sep="")
+                if (length(new.edges) > 0) {
+                    cat("  Adding edges from",vertex.ID,"to",new.edges,"\n")
+                }
+                if (length(old.edges) > 0) {
+                    cat("  Removing edges from",vertex.ID,"to",old.edges,"\n")
                 }
             }
             return(list(new.edges, old.edges))
         }
     )
-    # loop through all vertex.ID's neighbors. For each one:
-    #   - if you agree, have victim add an edge to a random influencer's
-    #       neighbor (FOAF)  (note: EVEN if that neighbor doesn't agree.)
-    #   - if you disagree, break the edge
 }
 
 
