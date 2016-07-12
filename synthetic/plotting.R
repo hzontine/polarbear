@@ -67,6 +67,9 @@ plot.animation <- function(graphs, attribute.name="ideology",
                 V(graphs[[i]])$color <- ifelse(
                     get.vertex.attribute(graphs[[i]],attribute.name) == 0,
                     "blue","red")
+                V(graphs[[i]])$label.color <- ifelse(
+                    get.vertex.attribute(graphs[[i]],attribute.name) == 0,
+                    "white","black")
             } else {
                 if(discrete.num+1 > 9){
                     colors <- brewer.pal(discrete.num+1, "Set3")
