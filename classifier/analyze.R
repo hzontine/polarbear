@@ -7,58 +7,100 @@ library(dplyr)
 library(e1071)
 
 
-load("trainingData.RData")   # Load "training.data".
 
-# The environment should have a "training.data" variable in it, which is a
-# data frame that has one row per Twitter user with the following columns:
-#
-# userid -- Twitter userid
-# content -- unprocessed content (concatenation of all tweets)
-# daclass1 through daclass4 -- training classes for (1) ideology, (2)
-# education, (3) gender, and (4) niceness.
-#
-# classification -- a number from 1-4, specifying a category, above
-#
-# dtm -- if this argument is provided, the doc-term matrix will not be
-# renegerated.
+main <- function() {
 
-build.classifier <- function(classification=1,dtm=NULL,data=training.data) {
+    # Load "training.data". This is a data frame with the following columns:
+    # . userid -- Twitter userid 
+    # . content -- unprocessed content (concatenation of all tweets)
+    # . daclass1 through daclass4 -- training classes for (1) ideology,
+    #   (2) education, (3) gender, and (4) niceness.
+    # Note the "daclass" columns all have one or more NAs, and also one or 
+    # more "Not sure" entries.
+    load("trainingData.RData")   
 
-    class.column.name <- paste0("daclass",classification)
-    classes <- data[[class.column.name]]
+    ideology.training <- dplyr::select(training.data, userid, content, 
+        Class=daclass1)
 
     # Count "Not sure" as NA.
-    classes <- ifelse(str_count(classes, "Not sure") == 1, NA, classes)
+    ideology.training$Class <- as.factor(ifelse(
+        str_count(ideology.training$Class, "Not sure") == 1,
+        NA, ideology.training$Class))
+    ideology.training <- ideology.training[!is.na(ideology.training$Class),]
 
-    if (is.null(dtm)) {
-        dtm <- build.dtm(data)
+    if (exists("save.dtm")) {
+        classifier <<- build.classifier(ideology.training,big.tweets,save.dtm)
+    } else {
+        classifier <<- build.classifier(ideology.training,big.tweets)
     }
 
-    training.size <- sum(!is.na(classes))
+    cat("For user 2161408706, we predict:",
+        predict.ideology(classifier, "2161408706"), "\n")
 
-    training.only <- cbind(as.data.frame(as.matrix(dtm)[!is.na(classes),]),
-            daclass=as.factor(classes)[!is.na(classes)])
-
-    test.only <- cbind(as.data.frame(as.matrix(dtm)[is.na(classes),]),
-            daclass=as.factor(classes)[is.na(classes)])
-
-    cat("Building classifier...\n")
-    rf.model <- ranger(daclass ~ .,
-       data=training.only,
-       importance='impurity',
-       write.forest=TRUE)
-
-    return(list(dtm=dtm,model=rf.model))
+    cat("Predicting all ideologies...\n")
+    ideos <- predict.all.ideologies(classifier)
+    predicted.ideologies <<-
+        cbind(collect(dplyr::select(classifier$dtm, Userid)), ideos)
 }
 
-# Preprocess the data frame passed (see description above) and return a 
-# DocumentTermMatrix object for it.
-build.dtm <- function(data=training.data) {
+
+predict.ideology <- function(classifier, userid) {
+    prediction <- predict(classifier$model, 
+        collect(dplyr::filter(classifier$dtm, Userid==userid)))$predictions
+    return(classifier$model$forest$levels[prediction])
+}
+
+
+predict.all.ideologies <- function(classifier) {
+    predictions <- predict(classifier$model, 
+        collect(classifier$dtm))$predictions
+    return(classifier$model$forest$levels[predictions])
+}
+
+
+# training.data: a data frame that has one row per labeled Twitter user with 
+# the following columns:
+# . userid -- Twitter userid 
+# . content -- unprocessed content (concatenation of all tweets)
+# . Class -- class label
+#
+# all.data: a data frame that has one row per Twitter user with the following 
+# columns:
+# . userid -- Twitter userid 
+# . content -- unprocessed content (concatenation of all tweets)
+#
+# docterm -- if this argument is provided, the doc-term matrix will not be
+# renegerated.
+#
+build.classifier <- function(training.data, all.data, docterm=NULL) {
+
+    if (is.null(docterm)) {
+        cat("Building document-term matrix...\n")
+        docterm <- build.dtm(all.data$content)
+        cat("Preparing training data...\n")
+        dtmatrix <- data.frame(Userid=all.data$userid, 
+            as.matrix(docterm), stringsAsFactors=FALSE)
+    } else {
+        dtmatrix <- docterm
+    }
+
+    real.training.data <- 
+        inner_join(dtmatrix, dplyr::select(training.data, -content),
+            by=c(Userid="userid"))
+
+    cat("Building classifier...\n")
+    rf.model <- ranger(Class ~ ., data=real.training.data,
+       importance='impurity', write.forest=TRUE)
+
+    a.sqlite.db <- src_sqlite("aSqliteDb.sqlite3", create=TRUE)
+    dtmatrix.sqlite <- copy_to(a.sqlite.db, dtmatrix, indexes=list("Userid"))
+    return(list(dtm=dtmatrix.sqlite,model=rf.model))
+}
+
+# Given a vector of text content, return a DocumentTermMatrix object for it.
+build.dtm <- function(docs) {
 
     cat("Preprocessing tweets...\n")
-
-    # Dave processing.
-    docs <- data$content
 
     #docs <- iconv(docs, sub="")
     docs <- gsub("[^\x20-\x7E]", "", docs)
