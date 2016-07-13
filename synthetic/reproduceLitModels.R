@@ -1,6 +1,6 @@
 # Reproduce results of published papers
 
-library(ggplot2)
+#library(ggplot2)
 
 source("opinionDynamics.R")
 
@@ -49,7 +49,7 @@ binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
 param.sweep <- function(results=NULL, num.trials=20) {
 
     library(doParallel)
-    registerDoParallel(8)
+    registerDoParallel(60)
 
     #if (is.null(results)) {
     #    pair.of.result.sets <- 
@@ -60,7 +60,7 @@ param.sweep <- function(results=NULL, num.trials=20) {
     final.result <<- lapply(c(1,2,3,4,5,0), function(num.vert) {
 	#lapply(c(TRUE,FALSE), function(a.is.victim) {
         #list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
-	 trials.results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+	 trials.results <<- data.frame(foreach(trial=1:num.trials, .combine=rbind) %dopar% {
                     cat("Trial #",trial,"\n",sep="")
 		    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
                         encounter.func=get.graph.neighbors.encounter.func(num.vert),
@@ -80,7 +80,7 @@ param.sweep <- function(results=NULL, num.trials=20) {
                             break
                         }
                     }
-                    return(data.frame(num.vert, all.vert, num.iter.before.consensus))
+                    return(data.frame(num.vert, num.iter.before.consensus))
                }
 	       save(trials.results, file="paramsweep2.RData")
      })
@@ -100,6 +100,8 @@ param.sweep <- function(results=NULL, num.trials=20) {
     save(final.result, file="paramsweep2.RData")
     return(final.result)
 }
+
+param.sweep(num.trials=50)
 
 yildiz.binary <- function(){
     # Yildoz, Acemoglu, et al. 2013
