@@ -24,6 +24,7 @@ binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
         victim.update.function=get.automatically.update.victim.function(
                                                             A.is.victim=TRUE), 
         choose.randomly.each.encounter=choose.randomly.each.encounter,
+        termination.function=get.unanimity.termination.function(),
         verbose=FALSE)
     if (plot) {
         plot.animation(graphs, "opinion", delay.between.frames=.15)
