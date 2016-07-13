@@ -36,3 +36,66 @@ convergence rate? Show boxplot.
 
 Note: make sure that we're measuring time in the same way (i.e., number of
 encounters).
+
+
+Dave Model definitions:
+
+Dave Model Variant 1: edges to FOAFs are formed conditionally on already
+agreeing with that FOAF. We think we get disconnected subgraphs each with 
+homogeneous opinions.
+
+Dave Model Variant 2: edges are formed unconditionally. We think we do NOT get
+disconnected subgraphs, but we do get community/clustering based on opinion." 
+
+
+
+To do for end of SSI!
+---------------------
+1. Dave model analysis on larger scale:
+    - verify that when we have variant 1, we do get all homogenous components.
+    - verify that when we have variant 2, we do NOT get all homogenous
+      components, but we do get homogeneous clusters.
+    Note: if we verify that those two bullets do ALWAYS happen, then the
+poster just has the two example graphs, and text stating that we verified that
+in n runs of m iterations each, it always happened. If we verify that they
+DON'T always happen, then we may need a more quantitative table/plot that
+shows (say) the fraction of clusters/components that turned out to be
+homogeneous.
+
+2. Look into ways of visualizing the Pelosi-Ryan graph and see if there's a
+graphical way to display that on the poster. (Just to show size and
+connectedness.)
+
+
+ABSTRACT
+
+Poster contents:
+
+    A good motivational paragraph on political polarization and why it matters
+
+    Opinion dynamics -- summary of lit (2-4 paragraphs strutting your stuff)
+        Maybe even a preliminary taxonomy
+
+    Our findings:
+        - sensitive to how encounters are set up
+            - Holley vs. Zontine   x
+            - influencer vs. influencee   x
+        - Dave model   x
+    
+    Future work:
+        Describe empirical data set
+        Give basic graph metrics on it
+
+
+
+
+    
+What goes on the poster -- images:
+    boxplot #1 (Holley vs. Zontine)
+    boxplot #2 (influencer vs. influencee)
+    graph showing typical final state of Dave Variant 1
+    graph showing typical final state of Dave Variant 2
+    A sample twitter user -- with photo, @screenname, and 2-4 recent tweets
+    (cherry picked to be mostly political ones)
+
+    
