@@ -131,15 +131,17 @@ sim.opinion.dynamics <- function(init.graph,
             }
         }
 
-        # Create a new igraph object to represent this point in time. 
-        graphs[[graph.num+1]] <- graphs[[graph.num]]
-        graph.num <- graph.num + 1
+        if (!generate.graph.per.encounter) {
+            # Create a new igraph object to represent this point in time. 
+            graphs[[graph.num+1]] <- graphs[[graph.num]]
+            graph.num <- graph.num + 1
 
-        # Annotate the graph object with a graph attribute indicating the
-        # number of encounters that had taken place at the time this snapshot
-        # was taken.
-        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-            "num.encounters", encounter.num)
+            # Annotate the graph object with a graph attribute indicating the
+            # number of encounters that had taken place at the time this snapshot
+            # was taken.
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                "num.encounters", encounter.num)
+        }
     }
     graphs
 }
