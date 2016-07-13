@@ -109,10 +109,10 @@ sim.opinion.dynamics <- function(init.graph,
             # For each of these encountered partners...
             for (ev in encountered.vertices) {
                 encounter.num <- encounter.num + 1
-                if (verbose) {
-                    cat("Encounter ",encounter.num," of ",num.encounters," (",
-                        v,")...\n", sep="")
-                }
+                #if (verbose) {
+                #    cat("Encounter ",encounter.num," of ",num.encounters," (",
+                #        v,")...\n", sep="")
+                #}
                 update.info <- victim.update.function(graphs[[graph.num]], v, ev)
                 V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
                     update.info$new.value
@@ -334,11 +334,13 @@ get.graph.neighbors.encounter.func <- function(num.vertices=0, all=FALSE) {
             # Each vertex encounters some others at random from a vector
             # of its "outgoing" neighbors, of whom he may pass 
             # information to/influence.
-            outgoing.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
-            if(length(outgoing.neighbors) <= num.vertices || all){
-                return (
-                    outgoing.neighbors
-                )
+            
+		if(num.vertices==0) {
+			all=TRUE
+		}
+		outgoing.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
+            	if(length(outgoing.neighbors) <= num.vertices || all){
+                	return (outgoing.neighbors)
             } else {
                 return ( 
                     sample(outgoing.neighbors, num.vertices)
