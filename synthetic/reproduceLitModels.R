@@ -24,6 +24,7 @@ binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
         victim.update.function=get.automatically.update.victim.function(
                                                             A.is.victim=TRUE), 
         choose.randomly.each.encounter=choose.randomly.each.encounter,
+        termination.function=get.unanimity.termination.function(),
         verbose=FALSE)
     if (plot) {
         plot.animation(graphs, "opinion", delay.between.frames=.15)
@@ -54,33 +55,36 @@ param.sweep <- function(results=NULL, num.trials=20) {
     #if (is.null(results)) {
     #    pair.of.result.sets <- 
     #}
+    i <- 0
     init.graph <- erdos.renyi.game(100,0.05)
     V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
-    result <<- lapply(c(1,2,3,4), function(num.vert) {
+    final.result <<- lapply(c(1,2,3,4,5,0), function(num.vert) {
 	#lapply(c(TRUE,FALSE), function(a.is.victim) {
         #list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
-        #list(2,FALSE,FALSE), list(3,FALSE,FALSE),
-        #list(4,FALSE,FALSE), list(5,FALSE,FALSE), list(1,TRUE,TRUE)), 
-               results <- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
-                    cat("\n----------------------------\n")
+	 trials.results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
                     cat("Trial #",trial,"\n",sep="")
-                    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
+		    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
                         encounter.func=get.graph.neighbors.encounter.func(num.vert),
+			#chose a.is.victim as true because it converges faster
 			victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
-                        edge.update=FALSE,
-			verbose=FALSE,
+                        edge.update.function=get.no.edge.update.function(),
+			verbose=TRUE,
+			#chose choose.randomly.each.encounter=FALSE because it converges faster
                         choose.randomly.each.encounter=FALSE)
-                    # binary.voter(choose.randomly.each.encounter, plot=FALSE)
-                    num.iter.before.consensus <- Inf
+                 
+ 		    # binary.voter(choose.randomly.each.encounter, plot=FALSE)                    
+		    cat("Sim.opinion.dynamics is done!\n")
+		    num.iter.before.consensus <- Inf
                     for (iter in 1:length(graphs)) {
                         if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
                             num.iter.before.consensus <- iter
                             break
                         }
                     }
-                    return(data.frame(num.neigbors.encountered, num.iter.before.consensus))
-             }
-         })
+                    return(data.frame(num.vert, all.vert, num.iter.before.consensus))
+               }
+	       save(trials.results, file="paramsweep2.RData")
+     })
         #results <- as.data.frame(
         #rbind(pair.of.result.sets[[1]],pair.of.result.sets[[2]]))
         #rownames(results) <- 1:nrow(results)
@@ -94,8 +98,8 @@ param.sweep <- function(results=NULL, num.trials=20) {
     #    scale_fill_discrete(name="Variant", breaks=c(TRUE,FALSE),
     #        labels=c("Graph A","Graph B")))
 
-    save(result, file="todo2.RData")
-    return(result)
+    save(final.result, file="paramsweep2.RData")
+    return(final.result)
 }
 
 yildiz.binary <- function(){

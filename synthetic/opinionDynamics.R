@@ -61,6 +61,7 @@ sim.opinion.dynamics <- function(init.graph,
         choose.randomly.each.encounter=FALSE,
         edge.update.function=get.no.edge.update.function(),
         generate.graph.per.encounter=FALSE,
+        termination.function=get.never.terminate.function(),
         verbose=TRUE) {
 
     if (generate.graph.per.encounter) {
@@ -76,7 +77,8 @@ sim.opinion.dynamics <- function(init.graph,
     graph.num <- 1
 
     # For each iteration of the sim...
-    while (encounter.num < num.encounters) {
+    while (encounter.num < num.encounters  &&
+        !termination.function(graphs[[graph.num]])) {
 
         if (verbose) {
             cat("---------------------------------\n")
@@ -84,6 +86,10 @@ sim.opinion.dynamics <- function(init.graph,
 
         # Go through all the vertices, in random order:
         for (v in sample(1:gorder(graphs[[graph.num]]))) {
+
+            if (termination.function(graphs[[graph.num]])) {
+                break
+            }
 
             # If Holley variant, then choose a random vertex instead of the
             # one from our shuffling, above.
@@ -109,10 +115,10 @@ sim.opinion.dynamics <- function(init.graph,
             # For each of these encountered partners...
             for (ev in encountered.vertices) {
                 encounter.num <- encounter.num + 1
-                if (verbose) {
-                    cat("Encounter ",encounter.num," of ",num.encounters," (",
-                        v,")...\n", sep="")
-                }
+                #if (verbose) {
+                #    cat("Encounter ",encounter.num," of ",num.encounters," (",
+                #        v,")...\n", sep="")
+                #}
                 update.info <- victim.update.function(graphs[[graph.num]], v, ev)
                 V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
                     update.info$new.value
@@ -131,18 +137,53 @@ sim.opinion.dynamics <- function(init.graph,
             }
         }
 
-        # Create a new igraph object to represent this point in time. 
-        graphs[[graph.num+1]] <- graphs[[graph.num]]
-        graph.num <- graph.num + 1
+        if (!termination.function(graphs[[graph.num]])  &&
+                !generate.graph.per.encounter) {
+            # Create a new igraph object to represent this point in time. 
+            graphs[[graph.num+1]] <- graphs[[graph.num]]
+            graph.num <- graph.num + 1
 
-        # Annotate the graph object with a graph attribute indicating the
-        # number of encounters that had taken place at the time this snapshot
-        # was taken.
-        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-            "num.encounters", encounter.num)
+            # Annotate the graph object with a graph attribute indicating the
+            # number of encounters that had taken place at the time this snapshot
+            # was taken.
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                "num.encounters", encounter.num)
+        }
     }
-    graphs
+    graphs[1:graph.num]
 }
+
+
+
+# Terminology:
+#
+# ** termination functions: a "termination function" is one that takes a graph
+# and returns TRUE if that graph is considered a "terminal state" of a
+# simulation -- i.e., if the simulation should stop when this graph is
+# reached.
+#
+# ** termination generator functions: a "termination generator function"
+# is one that can be called to return a termination function.
+
+# Never terminate.
+get.never.terminate.function <- function() {
+    return (
+        function(graph) {
+            return(FALSE)
+        }
+    )
+}
+
+# Terminate if the graph has total uniformity of opinions.
+get.unanimity.termination.function <- function() {
+    return (
+        function(graph) {
+            return (length(unique(V(graph)$opinion)) == 1)
+        }
+    )
+}
+
+
 
 
 # Terminology:
@@ -334,11 +375,13 @@ get.graph.neighbors.encounter.func <- function(num.vertices=0, all=FALSE) {
             # Each vertex encounters some others at random from a vector
             # of its "outgoing" neighbors, of whom he may pass 
             # information to/influence.
-            outgoing.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
-            if(length(outgoing.neighbors) <= num.vertices || all){
-                return (
-                    outgoing.neighbors
-                )
+            
+		if(num.vertices==0) {
+			all=TRUE
+		}
+		outgoing.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
+            	if(length(outgoing.neighbors) <= num.vertices || all){
+                	return (outgoing.neighbors)
             } else {
                 return ( 
                     sample(outgoing.neighbors, num.vertices)
