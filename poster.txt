@@ -1,6 +1,33 @@
+Abstract
+
+    Political polarization represents the increasing divergence of opinions between Liberals and Conservatives on the political 
+spectrum. As social media fosters an echo-chamber, people tend to form relationships with the like-minded, and break ones with
+the opposite. Over time, tight network clusters separated by ideology begin to prevent communication between the political parties
+A happy medium between no conversation and total uniformity of opinion is key in cultivating a healthy society. Our task was to 
+simulate a network of Twitter users and model their changing political opinions on a graph. We coded a function to take several
+parameters, including the initial graph, and produce an animation file of the changing plot over some amount of time. Some methods
+other researchers choose to implement did not accurately represent the framework of Twitter. We found a significant difference in the 
+length of time before complete consensus of opinion, when the order of interactions between neighbors varies as well as the number of 
+users present in the interaction. Opinion dynamics literature cites one micro-behavior, a few stubborn users who never change their 
+opinion, as a cause of a macro-behavior, polarization of political ideology. Another macro-behavior, uniformity of opinion, is cited to
+always occur for users with binary opinions where each user adopts another’s opinion. This fall, we plan to study real Twitter users who 
+follow politicians and are politically active. Once we have constructed an accurate political text classifier, we can label users according 
+to their tweets. Recording the dynamic relationships of these users through the upcoming election will allow us to study the effect of 
+observed micro-behaviors on the dataset.
+
 
 Political Polarization
-    - The great debate
+    Political Polarization is an observed phenomenon which occurs when public opinion diverges on the political spectrum, leaving only two 
+parties with extreme, stubborn values. With the creation of social networking, people now have the ability to build a personal profile, 
+choose who they wish to follow, and decide how frequently they wish to visit the site. Each person can choose how much or how little he/she
+wishes to share about his/her own personal beliefs online. Homophily is a tendency humans have to associate themselves with others who have
+similar opinions and beliefs. If two friends agree on one issue and follow each other, it is highly probable one may directly or indirectly
+influence the other into adopting his/her opinion on another issue. Over time, politically active users have been observed to aggregate 
+into communities of interest, which allows confirmation bias to be reinforced and selective news to go undisputed. When public opinion is
+polarized, it becomes increasingly difficult for the parties to compromise on solutions for pressing national issues.
+
+
+
 
 Models of Opinion Dynamics
     - Modeling a population of users as a graph

@@ -38,19 +38,6 @@ Note: make sure that we're measuring time in the same way (i.e., number of
 encounters).
 
 
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-
-
-
-
 =======
 Dave Model definitions:
 
@@ -99,20 +86,6 @@ Poster contents:
     Future work:
         Describe empirical data set
         Give basic graph metrics on it
->>>>>>> 00e15e4d9200db8c57aaa493c7340fe3d6302c1b
-
-
-
-
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
 
 
 
@@ -122,7 +95,6 @@ Justifying the dave model:
     - Noting the differences in behaviors: add edge with FOAF who you disagree with
         cluster_fast_greedy() $memberships
         is it true that all of these are homogeneous?
-=======
     
 What goes on the poster -- images:
     boxplot #1 (Holley vs. Zontine)
@@ -133,4 +105,3 @@ What goes on the poster -- images:
     (cherry picked to be mostly political ones)
 
     
->>>>>>> 00e15e4d9200db8c57aaa493c7340fe3d6302c1b
