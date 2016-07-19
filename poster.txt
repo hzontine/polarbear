@@ -4,70 +4,111 @@ Title:  Variations on traditional Opinion Dynamics Models and their Effects
 
 Abstract
 
-    Political polarization represents the increasing divergence of opinions between Liberals and Conservatives
-on the political spectrum. As social media fosters an echo-chamber, people tend to form relationships with the 
-like-minded, and break ones with the opposite. Over time, tight network clusters separated by ideology begin to 
-prevent communication between the political parties. A happy medium between no conversation and total uniformity 
-of opinion is key in cultivating a healthy society. Our task was to simulate a network of Twitter users and model 
-their changing political opinions on a graph. We coded a function to take several parameters, including the initial
-graph, and produce an animation file of the changing plot over some amount of time. Some methods other researchers 
-choose to implement did not accurately represent the framework of Twitter. We found a significant difference in the 
-length of time before complete consensus of opinion, when the order of interactions between neighbors varies as well 
-as the number of users present in the interaction. Opinion dynamics literature cites one micro-behavior, a few 
-stubborn users who never change their opinion, as a cause of a macro-behavior, polarization of political ideology. 
-Another macro-behavior, uniformity of opinion, is cited to always occur for users with binary opinions where each 
-user adopts another’s opinion. This fall, we plan to study real Twitter users who follow politicians and are 
-politically active. Once we have constructed an accurate political text classifier, we can label users according 
-to their tweets. Recording the dynamic relationships of these users through the upcoming election will allow us 
-to study the effect of observed micro-behaviors on the dataset.
+Political polarization represents the increasing divergence of
+opinions between Liberals and Conservatives on the political 
+spectrum. As social media fosters an echo-chamber, people tend 
+to form relationships with the like-minded, and break ones with 
+the opposite. Over time, tight network clusters separated by 
+ideology begin to prevent communication between the political 
+parties. A happy medium between no conversation and total 
+uniformity of opinion is key in cultivating a healthy society. 
+Our task was to simulate a network of Twitter users and model 
+their changing political opinions on a graph. We coded a 
+function to take several parameters, including the initial
+graph, and produce an animation file of the changing plot over 
+some amount of time. Some methods other researchers choose to 
+implement did not accurately represent the framework of Twitter.
+We found a significant difference in the length of time before
+complete consensus of opinion, when the order of interactions 
+between neighbors varies as well as the number of users present 
+in the interaction. Opinion dynamics literature cites one 
+micro-behavior, a few stubborn users who never change their 
+opinion, as a cause of a macro-behavior, polarization of political 
+ideology. Another macro-behavior, uniformity of opinion, is cited 
+to always occur for users with binary opinions where each user 
+adopts another’s opinion. This fall, we plan to study real Twitter 
+users who follow politicians and are politically active. Once we 
+have constructed an accurate political text classifier, we can 
+label users according to their tweets. Recording the dynamic 
+relationships of these users through the upcoming election will 
+allow us to study the effect of observed micro-behaviors on the 
+dataset.
 
 Political Polarization
 
-    Political Polarization is an observed phenomenon which occurs when public opinion diverges on the political 
-spectrum, leaving only two parties with extreme, stubborn values. With the creation of social networking, people 
-now have the ability to build a personal profile, choose who they wish to follow, and decide how frequently they 
-wish to visit the site. Each person can choose how much or how little he/she wishes to share about his/her own 
-personal beliefs online. Homophily is a tendency humans have to associate themselves with others who have similar 
-opinions and beliefs. If two friends agree on one issue and follow each other, it is highly probable one may directly
-or indirectly influence the other into adopting his/her opinion on another issue. Over time, politically active users 
-have been observed to aggregate into communities of interest, which allows confirmation bias to be reinforced and 
-selective news to go undisputed. When public opinion is polarized, it becomes increasingly difficult for the parties 
-to compromise on solutions for pressing national issues.
+Political Polarization is an observed phenomenon which occurs 
+when public opinion diverges on the political spectrum, leaving 
+only two parties with extreme, stubborn values. With the creation
+of social networking, people now have the ability to build a 
+personal profile, choose who they wish to follow, and decide how 
+frequently they wish to visit the website. Each person can choose
+how much or how little he/she wishes to share about his/her own 
+personal beliefs online. Homophily is a tendency humans have to
+associate themselves with others who have similar opinions and 
+beliefs. If two friends agree on one issue and follow each other,
+it is highly probable one may directly or indirectly influence 
+the other into adopting his/her opinion on another issue. Over
+time, politically active users have been observed to aggregate
+into communities of interest, which allows confirmation bias to
+be reinforced and selective news to go undisputed. When public 
+opinion is polarized, it becomes increasingly difficult for the 
+parties to compromise on solutions for pressing national issues.
 
 Opinion Dynamics
 
-    The study of how people formulate and change their own opinion based on the opinions of others is essential to the 
-field of Opinion Dynamics. In order to model a population of users as a graph, each Twitter user must be represented as 
-a vertex, also known as a node, on the graph. The relationship between two users on Twitter can be unidirectional (one 
-follows the other) or bidirectional (they both follow each other), and thus must be depicted as either an arrow or a 
-line respectively. The arrow is always directed from followee to the follower in order to portray the direction of 
-information flow. 
-    There are many different ways to simulate how users change their opinion. The political ideology for each user 
-can be modeled as either univariate or multivariate, where the opinion value is either discrete or continuous. 
-The Binary Voter Model, produced independently by Holley 1975 and Clifford 1973, is a simple simulation where 
-each agent has one binary opinion value and always adopts another's opinion. Weisbuch 2001 created a model where
-agents held a continuous opinion value and would only interact when the difference was below a specfied threshold 
-value. The two ways to design how a user is influenced is either through pairwise interactions or group influence. 
-Pairwise interactions always occur between two users, whether the users are neighbors on the graph or not. Group 
-influence is a different type of interaction, where a user considers the group average of its neighbors in order
-to potentially shift his/her opinion.
-    Many researchers in the field of Opinion Dynamics chose to simplify their model so that they could analytically
-work out the solution without having to simulate it. There are two reasons to simulate a model: 1) to determine whether 
-certain micro-behaviors are sufficient to produce known macro-observations and 2) to determine the macro-consequences 
-of certain micro-behaviors. In our case, we are interested in the modeling assumptions that will produce macro-behaviors, 
-such as entrenched polarization, alignment on seemingly diverse issues, and uniformity of opinion. The Binary Voter Model
-is cited to always lead to uniformity of opinion after some length of time. Yildiz reinvented this model by adding a 
-binary stubbornness attribute to each node. He found that typically the insertion of a few static users led to a graph 
+The study of how people formulate and change their own opinion
+based on the opinions of others is essential to the field of 
+Opinion Dynamics. In order to model a population of users as a 
+graph, each Twitter user must be represented as a vertex, also
+known as a node, on the graph. The relationship between two 
+users on Twitter can be unidirectional (one follows the other)
+or bidirectional (they both follow each other), and thus must 
+be depicted as either an arrow or a line respectively. The arrow 
+is always directed from followee to the follower in order to 
+portray the direction of information flow. 
+There are many different ways to simulate how users change their
+opinion. The political ideology for each user can be modeled as
+either univariate or multivariate, where the opinion value is 
+either discrete or continuous. The Binary Voter Model, produced 
+independently by Holley 1975 and Clifford 1973, is a simple 
+simulation where each agent has one binary opinion value and
+always adopts another's opinion. Weisbuch 2001 created a model
+where agents held a continuous opinion value and would only 
+interact when the difference was below a specfied threshold 
+value. The two ways to design how a user is influenced is either 
+through pairwise interactions or group influence. Pairwise 
+interactions always occur between two users, whether the users
+are neighbors on the graph or not. Group influence is a different
+type of interaction, where a user considers the group average of 
+its neighbors in order to potentially shift his/her opinion.
+Many researchers in the field of Opinion Dynamics chose to 
+simplify their model so that they could analytically work out 
+the solution without having to simulate it. There are two reasons
+to simulate a model: 1) to determine whether certain micro-
+behaviors are sufficient to produce known macro-observations and 
+2) to determine the macro-consequences of certain micro-behaviors.
+In our case, we are interested in the modeling assumptions that 
+will produce macro-behaviors, such as entrenched polarization, 
+alignment on seemingly diverse issues, and uniformity of opinion.
+The Binary Voter Model is cited to always lead to uniformity of 
+opinion after some length of time. Yildiz reinvented this model 
+by adding a binary stubbornness attribute to each node. He found 
+that typically the insertion of a few static users led to a graph 
 polarized by opinion.
 
 Results
 
-    While reproducing other models from the Opinion Dynamics literature, we noticed opportunities to explore slight variations. 
-The Binary Voter Model cycles through iterations, where each iteration users are randomly chosen to interact with other 
-randomly chosen users. What seemed more realistic to us was having every single user have a turn each iteration. In the real 
-world, people are influencing others and formulating their own opinions in tandem with the population. So we set up a parameter
-sweep over 50 simulations comparing the consensus time between the two. We found significant results when our model converged 
-on average faster than the Binary Voter Model.
+While reproducing other models from the Opinion Dynamics literature,
+we noticed opportunities to explore slight variations. The Binary 
+Voter Model cycles through iterations, where each iteration users 
+are randomly chosen to interact with other randomly chosen users.
+What seemed more realistic to us was having every single user have 
+a turn each iteration. In the real world, people are influencing 
+others and formulating their own opinions in tandem with the 
+population. So we set up a parameter sweep over 50 simulations 
+comparing the consensus time between the two. We found significant 
+results when our model converged on average faster than the Binary 
+Voter Model.
     
         - A.is.victim
 
