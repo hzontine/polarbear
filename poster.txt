@@ -60,20 +60,17 @@ polarized by opinion.
 
 Results
 
-    While reproducing other models from the Opinion Dynamics literature, we noticed opportunities to make slight variations. 
+    While reproducing other models from the Opinion Dynamics literature, we noticed opportunities to explore slight variations. 
 The Binary Voter Model cycles through iterations, where each iteration users are randomly chosen to interact with other 
 randomly chosen users. What seemed more realistic to us was having every single user have a turn each iteration. In the real 
 world, people are influencing others and formulating their own opinions in tandem with the population. So we set up a parameter
 sweep over 50 simulations comparing the consensus time between the two. We found significant results when our model converged 
 on average faster than the Binary Voter Model.
-    Many literature models 
+    Many literature models
+        - A.is.victim
 
+    Dave Model 
 
-
-        * Ex: Binary Voter Model, DW, HK, BVM with stubborn agents, etc.
-    - Our findings
-        - sensitive to how encounters are set up
-        - Dave model
 
 
 Future Work
