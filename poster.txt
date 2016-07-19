@@ -17,6 +17,7 @@ observed micro-behaviors on the dataset.
 
 
 Political Polarization
+
     Political Polarization is an observed phenomenon which occurs when public opinion diverges on the political spectrum, leaving only two 
 parties with extreme, stubborn values. With the creation of social networking, people now have the ability to build a personal profile, 
 choose who they wish to follow, and decide how frequently they wish to visit the site. Each person can choose how much or how little he/she
@@ -26,14 +27,18 @@ influence the other into adopting his/her opinion on another issue. Over time, p
 into communities of interest, which allows confirmation bias to be reinforced and selective news to go undisputed. When public opinion is
 polarized, it becomes increasingly difficult for the parties to compromise on solutions for pressing national issues.
 
+Opinion Dynamics
+
+    The study of how people formulate and change their own opinion based on the opinions of others is essential to the field of Opinion Dynamics.
+In order to model a population of users as a graph, each Twitter user must be represented as a vertex, also known as a node, on the graph. The 
+relationship between two users on Twitter can be unidirectional (one follows the other) or bidirectional (they both follow each other), and thus
+must be depicted as either an arrow or a line respectively. The arrow is always directed from followee to the follower in order to portray the 
+direction of information flow. The political ideology for each user can be modeled as either univariate or multivariate, where each opinion value 
+is either discrete or continuous. 
+The most studied is univariate binary..
+ 
 
 
-
-Models of Opinion Dynamics
-    - Modeling a population of users as a graph
-    - What edges represent (briefly mention directed vs undirected)
-    - Representing the opinion itself: discrete or continuous? univariate or
-      multivariate? 
     - How vertices influence each other: Pairwise interactions, or group
       influence?
     - "Who is my neighbor?" is it the whole population, or a subset?
@@ -63,19 +68,10 @@ Simulating Opinion Dynamics
         * Will never reach a fixed state
             - Bounded Confidence: if the threshold is too low
             - Stubborn Agents: never change their own opinions
+    - Our findings
+        - sensitive to how encounters are set up
+        - Dave model
 
-Emperical Data
-    - How was the data collected?
-    - How was the seed set chosen?
-    - What constraints did we inflict during data collection?
-    - Compare and contrast graph metrics between our graphs.
-    Text Classification
-        - What is Sentiment Analysis?
-        - Types of Classifiers
-        - Training Data
-            * Manually labeled tweets thanks to our fellow SSI students
-        - Test Data
-        - How accurate were our predictions?
-Dynamic Networks
-    - shiny app demo
-
+Future Work
+    - Emperical Dataset
+    - Give graph metrics
