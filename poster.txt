@@ -1,4 +1,6 @@
-Title: ?????
+Title:  Variations on traditional Opinion Dynamics Models and their Effects
+        Evolving Graphs to represent Opinion Dynamics
+        Proprigating Opinions vs evolving graphs for simulating political polarization
 
 Abstract
 
@@ -66,7 +68,7 @@ randomly chosen users. What seemed more realistic to us was having every single 
 world, people are influencing others and formulating their own opinions in tandem with the population. So we set up a parameter
 sweep over 50 simulations comparing the consensus time between the two. We found significant results when our model converged 
 on average faster than the Binary Voter Model.
-    Many literature models
+    
         - A.is.victim
 
     Dave Model 
@@ -76,6 +78,6 @@ on average faster than the Binary Voter Model.
 Future Work
     
     This fall, we plan to study what micro-behaviors may be effective in mitigating the polarization of a politically polarized society.
-
+We have collected a dataset of 
     - Emperical Dataset
     - Give graph metrics
