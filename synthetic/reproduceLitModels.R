@@ -47,7 +47,7 @@ binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
 # iterations it took for the graph to reach uniformity; Inf if it never did in
 # the required number of iterations.)
 
-param.sweep <- function(results=NULL, num.trials=20) {
+param.sweep <- function(results=NULL, num.trials=50) {
 
     library(doParallel)
     registerDoParallel(8)
@@ -55,25 +55,23 @@ param.sweep <- function(results=NULL, num.trials=20) {
     #if (is.null(results)) {
     #    pair.of.result.sets <- 
     #}
-    i <- 0
-    init.graph <- erdos.renyi.game(100,0.05)
-    V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
-    final.result <<- lapply(c(1,2,3,4,5,0), function(num.vert) {
+    #i <- 0
+    #init.graph <- erdos.renyi.game(100,0.05)
+    #V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
+    final.result <<- lapply(c(TRUE,FALSE), function(choose.randomly) {
 	#lapply(c(TRUE,FALSE), function(a.is.victim) {
         #list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
-	 trials.results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
-                    cat("Trial #",trial,"\n",sep="")
-		    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
-                        encounter.func=get.graph.neighbors.encounter.func(num.vert),
+	    results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+		    #graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
+            #            encounter.func=get.graph.neighbors.encounter.func(1),
 			#chose a.is.victim as true because it converges faster
-			victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
-                        edge.update.function=get.no.edge.update.function(),
-			verbose=TRUE,
+			#victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
+            #            edge.update.function=get.no.edge.update.function(),
+			#verbose=TRUE,
 			#chose choose.randomly.each.encounter=FALSE because it converges faster
-                        choose.randomly.each.encounter=FALSE)
+            #            choose.randomly.each.encounter=choose.randomly)
                  
- 		    # binary.voter(choose.randomly.each.encounter, plot=FALSE)                    
-		    cat("Sim.opinion.dynamics is done!\n")
+ 		    graphs <- binary.voter(choose.randomly, plot=FALSE)                    
 		    num.iter.before.consensus <- Inf
                     for (iter in 1:length(graphs)) {
                         if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
@@ -81,24 +79,24 @@ param.sweep <- function(results=NULL, num.trials=20) {
                             break
                         }
                     }
-                    return(data.frame(num.vert, all.vert, num.iter.before.consensus))
-               }
-	       save(trials.results, file="paramsweep2.RData")
+                    return(data.frame(choose.randomly, num.iter.before.consensus))
+           }
+	       save(results, file="randomlySweep.RData")
      })
         #results <- as.data.frame(
         #rbind(pair.of.result.sets[[1]],pair.of.result.sets[[2]]))
         #rownames(results) <- 1:nrow(results)
         #colnames(results) <- c("A.is.victim","iter.to.consensus")
 
-    #print(ggplot(results, aes(x=choose.randomly, y=iter.to.consensus,
-    #        fill=choose.randomly)) +
-    #    geom_boxplot(notch=TRUE) +
-    #    ggtitle(paste0("Influence 1 neighbor(A) vs. Influenced by 1 neighbor(B) (n=",2*num.trials,")")) +
-    #    ylab("# of iterations to convergence") +
-    #    scale_fill_discrete(name="Variant", breaks=c(TRUE,FALSE),
-    #        labels=c("Graph A","Graph B")))
+    print(ggplot(results, aes(x=choose.randomly, y=num.iter.before.consensus,
+            fill=choose.randomly)) +
+        geom_boxplot(notch=TRUE) +
+        ggtitle(paste0("Choose random users each iteration?")) +
+        ylab("# of iterations to convergence") +
+        scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
+            labels=c("Binary Voter","Davies-Zontine")))
 
-    save(final.result, file="paramsweep2.RData")
+    save(final.result, file="randomlySweep.RData")
     return(final.result)
 }
 
