@@ -88,6 +88,11 @@ param.sweep <- function(results=NULL, num.trials=50) {
         #rownames(results) <- 1:nrow(results)
         #colnames(results) <- c("A.is.victim","iter.to.consensus")
 
+
+	
+	theme_set(theme_bw(base_size=16) +
+   		theme(plot.title=element_text(family="Times")))
+
     final.result <- rbind(final.result[[1]],final.result[[2]])
     print(ggplot(final.result, aes(x=choose.randomly, y=num.iter.before.consensus,
             fill=choose.randomly)) +
