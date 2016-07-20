@@ -38,6 +38,7 @@ Note: make sure that we're measuring time in the same way (i.e., number of
 encounters).
 
 
+=======
 Dave Model definitions:
 
 Dave Model Variant 1: edges to FOAFs are formed conditionally on already
@@ -88,7 +89,12 @@ Poster contents:
 
 
 
-
+Justifying the dave model:
+    - people tend to terminate friendships when they disagree (lit search this)
+    - when you agree with someone, you tend to get introduced to and form friendships with FOAFs
+    - Noting the differences in behaviors: add edge with FOAF who you disagree with
+        cluster_fast_greedy() $memberships
+        is it true that all of these are homogeneous?
     
 What goes on the poster -- images:
     boxplot #1 (Holley vs. Zontine)
