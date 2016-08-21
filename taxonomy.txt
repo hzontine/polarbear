@@ -35,8 +35,8 @@ X    - conversions happen only with fixed probability
        in-degree (i.e., if you're following a zillion people, it's less likely
        you'll be influenced by each one because that one person only occupies a
        small fraction of the ideas you're exposed to) (??)
-         - Question: can/should the "degree of activeness on Twitter" be 
-            modeled? (More likely to be influenced the more tweets you see.)
+     - Question: can/should the "degree of activeness on Twitter" be 
+        modeled? (More likely to be influenced the more tweets you see.)
      - different nodes have different "stubbornness" attribute (Yildiz, Acemoglu 2011)
 X       - binary (Yildiz)
         - continuous (?)
@@ -61,8 +61,8 @@ X       - binary (Yildiz)
 
 Which way does influence go?
 ----------------------------
-        - unidirectional influence for each encounter
-        - bidirectional (DW)
+    - unidirectional influence for each encounter
+    - bidirectional (DW)
 
 Big question: does the graph change over time??
 

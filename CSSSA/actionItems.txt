@@ -1,0 +1,22 @@
+
+Action items:
+-------------
+Tue Aug 23 HZ - confirm "I vs. V" hasn't been done (or if it has, who did it and how and
+what were the results)
+Tue Aug 23 SD - play with I vs. V and see if there's an obvious explanation
+HZ - collect results for A vs B vs C vs D
+HZ - up our N from 50 to (say) 200
+SD - abstract
+SD - intro
+HZ - related work
+HZ - The model: The binary voter model
+HZ - The model: Variant 1: Zontine vs. Holley
+HZ - The model: Variant 2: Victim vs. Influencer
+SD - The model: Dep var: rate of convergence
+SD - Analysis methodology: the box 
+HZ - Analysis methodology: # of simulations for each ind var combo 
+HZ - Results: result of var 1
+HZ - Results: result of var 2
+HZ - Results: A vs B vs C vs D
+SD - Discussion
+SD - Conclusion
