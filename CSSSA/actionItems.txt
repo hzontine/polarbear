@@ -3,10 +3,8 @@ Action items:
 -------------
 Tue Aug 23 HZ - confirm "I vs. V" hasn't been done (or if it has, who did it and how and
 what were the results)
-Tue Aug 23 SD - play with I vs. V and see if there's an obvious explanation
 HZ - collect results for A vs B vs C vs D
 HZ - up our N from 50 to (say) 200
-SD - abstract
 SD - intro
 HZ - related work
 HZ - The model: The binary voter model
