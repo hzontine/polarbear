@@ -1,2 +1,21 @@
 
-Abstract
+\section*{ABSTRACT}
+
+Opinion Dynamics models seek to reproduce the phenomenon of individual agents
+forming opinions over time via mutually influencing one another. As with all
+agent-based models (ABMs), researchers seek to faithfully model the real-world
+process through a selective simplification of the phenomenon.
+
+When creating a simulation to realize such a model, various implementation
+choices present themselves that at first glance may look arbitrary. In some
+cases, however, the way in which the details of the simulation are implemented
+can lead to important differences in its overall behavior; in the extreme,
+incorrect conclusions may even be drawn about what macro-behavior the abstract
+model is guaranteed to produce. In this paper, we look at two such choices
+germane to Opinion Dynamics models: a subtle difference in the way agents are
+randomly chosen for interaction, and the direction of influence between the
+two agents in such an encounter. In both cases, the rate of convergence to
+equilibrium is profoundly affected by what seem to be arbitrary implementation
+choices. This raises questions about the robustness of certain conclusions
+that are sometimes drawn from ABMs, and suggests strategies for avoiding
+pitfalls.

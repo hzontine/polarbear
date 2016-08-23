@@ -1,28 +1,108 @@
+\input{wsc15style.tex} 
+\documentclass{wscpaperproc}
+\usepackage{latexsym}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{mathptmx}
+
+% http://tex.stackexchange.com/questions/35809/how-do-i-use-apa-style-citations-with-bibtex
+% \usepackage{apacite}   % not working; fix later
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsbsy}
+\usepackage{amsthm}
 
 
-Title:
-The Counterintuitive Effect of Implementation Choices on the Rate of
-Convergence of Opinion Dynamics Models
+
+%
+%****************************************************************************
+% AUTHOR: If you do not wish to use hyperlinks, then just comment
+% out the hyperref usepackage commands below.
+
+%% This version of the command is used if you use pdflatex. In this case you
+%% cannot use ps or eps files for graphics, but pdf, jpeg, png etc are fine.
+
+\usepackage[pdftex,colorlinks=true,urlcolor=blue,citecolor=black,anchorcolor=black,linkcolor=black]{hyperref}
+
+%% The next versions of the hyperref command are used if you adopt the
+%% outdated latex-dvips-ps2pdf route in generating your pdf file. In
+%% this case you can use ps or eps files for graphics, but not pdf, jpeg, png etc.
+%% However, the final pdf file should embed all fonts required which means that you have to use file
+%% formats which can embed fonts. Please note that the final PDF file will not be generated on your computer!
+%% If you are using WinEdt or PCTeX, then use the following. If you are using
+%% Y&Y TeX then replace "dvips" with "dvipsone"
+
+%%\usepackage[dvips,colorlinks=true,urlcolor=blue,citecolor=black,%
+%% anchorcolor=black,linkcolor=black]{hyperref}
+%****************************************************************************
 
 
 
-abstract (SD)
-intro (SD)
-related (HZ)
-    - opinion dynamics models
-    - binary vs. continuous
-The model
-    - The binary voter model (HZ)
-    - Variant 1: Zontine vs. Holley (HZ)
-    - Variant 2: Victim vs. Influencer (HZ)
-    - Dep var: rate of convergence (SD)
-The analysis methodology
-    - the box (SD)
-    - # of simulations for each ind var combo (HZ)
-Results
-    - result of var 1 (HZ)
-    - result of var 2 (HZ)
-    - A vs B vs C vs D (HZ)
-Discussion (SD)
-Conclusion (?)
-References
+\begin{document}
+
+\WSCpagesetup{Davies and Zontine}
+
+\title{The Surprising Effect of Implementation Choices\\ on the Rate of
+Convergence of Opinion Dynamics Models}
+
+\author{Stephen Davies\\ [12pt]
+Department of Computer Science \\
+University of Mary Washington\\
+1301 College Avenue \\
+Fredericksburg, VA 22401, USA
+\and
+Hannah Zontine \\[12pt]
+Department of Computer Science \\
+University of Mary Washington\\
+1301 College Avenue \\
+Fredericksburg, VA 22401, USA
+}
+
+\maketitle
+
+hello there.
+
+%\cite{schelling_models_1969}
+
+\input{abstract}
+\input{intro}
+\input{related}
+\input{model}
+\input{results}
+\input{conclusion}
+
+
+%abstract (SD)
+%intro (SD)
+%related (HZ)
+%    - opinion dynamics models
+%    - binary vs. continuous
+%The model
+%    - The binary voter model (HZ)
+%    - Variant 1: Zontine vs. Holley (HZ)
+%    - Variant 2: Victim vs. Influencer (HZ)
+%    - Dep var: rate of convergence (SD)
+%The analysis methodology
+%    - the box (SD)
+%    - # of simulations for each ind var combo (HZ)
+%Results
+%    - result of var 1 (HZ)
+%    - result of var 2 (HZ)
+%    - A vs B vs C vs D (HZ)
+%Discussion (SD)
+%Conclusion (?)
+%References
+
+\appendix
+
+\vspace{6pt}
+
+% \bibliographystyle{apacite}   % not working; fix later
+\bibliographystyle{wsc}
+\bibliography{daviesZontine}
+
+\end{document}
+
