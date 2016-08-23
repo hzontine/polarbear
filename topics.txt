@@ -1,0 +1,14 @@
+
+Variations on the model we should do eventually:
+------------------------------------------------
+
+The Dave model (dynamic graph)
+
+The Stephen model (vector of opinions; presumably converge to "package")
+
+"Soft" stubbornness
+
+Hannah's degree-based influence (the more neighbors you have, the less you're
+    influenced by each one)
+
+Initial graph: Erdos-Renyi vs. Barabasi

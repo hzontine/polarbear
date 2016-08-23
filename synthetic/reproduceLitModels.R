@@ -50,7 +50,7 @@ binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
 param.sweep <- function(results=NULL, num.trials=50) {
 
     library(doParallel)
-    registerDoParallel(8)
+    registerDoParallel(50)
 
     #if (is.null(results)) {
     #    pair.of.result.sets <- 
@@ -58,10 +58,10 @@ param.sweep <- function(results=NULL, num.trials=50) {
     #i <- 0
     #init.graph <- erdos.renyi.game(100,0.05)
     #V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
-    final.result <<- lapply(c(TRUE,FALSE), function(choose.randomly) {
+    #final.result <<- lapply(c(TRUE,FALSE), function(choose.randomly) {
 	#lapply(c(TRUE,FALSE), function(a.is.victim) {
         #list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
-	    results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+#	    results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
 		    #graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
             #            encounter.func=get.graph.neighbors.encounter.func(1),
 			#chose a.is.victim as true because it converges faster
@@ -84,18 +84,41 @@ param.sweep <- function(results=NULL, num.trials=50) {
      })
     print(ggplot(results, aes(x=choose.randomly, y=num.iter.before.consensus,
         fill=choose.randomly)) +
+#                   cat("Trial #",trial,"....\n",sep="")
+#		    graphs <- binary.voter(choose.randomly, plot=FALSE)                    
+#		    num.iter.before.consensus <- 100
+#                   for (iter in 1:length(graphs)) {
+#                      if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
+#                         num.iter.before.consensus <- iter
+#                        break
+#                   }
+#              }
+#             return(data.frame(choose.randomly, num.iter.before.consensus))
+#   }
+#save(results, file="randomlySweep.RData")
+#})
+#results <- as.data.frame(
+#rbind(pair.of.result.sets[[1]],pair.of.result.sets[[2]]))
+#rownames(results) <- 1:nrow(results)
+#colnames(results) <- c("A.is.victim","iter.to.consensus")	
+#	theme_set(theme_bw(base_size=16) +
+#   		theme(plot.title=element_text(family="Times")))
+#    final.result <- rbind(final.result[[1]],final.result[[2]])
+#    print(ggplot(final.result, aes(x=choose.randomly, y=num.iter.before.consensus,
+#            fill=choose.randomly)) +
+
+
+
         geom_boxplot(notch=FALSE) +
         ggtitle(paste0("Choose random users each iteration?")) +
         ylab("# of iterations to convergence") +
         scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
             labels=c("Binary Voter","Davies-Zontine")))
-
     save(final.result, file="randomlySweep.RData")
     return(final.result)
 }
 
-
-param.sweep()
+param.sweep(num.trials=50)
 
 yildiz.binary <- function(){
     # Yildoz, Acemoglu, et al. 2013
