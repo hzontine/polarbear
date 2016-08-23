@@ -19,7 +19,7 @@ binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
     #set.seed(111234)
     init <- get.plain.old.graph(opinion=rbinom(50,1,0.5), 
         probability.connected=0.2)
-    graphs <<- sim.opinion.dynamics(init, num.encounters=50*vcount(init),
+    graphs <<- sim.opinion.dynamics(init, num.encounters=100*vcount(init),
         encounter.func=get.graph.neighbors.encounter.func(1),
         victim.update.function=get.automatically.update.victim.function(
                                                             A.is.victim=TRUE), 
@@ -72,25 +72,19 @@ param.sweep <- function(results=NULL, num.trials=50) {
             #            choose.randomly.each.encounter=choose.randomly)
                  
  		    graphs <- binary.voter(choose.randomly, plot=FALSE)                    
-		    num.iter.before.consensus <- Inf
-                    for (iter in 1:length(graphs)) {
-                        if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
-                            num.iter.before.consensus <- iter
-                            break
-                        }
-                    }
-                    return(data.frame(choose.randomly, num.iter.before.consensus))
-           }
-	       save(results, file="randomlySweep.RData")
+		    num.iter.before.consensus <- 100
+            for (iter in 1:length(graphs)) {
+                if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
+                    num.iter.before.consensus <- iter
+                    break
+                }
+            }
+            return(data.frame(choose.randomly, num.iter.before.consensus))
+        }
      })
-        #results <- as.data.frame(
-        #rbind(pair.of.result.sets[[1]],pair.of.result.sets[[2]]))
-        #rownames(results) <- 1:nrow(results)
-        #colnames(results) <- c("A.is.victim","iter.to.consensus")
-
     print(ggplot(results, aes(x=choose.randomly, y=num.iter.before.consensus,
-            fill=choose.randomly)) +
-        geom_boxplot(notch=TRUE) +
+        fill=choose.randomly)) +
+        geom_boxplot(notch=FALSE) +
         ggtitle(paste0("Choose random users each iteration?")) +
         ylab("# of iterations to convergence") +
         scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
@@ -99,6 +93,9 @@ param.sweep <- function(results=NULL, num.trials=50) {
     save(final.result, file="randomlySweep.RData")
     return(final.result)
 }
+
+
+param.sweep()
 
 yildiz.binary <- function(){
     # Yildoz, Acemoglu, et al. 2013

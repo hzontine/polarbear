@@ -118,7 +118,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
                     layout=vertex.coords,
                     vertex.shape=vertex.shape,
                     vertex.size=vertex.size,
-                    main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
+                    main=paste("Graph B"), sub=subtitle)
                 legend("bottomright",legend=c("Liberal","Conservative"),
                     fill=c("blue","red"))
             }
@@ -143,8 +143,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
     }
     if (!interactive) {
         cat("Assembling animation...\n")
-        system(paste0("convert -delay ",delay.between.frames*100,
-            " -loop 0 ",base.filename,"plot*.png ", animation.filename))
+        system(paste0("convert -delay ",delay.between.frames*100," ",base.filename,"plot*.png ", animation.filename))
         system(paste0("rm ",base.filename,"plot*.png"))
         cat("Animation in file ",animation.filename,".\n",sep="")
     }
