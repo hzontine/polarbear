@@ -1,2 +1,27 @@
 
 \section{THE MODEL}
+
+As explained above, the BVM is deceptively simple. Each node in the graph is
+initially assigned an opinion (say, 0 or 1) and updates it periodically by
+copying the opinion of one of its graph neighbors. It has long been known that
+such a system will reach consensus (uniformity of one opinion or the other)
+under a wide variety of conditions (see, \textit{e.g.},
+\cite{sood_voter_2005}). The probability that 0 (as opposed to 1) becomes the
+dominant opinion as a function of the initial opinion distribution is known,
+as is the expected number of iterations required to reach consensus for
+various degree distributions of the graph.
+
+Implementing this model as an agent-based simulation is straightforward. Yet
+in reproducing these classical results en route to other work, we discovered
+at least two subtle implementation choices that at first glance would appear
+unimportant, and yet which impact the convergence time in striking fashion. We
+present these not so much as important in their own right, but as exemplars of
+a more general problem: implementation choices that a modeler takes for
+granted may turn out to be critical to the behavior claimed for that model.
+
+\subsection{Simulation variant 1}
+
+\subsection{Simulation variant 2}
+
+
+
