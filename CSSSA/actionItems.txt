@@ -7,11 +7,11 @@ HZ - collect results for A vs B vs C vs D
 HZ - up our N from 50 to (say) 200
 SD - intro
 HZ - related work
-HZ - The model: The binary voter model
-HZ - The model: Variant 1: Zontine vs. Holley
-HZ - The model: Variant 2: Victim vs. Influencer
+SD - The model: The binary voter model
+SD - The model: Variant 1: Zontine vs. Holley
+SD - The model: Variant 2: Victim vs. Influencer
 SD - The model: Dep var: rate of convergence
-SD - Analysis methodology: the box 
+HZ - Analysis methodology: the box 
 HZ - Analysis methodology: # of simulations for each ind var combo 
 HZ - Results: result of var 1
 HZ - Results: result of var 2
