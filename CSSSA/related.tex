@@ -18,8 +18,35 @@ Other classical models have been proposed where opinions are represented by cont
 values, typically between 0 and 1. Weisbuch et al. designed a model with continuous
 opinion values, where agents randomly interacted in pairs when the difference of their 
 opinions was below a fixed threshold value. Ghaderi and Srikant studied the effect of
-interactions among agents where an agent not only considers the opinions of his neighbors,
-but also his inital opinion and how strongly he felt about it.
+interactions among agents where an agent not only considers the opinions of his 
+neighbors, but also his inital opinion and how strongly he felt about it.
+
+While many models assign each agent only one opinion value, some researchers explore 
+models where agents have multiple opinion values. Deffuant et al. 2000 modeled agent's
+opinions as a vector of opinions, representing opinions on different subjects. For the
+sake of simplication, they chose binary values. Agents aggregate opinions through
+pairwise evaulation, slightly shifting an agent's opinion after looping through all 
+possible pairings within the population. After more than 1000 interactions among
+the agents, the researchers discovered orthogonalisation of opinions, no polarization, 
+and no correlation between the opinion vectors.
+
+Friedkin and Johnsen 1990 modeled an analytical approach which makes simplifying 
+assumptions about the process of opinion change. Latent vs. expressed?
+
+While the BVM restricts agents to only interact with their neighbors, other models
+simulate interactions where agents consider the opinions of a group of other agents 
+in the graph. Hegselmann et al. (HK) constructed a model where agents encounter others
+randomly from the whole population. The HK model uses bounded confidence on a continuous
+opinion scale. Each randomly selected agent aggregates all other agent opinions within
+his confidence bound and considers the group average for shifting his opinion. In the 
+DeGroot Model, an agent updates his opinion to be a weighted average of his own opinion 
+and the opinions of his neighbors.
+ 
+*** Sirbu ***
+
+
+
+
 
 
 
