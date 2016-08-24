@@ -52,40 +52,33 @@ param.sweep <- function(results=NULL, num.trials=50) {
     library(doParallel)
     registerDoParallel(50)
 
-    #if (is.null(results)) {
-    #    pair.of.result.sets <- 
-    #}
-    #i <- 0
-    #init.graph <- erdos.renyi.game(100,0.05)
-    #V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
-    #final.result <<- lapply(c(TRUE,FALSE), function(choose.randomly) {
-	#lapply(c(TRUE,FALSE), function(a.is.victim) {
-        #list(list(1,FALSE), list(1,TRUE)), function(num.ver, a.is.victim) {
-#	    results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
-		    #graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
-            #            encounter.func=get.graph.neighbors.encounter.func(1),
-			#chose a.is.victim as true because it converges faster
-			#victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
-            #            edge.update.function=get.no.edge.update.function(),
-			#verbose=TRUE,
-			#chose choose.randomly.each.encounter=FALSE because it converges faster
-            #            choose.randomly.each.encounter=choose.randomly)
-                 
- 		    graphs <- binary.voter(choose.randomly, plot=FALSE)                    
-		    num.iter.before.consensus <- 100
+    # Probability the inital graph is connected = 0.05 ?? 
+    init.graph <- erdos.renyi.game(100,0.05)
+    V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
+    # Always the same graph
+    box <<- lapply(c(c(TRUE,TRUE), c(FALSE,TRUE), c(TRUE,FALSE), c(FALSE,FALSE)), function(holley, victim) {
+	    
+        results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+		    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
+                encounter.func=get.graph.neighbors.encounter.func(1),
+			    victim.update.function=get.automatically.update.victim.function(A.is.victim=victim),
+                edge.update.function=get.no.edge.update.function(),
+			    verbose=TRUE,
+                choose.randomly.each.encounter=holley)
+
+     
+		    num.iter.before.consensus <- 42000
             for (iter in 1:length(graphs)) {
                 if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
                     num.iter.before.consensus <- iter
                     break
                 }
             }
-            return(data.frame(choose.randomly, num.iter.before.consensus))
+            return(data.frame(holley, victim, num.iter.before.consensus))
         }
      })
-    print(ggplot(results, aes(x=choose.randomly, y=num.iter.before.consensus,
-        fill=choose.randomly)) +
-#                   cat("Trial #",trial,"....\n",sep="")
-#		    graphs <- binary.voter(choose.randomly, plot=FALSE)                    
+   
+
 #		    num.iter.before.consensus <- 100
 #                   for (iter in 1:length(graphs)) {
 #                      if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
@@ -94,31 +87,43 @@ param.sweep <- function(results=NULL, num.trials=50) {
 #                   }
 #              }
 #             return(data.frame(choose.randomly, num.iter.before.consensus))
-#   }
-#save(results, file="randomlySweep.RData")
-#})
-#results <- as.data.frame(
-#rbind(pair.of.result.sets[[1]],pair.of.result.sets[[2]]))
-#rownames(results) <- 1:nrow(results)
-#colnames(results) <- c("A.is.victim","iter.to.consensus")	
-#	theme_set(theme_bw(base_size=16) +
-#   		theme(plot.title=element_text(family="Times")))
-#    final.result <- rbind(final.result[[1]],final.result[[2]])
-#    print(ggplot(final.result, aes(x=choose.randomly, y=num.iter.before.consensus,
-#            fill=choose.randomly)) +
 
 
 
-        geom_boxplot(notch=FALSE) +
-        ggtitle(paste0("Choose random users each iteration?")) +
-        ylab("# of iterations to convergence") +
-        scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
-            labels=c("Binary Voter","Davies-Zontine")))
-    save(final.result, file="randomlySweep.RData")
-    return(final.result)
+
+	theme_set(theme_bw(base_size=16) +
+   		theme(plot.title=element_text(family="Times")))
+
+#    print(ggplot(results, aes(x=choose.randomly, y=num.iter.before.consensus,
+#        fill=choose.randomly)) +
+#        geom_boxplot(notch=FALSE) +
+#        ggtitle(paste0("Choose random users each iteration?")) +
+#        ylab("# of iterations to convergence") +
+#        scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
+#            labels=c("Binary Voter","Davies-Zontine")))
+    return(box)
 }
 
-param.sweep(num.trials=50)
+param.sweep(num.trials=200)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 yildiz.binary <- function(){
     # Yildoz, Acemoglu, et al. 2013
