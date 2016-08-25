@@ -56,15 +56,15 @@ param.sweep <- function(results=NULL, num.trials=50) {
     init.graph <- erdos.renyi.game(100,0.05)
     V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
     # Always the same graph
-    box <<- lapply(c(c(TRUE,TRUE), c(FALSE,TRUE), c(TRUE,FALSE), c(FALSE,FALSE)), function(holley, victim) {
+    #box <<- lapply(c(TRUE,TRUE), function(holley, victim) {
 	    
         results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
 		    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
                 encounter.func=get.graph.neighbors.encounter.func(1),
-			    victim.update.function=get.automatically.update.victim.function(A.is.victim=victim),
+			    victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
                 edge.update.function=get.no.edge.update.function(),
 			    verbose=TRUE,
-                choose.randomly.each.encounter=holley)
+                choose.randomly.each.encounter=TRUE)
 
      
 		    num.iter.before.consensus <- 42000
@@ -74,9 +74,9 @@ param.sweep <- function(results=NULL, num.trials=50) {
                     break
                 }
             }
-            return(data.frame(holley, victim, num.iter.before.consensus))
+            return(data.frame(num.iter.before.consensus))
         }
-     })
+     #})
    
 
 #		    num.iter.before.consensus <- 100
@@ -91,8 +91,8 @@ param.sweep <- function(results=NULL, num.trials=50) {
 
 
 
-	theme_set(theme_bw(base_size=16) +
-   		theme(plot.title=element_text(family="Times")))
+#	theme_set(theme_bw(base_size=16) +
+#  		theme(plot.title=element_text(family="Times")))
 
 #    print(ggplot(results, aes(x=choose.randomly, y=num.iter.before.consensus,
 #        fill=choose.randomly)) +
@@ -101,7 +101,7 @@ param.sweep <- function(results=NULL, num.trials=50) {
 #        ylab("# of iterations to convergence") +
 #        scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
 #            labels=c("Binary Voter","Davies-Zontine")))
-    return(box)
+    return(results)
 }
 
 param.sweep(num.trials=200)
