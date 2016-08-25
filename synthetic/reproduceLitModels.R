@@ -58,10 +58,10 @@ param.sweep <- function(results=NULL, num.trials=50) {
     # Always the same graph
     #box <<- lapply(c(,TRUE), function(holley, victim) {
 	    
-        results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+        D.results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
 		    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
                 encounter.func=get.graph.neighbors.encounter.func(1),
-			    victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
+			    victim.update.function=get.automatically.update.victim.function(A.is.victim=FALSE),
                 edge.update.function=get.no.edge.update.function(),
 			    verbose=TRUE,
                 choose.randomly.each.encounter=FALSE)
@@ -101,7 +101,8 @@ param.sweep <- function(results=NULL, num.trials=50) {
 #        ylab("# of iterations to convergence") +
 #        scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
 #            labels=c("Binary Voter","Davies-Zontine")))
-    return(results)
+    save.image(file="Box.RData")
+    return(D.results)
 }
 
 param.sweep(num.trials=200)
