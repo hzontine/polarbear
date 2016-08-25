@@ -56,7 +56,7 @@ param.sweep <- function(results=NULL, num.trials=50) {
     init.graph <- erdos.renyi.game(100,0.05)
     V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
     # Always the same graph
-    #box <<- lapply(c(TRUE,TRUE), function(holley, victim) {
+    #box <<- lapply(c(,TRUE), function(holley, victim) {
 	    
         results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
 		    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
@@ -64,7 +64,7 @@ param.sweep <- function(results=NULL, num.trials=50) {
 			    victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
                 edge.update.function=get.no.edge.update.function(),
 			    verbose=TRUE,
-                choose.randomly.each.encounter=TRUE)
+                choose.randomly.each.encounter=FALSE)
 
      
 		    num.iter.before.consensus <- 42000
