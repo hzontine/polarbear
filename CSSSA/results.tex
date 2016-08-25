@@ -2,7 +2,43 @@
 \section{RESULTS}
 
 \subsection{Simulation Variant 1}
+*Holley vs. Zontine*
+
+Everyone gets a turn. vs. Random
+
+
+
+
 
 \subsection{Simulation Variant 2}
+
+*Victim vs. Influencer*
+
+Such a trivial implementation choice about the direction of information flow 
+in a pairwise interaction yields unexpected results.
+
+We define victims as agents who either, once an iteration or randomly, always 
+adopt the opinion of a neighbor if their opinions happen to disagree. On 
+average, when the agents are victims, it takes fewer than half the number
+of iterations to reach a complete consensus.
+
+Our inital thought was to model our simulation the other way.
+
+But after noticing how Holley and Clifford's implemenation.
+
+Our iterpretation of the 
+
+When each agent is set up as the influencer, he will only have impact over
+agents' opinions with whom he is connected. Therefore, agents with a higher
+degree of edges are influenced the most often. An agent is restricted to only 
+influence a subset of the nodes (i.e. his neighbors) in the graph on each 
+cycle. This minor implementation choice is effectively biased toward choosing
+higher-degree nodes. As a result, nodes with lower-degrees have significantly
+less probability of changing. Acting in a similar fashion as stubborn nodes 
+(Yildiz), we observed a slower, if at all, rate of convergence time.
+
+
+What about random victim vs. influencer for each interaction?
+
 
 \subsection{The Box}
