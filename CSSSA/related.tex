@@ -1,43 +1,71 @@
 
-\section{RELATED WORK}
-
-Numerous models have been proposed to approximate the phenomenon of Opinion
-Dynamics; we sketch only a few of the more important efforts here to give the
-reader a feel for the breadth of the field.
+\section{OPINION DYNAMICS MODELS}
 
 Published independently by \cite{clifford_model_1973} and
-\cite{holley_ergodic_1975} in the 1970s, the Binary Voter
-Model (BVM) laid the initial foundation from which many other Opinion Dynamics
-models have been constructed. The BVM, which represents an individual's
-opinion as a single binary value, was intentionally simplified in several ways
-for the sake of deriving an analytical solution. One simplification,
-for instance, is that agents are distributed on a regular lattice rather than
-an arbitrary graph. Periodically, a randomly chosen agent adopts the opinion
-of a neighboring agent if the two opinions differ. Over time, the BVM will
-always reach uniformity of opinion, according to Aldous and Fill.
+\cite{holley_ergodic_1975} in the 1970s, the Binary Voter Model (BVM) laid the
+initial foundation from which many other Opinion Dynamics models have been
+constructed. The BVM, which represents an individual's opinion as a single
+binary value, was intentionally simplified in several ways for the sake of
+deriving an analytical solution. One simplification, for instance, is that
+agents are distributed on a regular lattice rather than an arbitrary graph.
+Periodically, a randomly chosen agent adopts the opinion of a neighboring
+agent if the two opinions differ. Importantly, over time the BVM will always
+reach uniformity of opinion, according to \cite[ch.~14]{aldous-fill-2014}.
 
+Numerous models for the Opinion Dynamics phenomenon have been proposed,
+varying in a multitude of ways, for instance:
+
+\begin{itemize}
+\item the way opinions are represented:
+    \begin{itemize}
+    \item discrete, with two or more distinct options \cite{follmer_random_1974,yildiz_discrete_2011} or
+    continuous, typically a value between 0 and 1 \cite{ghaderi_opinion_2012,weisbuch_interacting_2001}
+
+    \item single \cite{weisbuch_dynamical_1999} or
+    multiple, where opinions on multiple different topics are considered \cite{deffuant_mixing_2000,sirbu_opinion_2013}
+
+    \item expressed (most models) or latent, in which the true value is possibly hidden from other agents \cite{friedkin_social_1990}
+    \end{itemize}
+
+\item how agents encounter each other:
+    \begin{itemize}
+    \item randomly from the whole population \cite{hegselmann_opinion_2002}, or % cite DW too
+    neighbors in a social network \cite{clifford_model_1973,holley_ergodic_1975}
+    \item pairwise (most models) or in groups \cite{degroot_reaching_1974}
+    
+    \end{itemize}
+\item how influence takes place:
+    \begin{itemize}
+    \item copying another agent's opinion \cite{holley_ergodic_1975}
+    \item averaging their opinion with one's own \cite{degroot_reaching_1974}
+    \item ``disagreement" processes where opinions diverge rather than
+converge\cite{sirbu_opinion_2013}
+    \end{itemize}
+
+\end{itemize}
+
+Other innovations have been studied as well. 
 \cite{yildiz_discrete_2011} expanded the BVM by adding a binary
 ``stubbornness" attribute to each agent. Stubborn agents never update their
 opinion and 
 % vvv ? reword?
 others would often be changing depending upon whom they interacted with. They
 discovered that the addition of only a few stubborn individuals always
-resulted in a graph polarized by opinion.
+results in a graph polarized by opinion (\textit{i.e.}, non-consensus).
 
-Other classical models have been proposed where opinions are represented by
-continuous values, typically between 0 and 1. \cite{weisbuch_interacting_2001}
-designed a model with continuous opinion values, where agents only adopt the
-opinion of a neighbor when the difference between their current opinions is
-below a fixed threshold value. (This is termed ``bounded confidence.")
-\cite{ghaderi_opinion_2012} further expanded this model by considering degrees
-of stubbornness; agents differ in the degree to which they are biased in favor
-of their initial opinion.
+\cite{weisbuch_interacting_2001} designed a model with continuous opinion
+values, where agents only adopt the opinion of a neighbor when the difference
+between their current opinions is below a fixed threshold value. (This is
+termed ``bounded confidence.") \cite{ghaderi_opinion_2012} further expanded
+this model by considering degrees of stubbornness; agents differ in the degree
+to which they are biased in favor of their initial opinion. Both of these
+approaches were motivated by a desire to prevent the model from always
+reaching uniformity of opinion in equilibrium.
 
-While many models assign each agent only one opinion value, some researchers
+As indicated above, some researchers
 have explored models where agents have multiple opinion values.
-\cite{deffuant_mixing_2000} gave each agent a vector of opinions, representing
-opinions on different subjects. For the sake of simplification, they chose
-binary values for these. Agents aggregate opinions through pairwise
+\cite{deffuant_mixing_2000} gave each agent a vector of discrete (binary,
+actually) opinions on different subjects. Agents aggregate opinions through pairwise
 evaluation, 
 % vvv ? how can you "slightly shift" a binary value?
 slightly shifting an agent's opinion after looping through all possible
@@ -46,17 +74,18 @@ agents, the researchers discovered orthogonalization of opinions, no
 polarization, and no correlation between the opinion vectors.
 
 % vvv I say we scrap this one unless we're going to say more
-\cite{friedkin_social_1990} modeled an analytical approach which makes
-simplifying assumptions about the process of opinion change. Latent vs.
-expressed?
+%\cite{friedkin_social_1990} modeled an analytical approach which makes
+%simplifying assumptions about the process of opinion change. Latent vs.
+%expressed?
 
-While the BVM restricts agents to only interact with their neighbors, other
-models simulate interactions where agents consider the opinions of a group of
-other agents in the graph. \cite{hegselmann_opinion_2002} (HK) constructed a
-model where agents encounter others randomly from the whole population. The HK
-model uses bounded confidence on a continuous opinion scale. Each randomly
-selected agent aggregates all other agent opinions within his confidence bound
-and considers the group average for shifting his opinion. In the DeGroot Model
+Finally, note that while the BVM restricts agents to only interact with their
+neighbors, other models have simulated interactions where agents consider the
+opinions of a group of other agents in the graph.
+\cite{hegselmann_opinion_2002} (HK) constructed a model where agents encounter
+others randomly from the whole population. The HK model uses bounded
+confidence on a continuous opinion scale. Each randomly selected agent
+aggregates all other agent opinions within his confidence bound and considers
+the group average for shifting his opinion. In the DeGroot Model
 \cite{degroot_reaching_1974}, an agent updates his opinion to be a weighted
 average of his own opinion and the opinions of his neighbors.
  

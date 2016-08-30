@@ -50,24 +50,25 @@ binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
 param.sweep <- function(results=NULL, num.trials=50) {
 
     library(doParallel)
-    registerDoParallel(50)
+    registerDoParallel(60)
 
     # Probability the inital graph is connected = 0.05 ?? 
-    init.graph <- erdos.renyi.game(100,0.05)
+    init.graph <- erdos.renyi.game(100,0.04)
     V(init.graph)$opinion <- sample(c(0,1),vcount(init.graph),replace=TRUE)
     # Always the same graph
     #box <<- lapply(c(,TRUE), function(holley, victim) {
 	    
-        D.results <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
-		    graphs <- sim.opinion.dynamics(init.graph, num.encounters=30000,
-                encounter.func=get.graph.neighbors.encounter.func(1),
-			    victim.update.function=get.automatically.update.victim.function(A.is.victim=FALSE),
-                edge.update.function=get.no.edge.update.function(),
-			    verbose=TRUE,
-                choose.randomly.each.encounter=FALSE)
 
-     
-		    num.iter.before.consensus <- 42000
+	#switch from 30000 to 20000
+        C.rerun <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+		graphs <- sim.opinion.dynamics(init.graph, num.encounters=20000,
+                	encounter.func=get.graph.neighbors.encounter.func(1),
+			victim.update.function=get.automatically.update.victim.function(A.is.victim=FALSE),
+              		edge.update.function=get.no.edge.update.function(),
+			verbose=TRUE,
+                	choose.randomly.each.encounter=FALSE)
+
+	    num.iter.before.consensus <- 400
             for (iter in 1:length(graphs)) {
                 if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
                     num.iter.before.consensus <- iter
@@ -102,14 +103,13 @@ param.sweep <- function(results=NULL, num.trials=50) {
 #        scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
 #            labels=c("Binary Voter","Davies-Zontine")))
     save.image(file="Box.RData")
-    return(D.results)
+    return(C.rerun)
 }
 
+
+
+
 param.sweep(num.trials=200)
-
-
-
-
 
 
 
