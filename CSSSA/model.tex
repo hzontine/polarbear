@@ -19,9 +19,89 @@ present these not so much as important in their own right, but as exemplars of
 a more general problem: implementation choices that a modeler takes for
 granted may turn out to be critical to the behavior claimed for that model.
 
-\subsection{Simulation variant 1}
+\subsection{Simulation variant 1: choosing with or without replacement}
 
-\subsection{Simulation variant 2}
+When we say ``each node periodically updates its opinion," what exactly does
+that imply about the \textit{order} in which the nodes are selected for the
+update process? There are at least two reasonable interpretations:
+
+\begin{itemize}
+\itemsep.1em
+
+\item For each iteration of the simulation's main loop, a node is chosen
+uniformly at random, \textit{with replacement}. In this scenario, if there
+were five nodes in the graph, we might have the following sequence of choices
+for opinion update: node 3, 5, 5, 5, 2, 3, 2, 5, 4, 2 \dots Notice that in
+this realization, node 5 was selected 40\% of the time, node 1 was
+not selected at all, and node 4 wasn't selected until near the end of the
+sequence.
+
+\item Treat \textit{each} of the nodes once (in random, shuffled order) before
+treating them all again (in a different, shuffled order), \textit{etc.} Put
+another way, chose the nodes uniformly at random \textit{without replacement}
+until the store of nodes is exhausted; then replenish and repeat. In this
+scenario, the sequence above would never happen; instead we might have
+something like this: 3, 5, 2, 4, 1, 5, 4, 3, 2, 1, \dots In this way, every
+node is guaranteed to be chosen once in $n=5$ iterations.
+
+\end{itemize}
+
+Clearly, based only on the system's English description, above, either of
+these choices is consistent with the spirit of the model. An implementer might
+choose either of them, either deliberately or (more probably) unconsciously.
+They both pass the ``select nodes repeatedly in random fashion" test.
+
+For the sake of clarity we adopt the terms ``\textbf{selection with
+replacement}" and ``\textbf{selection without replacement}" as the
+descriptions for these two alternatives.
+
+Before examining the results, one question we might ask is: which of these two
+variants is more reflective of the real-world phenomenon? Compelling arguments
+can be made both ways. In favor of \textbf{selection without replacement} is
+the observation that all human beings have 24 hours per day in which to live
+and interact. If we want to simulate the dynamic behavior of a social system
+over time, therefore, it is important to ensure that all agents act at a
+fairly similar pace. After all, in the real world, there is no sequential loop
+at all, agents are not successively ``chosen" to interact, and no agent is
+``starved" for interaction as a consequence of a peculiar random number
+sequence.
+
+On the other hand, it is also true that in any social system, some agents will
+be more active than others. Consider an online social network, such as
+Facebook or Twitter. Some users post many messages per day, while others only
+on rare occasions; and some \textit{read} many posts per day, whereas others
+only glance at their customized news feeds once in a while. This heterogeneity
+of usage would seem to favor the \textbf{selection with replacement} variant,
+to do justice to the varying rates at which agents interact with one another.
+
+\subsection{Simulation variant 2: direction of opinion propagation}
+
+The model instructs us to (1) choose a node randomly, (2) choose one of its
+graph neighbors, and then (3) have one of the nodes copy the opinion value of
+the other. But which way does the influence go --- is the originally chosen
+node the one whose opinion is updated, or is the neighbor's? At first glance,
+this seems to be a symmetrical and arbitrary choice, and would not be expected
+to impact the system's behavior. Indeed it does, however, and in a striking
+way.
+
+We define ``\textbf{node influences neighbor}" as the variant where the
+originally selected node is the one whose opinion is propagated (to a random
+one of its graph neighbors) and ``\textbf{neighbor influences node}" as the
+alternative, where the copying goes from the node's neighbor back to it.
+
+As to the question of which variant 2 choice is more reflective of reality, we
+again find no definitive answers. In this case, our ambivalence stems from the
+fact that the algorithm's influence procedure isn't itself a very good model
+of what actually happens in real human interaction. Influence in a real human
+conversation isn't (usually) unidirectional, with the ``winner" being
+determined by considering which participant initiated the dialogue. It is a
+complex process during which ideas are shared and defended, biases revealed, 
+and opinions adjusted (or not) based on a myriad of factors. In a highly
+abstract model such as this one, which does not aim to capture such
+subtleties, how can we resolve this in the simplest and cleanest way? Clearly
+by choosing from the two alternatives, above. Unfortunately, as we will see,
+our choice here, too, made arbitrarily in the name of simplification,
+noticeably changes the system's macro behavior.
 
 \subsection{Analysis Methodology}
 
