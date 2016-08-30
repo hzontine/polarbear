@@ -14,11 +14,35 @@ the terms "selection with replacement," "node influences neighbor," etc.)
 Concisely describe our dep variable: "time (# iter) to convergence" and
 explain what that means
 
+
+After one simulation of our model, we can record the iteration where the model
+reached a consensus.
+ the dependent variable which our model record
+
 \subsection{Other parameters}
 
 Mention other relevant things. These include:
 
-how many tests you ran of each: 
-group, how many nodes there were, how you used ER and what the prob of an edge
-was, how many iterations you maxed out at, what the init prob was of red vs
-blue, and whatever else you think a reader would want to know
+how many tests you ran of each: 200 trials 
+
+We created 200 inital Erdos Renyi graphs with 100 nodes. After much consideration,
+we assigned a 0.06 probability of connectedness to all of the graphs. In a graph
+with 100 agents, most nodes will probably be connected to six other people. We 
+used the same 200 inital graphs to run the simulation with all combinations of
+the independent variables.
+
+Random sampling for the initial opinions 
+
+
+table of true vs. false
+
+number of encounters: 20000
+
+what the init prob was of red vs blue: 50% sample
+
+
+
+200 initial graphs
+
+
+
