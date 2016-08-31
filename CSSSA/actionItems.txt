@@ -5,8 +5,6 @@ HZ - write code to set the seed first thing in param.sweep(), then generate
     all 200 graphs and color them (assign initial opinions), then run all 200
     sims with those 200 graphs as the initial conditions.
 HZ - Make sure all graphs are connected. 
-SD - Terminate sim.opinion.dynamics() when convergence happens. Don't ever
-    terminate otherwise.
 HZ - collect results for A vs B vs C vs D
 HZ - Experimental design
 SD - Results: result of var 1
