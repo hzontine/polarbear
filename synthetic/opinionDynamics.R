@@ -53,6 +53,10 @@ source("plotting.R")
 # "iteration," where "iteration" is defined as "as many encounters as there
 # are vertices." (This effectively means "every vertex gets a chance to
 # influence" if choose.randomly.each.encounter is FALSE.)
+#
+# terminate.after.max.num.encounters -- if TRUE, put a cap on the total number
+# of encounters the simulation will run. If FALSE, never terminate until the
+# termination function itself says to stop.
 
 sim.opinion.dynamics <- function(init.graph,
         num.encounters=200,
@@ -62,14 +66,21 @@ sim.opinion.dynamics <- function(init.graph,
         edge.update.function=get.no.edge.update.function(),
         generate.graph.per.encounter=FALSE,
         termination.function=get.never.terminate.function(),
+        terminate.after.max.num.encounters=!is.infinite(num.encounters),
         verbose=TRUE) {
 
-    if (generate.graph.per.encounter) {
-        graphs <- vector("list",length=num.encounters)
+    if (terminate.after.max.num.encounters) {
+        if (generate.graph.per.encounter) {
+            graphs <- vector("list",length=num.encounters)
+        } else {
+            graphs <-
+                vector("list",
+                    length=trunc((num.encounters/gorder(init.graph))+1))
+        }
     } else {
-        graphs <- 
-            vector("list",length=trunc((num.encounters/gorder(init.graph))+1))
+        graphs <- vector("list",length=200)
     }
+
     graphs[[1]] <- init.graph
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
@@ -77,7 +88,8 @@ sim.opinion.dynamics <- function(init.graph,
     graph.num <- 1
 
     # For each iteration of the sim...
-    while (encounter.num < num.encounters  &&
+    while ((!terminate.after.max.num.encounters ||
+                                        encounter.num < num.encounters)  &&
         !termination.function(graphs[[graph.num]])) {
 
         if (verbose) {
