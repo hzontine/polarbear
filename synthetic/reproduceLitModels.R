@@ -22,7 +22,7 @@ binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
     graphs <<- sim.opinion.dynamics(init, num.encounters=100*vcount(init),
         encounter.func=get.graph.neighbors.encounter.func(1),
         victim.update.function=get.automatically.update.victim.function(
-                                                            A.is.victim=TRUE), 
+                                                            A.is.victim=FALSE), 
         choose.randomly.each.encounter=choose.randomly.each.encounter,
         termination.function=get.unanimity.termination.function(),
         verbose=FALSE)
@@ -52,22 +52,23 @@ param.sweep <- function(results=NULL, num.trials=50, init.graph) {
     library(doParallel)
     registerDoParallel(60)
 
-	    
-	num <- vector(length=200)
-        A.three <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+	data <- matrix(nrow=1,ncol=2)
+	colnames(data) <- c("num","effectual")
+        a <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
 			cat(">>>>>>>>>>>>>>>>>>>",trial,"\n")
 		    graphs <- sim.opinion.dynamics(init.graph[[trial]], num.encounters=Inf,
                 	encounter.func=get.graph.neighbors.encounter.func(1),
-			        victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
+			        victim.update.function=get.automatically.update.victim.function(A.is.victim=FALSE),
               		edge.update.function=get.no.edge.update.function(),
 			        verbose=TRUE,
                 	termination.function=get.unanimity.termination.function(),
 			choose.randomly.each.encounter=TRUE)
 
-		num[trial] <- graph_attr(graphs[[length(graphs)]], "num.encounters")
-            	return(num[trial])
+		data[trial, "num"] <- graph_attr(graphs[[1]][[length(graphs[[1]])]], "num.encounters")
+		data[trial, "effectual"] <- graphs[[2]][length(graphs[[1]])]
+		cat(graphs[[2]],"\n")
+            	return(data)
         }
-     #})
 
 #		    num.iter.before.consensus <- 100
 #                   for (iter in 1:length(graphs)) {
@@ -91,8 +92,8 @@ param.sweep <- function(results=NULL, num.trials=50, init.graph) {
 #        ylab("# of iterations to convergence") +
 #        scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
 #            labels=c("Binary Voter","Davies-Zontine")))
-    save(A.three, num, file="Box.RData")
-    return(A.three)
+    save(a, file="Box.RData")
+    return(a)
 }
 
 set.seed(2222)
@@ -109,7 +110,7 @@ for(i in 1:200){
 }
 
 
-param.sweep(num.trials=200, init.graph=init)
+param.sweep(num.trials=1, init.graph=init)
 
 
 

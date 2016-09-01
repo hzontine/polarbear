@@ -88,7 +88,8 @@ sim.opinion.dynamics <- function(init.graph,
 
     encounter.num <- 0
     graph.num <- 1
-
+    counter <- 0
+    effect <- c(counter)
     # For each iteration of the sim...
     while ((!terminate.after.max.num.encounters ||
                                         encounter.num < num.encounters)  &&
@@ -134,8 +135,20 @@ sim.opinion.dynamics <- function(init.graph,
                 #        v,")...\n", sep="")
                 #}
                 update.info <- victim.update.function(graphs[[graph.num]], v, ev)
-                V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
-                    update.info$new.value
+		if(is.null(update.info$victim.vertex)){
+			if(A.is.victim){
+				if(update.info$new.value != V(graphs[[graph.num]])[ev]$opinion){
+					counter <- counter + 1
+				}
+			} else{
+				if(update.info$new.value != V(graphs[[graph.num]])[v]$opinion){
+					counter <- counter + 1
+				}
+			}
+		} else {
+	            V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
+        	            update.info$new.value
+		}
             }
 
             if (generate.graph.per.encounter) {
@@ -146,10 +159,9 @@ sim.opinion.dynamics <- function(init.graph,
                 # Annotate the graph object with a graph attribute indicating
                 # the number of encounters that had taken place at the time
                 # this snapshot was taken.
-                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                    "num.encounters", encounter.num)
-            }
-        }
+   	    }
+	}
+
 
         if (!termination.function(graphs[[graph.num]])  &&
                 !generate.graph.per.encounter) {
@@ -160,12 +172,12 @@ sim.opinion.dynamics <- function(init.graph,
             # Annotate the graph object with a graph attribute indicating the
             # number of encounters that had taken place at the time this snapshot
             # was taken.
-            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                "num.encounters", encounter.num)
-        }
-    }
+            
+	}
+	effect <- c(effect,counter) 
+	}
 	cat("Done!\n")
-    graphs[1:graph.num]
+    list(graphs[1:graph.num], effect)
 }
 
 
@@ -599,5 +611,4 @@ main <- function() {
     #   victim.update.function=get.bounded.confidence.update.victim.function(0.5, 0.2))
 
     plot.animation(graphs, "opinion", delay.between.frames=.25)
-B
 }
