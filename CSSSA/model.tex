@@ -76,37 +76,30 @@ to do justice to the varying rates at which agents interact with one another.
 
 \subsection{Simulation variant 2: direction of opinion propagation}
 
-The model instructs us to (1) choose a node randomly, (2) choose one of its
-graph neighbors, and then (3) have one of the nodes copy the opinion value of
-the other. But which way does the influence go --- is the originally chosen
-node the one whose opinion is updated, or is the neighbor's? At first glance,
-this seems to be a symmetrical and arbitrary choice, and would not be expected
-to impact the system's behavior. Indeed it does, however, and in a striking
-way.
+The model calls for the implementer to (1) choose a node randomly, (2) choose
+one of its graph neighbors, and then (3) have one of the nodes copy the
+opinion value of the other. But which way does the influence go? Is the
+originally chosen node the one whose opinion is updated, or is the neighbor's?
+At first glance, this may seem to be a symmetrical and therefore arbitrary
+choice, and not be expected to impact the system's behavior. Indeed it does,
+however, and in a striking way.
 
-We define ``\textbf{node influences neighbor}" as the variant where the
+We define ``\textbf{node influences neighbor}" as the variant in which the
 originally selected node is the one whose opinion is propagated (to a random
 one of its graph neighbors) and ``\textbf{neighbor influences node}" as the
-alternative, where the copying goes from the node's neighbor back to it.
+alternative, in which the copying goes from the node's neighbor back to it.
 
 As to the question of which variant 2 choice is more reflective of reality, we
 again find no definitive answers. In this case, our ambivalence stems from the
 fact that the algorithm's influence procedure isn't itself a very good model
 of what actually happens in real human interaction. Influence in a real human
 conversation isn't (usually) unidirectional, with the ``winner" being
-determined by considering which participant initiated the dialogue. It is a
-complex process during which ideas are shared and defended, biases revealed, 
-and opinions adjusted (or not) based on a myriad of factors. In a highly
-abstract model such as this one, which does not aim to capture such
+determined by considering which participant initiated the dialogue. Instead,
+it is a complex process during which ideas are shared and defended, biases
+revealed, and opinions adjusted (or not) based on a myriad of factors. In a
+highly abstract model such as this one, which does not aim to capture such
 subtleties, how can we resolve this in the simplest and cleanest way? Clearly
 by choosing from the two alternatives, above. Unfortunately, as we will see,
 our choice here, too, made arbitrarily in the name of simplification,
 noticeably changes the system's macro behavior.
-
-\subsection{Analysis Methodology}
-
-
-
-
-
 
