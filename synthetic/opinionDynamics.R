@@ -65,9 +65,11 @@ sim.opinion.dynamics <- function(init.graph,
         choose.randomly.each.encounter=FALSE,
         edge.update.function=get.no.edge.update.function(),
         generate.graph.per.encounter=FALSE,
-        termination.function=get.never.terminate.function(),
+        termination.function=get.unanimity.termination.function(),
         terminate.after.max.num.encounters=!is.infinite(num.encounters),
         verbose=TRUE) {
+
+	cat("Starting.....\n")
 
     if (terminate.after.max.num.encounters) {
         if (generate.graph.per.encounter) {
@@ -93,7 +95,7 @@ sim.opinion.dynamics <- function(init.graph,
         !termination.function(graphs[[graph.num]])) {
 
         if (verbose) {
-            cat("---------------------------------\n")
+            cat("<<<<<<<<<<<<<<<---------------------------------\n")
         }
 
         # Go through all the vertices, in random order:
@@ -162,6 +164,7 @@ sim.opinion.dynamics <- function(init.graph,
                 "num.encounters", encounter.num)
         }
     }
+	cat("Done!\n")
     graphs[1:graph.num]
 }
 
@@ -596,4 +599,5 @@ main <- function() {
     #   victim.update.function=get.bounded.confidence.update.victim.function(0.5, 0.2))
 
     plot.animation(graphs, "opinion", delay.between.frames=.25)
+B
 }

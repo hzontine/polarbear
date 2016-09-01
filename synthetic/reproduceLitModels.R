@@ -52,31 +52,22 @@ param.sweep <- function(results=NULL, num.trials=50, init.graph) {
     library(doParallel)
     registerDoParallel(60)
 
-    # Probability the inital graph is connected = 0.05 ?? 
-    # Always the same graph
-    #box <<- lapply(c(,TRUE), function(holley, victim) {
 	    
-
-	#switch from 30000 to 20000
-        A.thrid.time <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
-		    graphs <- sim.opinion.dynamics(init.graph[[trial]], num.encounters=30000,
+	num <- vector(length=200)
+        A.three <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+			cat(">>>>>>>>>>>>>>>>>>>",trial,"\n")
+		    graphs <- sim.opinion.dynamics(init.graph[[trial]], num.encounters=Inf,
                 	encounter.func=get.graph.neighbors.encounter.func(1),
 			        victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
               		edge.update.function=get.no.edge.update.function(),
 			        verbose=TRUE,
-                	choose.randomly.each.encounter=TRUE)
+                	termination.function=get.unanimity.termination.function(),
+			choose.randomly.each.encounter=TRUE)
 
-	   # num.iter.before.consensus <- 400
-       #     for (iter in 1:length(graphs)) {
-       #         if (length(unique(V(graphs[[iter]])$opinion)) == 1) {
-       #             num.iter.before.consensus <- iter
-       #             break
-       #         }
-       #     }
-            return(data.frame(num.iter.before.consensus))
+		num[trial] <- graph_attr(graphs[[length(graphs)]], "num.encounters")
+            	return(num[trial])
         }
      #})
-   
 
 #		    num.iter.before.consensus <- 100
 #                   for (iter in 1:length(graphs)) {
@@ -100,8 +91,8 @@ param.sweep <- function(results=NULL, num.trials=50, init.graph) {
 #        ylab("# of iterations to convergence") +
 #        scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
 #            labels=c("Binary Voter","Davies-Zontine")))
-    save.image(file="Box.RData")
-    return(A.third.time)
+    save(A.three, num, file="Box.RData")
+    return(A.three)
 }
 
 set.seed(2222)
