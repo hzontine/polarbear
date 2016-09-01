@@ -1,51 +1,32 @@
 
 \section{EXPERIMENTAL DESIGN}
 
-HZ, write this section.
+Our model was constructed to manipulate two implementation choices in order
+to observe the effect different combinations have our control variable, time.
 
 \subsection{Independent variables}
 
-Concisely describe the indep vars, in a manner consistent with model.tex (use
-the terms "selection with replacement," "node influences neighbor," etc.)
-
+One of our experimental variables depends on the order agents are selected 
+for interactions: with or without replacement. Our second variable differs 
+according to the direction of influence: whether the nodes influence their 
+neighbors or their neighbors influence them.
 
 \subsection{Dependent variables}
 
-Concisely describe our dep variable: "time (# iter) to convergence" and
-explain what that means
+To compare our two independent variables, we must measure the amount of time that
+passes before all agents in the graph have the same binary opinion. Specifically,
+we chose to count the number of pairwise encounters that occur before uniformity
+of opinion among all agents. The simulation was set up to run through an infinite 
+number of interactions and only terminate when uniformity was reached.
 
-The measurement is number of iterations to complete uniformity of opinion
-among the agents in the graph.
+Our simulation was run for 200 trials. 
 
-
-After one simulation of our model, we can record the iteration where the model
-reached a consensus.
- the dependent variable which our model record
-
-\subsection{Other parameters}
-
-Mention other relevant things. These include:
-
-how many tests you ran of each: 200 trials 
-
-We created 200 inital Erdos Renyi graphs with 100 nodes each. After much consideration,
-we assigned a 0.06 probability of connectedness to all of the graphs. In a graph
-with 100 agents, most nodes will probably be connected to six other people. We 
-used the same 200 inital graphs to run the simulation with all combinations of
-the independent variables.
-
-Random sampling for the initial opinions 
+With a seed set, 200 initial Erdos Renyi graphs were created with 100 nodes each
+and a       probability of connectedness. We used the same 200 initial graphs to
+start the simulation for all combinations of the two independent variables. Each
+graph was randomly assigned one of two opinion attributes.
 
 
-table of true vs. false
-
-number of encounters: 20000
-
-what the init prob was of red vs blue: 50% sample
-
-
-
-200 initial graphs
 
 
 
