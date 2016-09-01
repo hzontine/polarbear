@@ -58,8 +58,9 @@ param.sweep <- function(results=NULL, num.trials=50, init.graph) {
 	    
 
 	#switch from 30000 to 20000
-        A.thrid.time <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
-		    graphs <- sim.opinion.dynamics(init.graph[[trial]], num.encounters=30000,
+        A.three <<- foreach(trial=1:num.trials, .combine=rbind) %dopar% {
+			cat(">>>>>>>>>>>>>>>>>>>",trial,"\n")
+		    graphs <- sim.opinion.dynamics(init.graph[[trial]], num.encounters=Inf,
                 	encounter.func=get.graph.neighbors.encounter.func(1),
 			        victim.update.function=get.automatically.update.victim.function(A.is.victim=TRUE),
               		edge.update.function=get.no.edge.update.function(),
@@ -73,7 +74,8 @@ param.sweep <- function(results=NULL, num.trials=50, init.graph) {
        #             break
        #         }
        #     }
-            return(data.frame(num.iter.before.consensus))
+
+            return(data.frame(graph_attr(init.graph[[trial]], "num.encounters")))
         }
      #})
    
@@ -100,8 +102,8 @@ param.sweep <- function(results=NULL, num.trials=50, init.graph) {
 #        ylab("# of iterations to convergence") +
 #        scale_fill_discrete(name="Models", breaks=c(TRUE,FALSE),
 #            labels=c("Binary Voter","Davies-Zontine")))
-    save.image(file="Box.RData")
-    return(A.third.time)
+    save(A.three, file="Box.RData")
+    return(A.three)
 }
 
 set.seed(2222)
