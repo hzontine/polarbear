@@ -87,6 +87,7 @@ sim.opinion.dynamics <- function(init.graph,
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
     encounter.num <- 0
+    num.effectual.encounters <- 0
     graph.num <- 1
     counter <- 0
     effect <- c(counter)
@@ -134,21 +135,15 @@ sim.opinion.dynamics <- function(init.graph,
                 #    cat("Encounter ",encounter.num," of ",num.encounters," (",
                 #        v,")...\n", sep="")
                 #}
-                update.info <- victim.update.function(graphs[[graph.num]], v, ev)
-		if(is.null(update.info$victim.vertex)){
-			if(A.is.victim){
-				if(update.info$new.value != V(graphs[[graph.num]])[ev]$opinion){
-					counter <- counter + 1
-				}
-			} else{
-				if(update.info$new.value != V(graphs[[graph.num]])[v]$opinion){
-					counter <- counter + 1
-				}
-			}
-		} else {
-	            V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
-        	            update.info$new.value
-		}
+                update.info <-
+                    victim.update.function(graphs[[graph.num]], v, ev)
+                if (length(update.info$victim.vertex) > 0  &&
+                    V(graphs[[graph.num]])[update.info$victim.vertex]$opinion !=
+                        update.info$new.value) {
+                    num.effectual.encounters <- num.effectual.encounters + 1
+                }
+                V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
+                    update.info$new.value
             }
 
             if (generate.graph.per.encounter) {
@@ -159,9 +154,12 @@ sim.opinion.dynamics <- function(init.graph,
                 # Annotate the graph object with a graph attribute indicating
                 # the number of encounters that had taken place at the time
                 # this snapshot was taken.
-   	    }
-	}
-
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                    "num.encounters", encounter.num)
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                    "num.effectual.encounters", num.effectual.encounters)
+            }
+        }
 
         if (!termination.function(graphs[[graph.num]])  &&
                 !generate.graph.per.encounter) {
@@ -172,10 +170,12 @@ sim.opinion.dynamics <- function(init.graph,
             # Annotate the graph object with a graph attribute indicating the
             # number of encounters that had taken place at the time this snapshot
             # was taken.
-            
-	}
-	effect <- c(effect,counter) 
-	}
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                "num.encounters", encounter.num)
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                "num.effectual.encounters", num.effectual.encounters)
+        }
+    }
 	cat("Done!\n")
     list(graphs[1:graph.num], effect)
 }
