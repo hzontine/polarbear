@@ -17,7 +17,6 @@ p <- ggplot(data, aes(x=selection,y=num.iter,fill=selection)) +
     scale_x_discrete(
         labels=c("with replacement","without replacement")) +
     guides(fill=FALSE) +
-#    coord_fixed(ratio=1) +
     ylab("# encounters before convergence") +
     xlab("Selection method / Influence direction") +
     ylim(0,60000) +
