@@ -87,6 +87,7 @@ sim.opinion.dynamics <- function(init.graph,
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
     encounter.num <- 0
+    num.effectual.encounters <- 0
     graph.num <- 1
 
     # For each iteration of the sim...
@@ -133,7 +134,13 @@ sim.opinion.dynamics <- function(init.graph,
                 #    cat("Encounter ",encounter.num," of ",num.encounters," (",
                 #        v,")...\n", sep="")
                 #}
-                update.info <- victim.update.function(graphs[[graph.num]], v, ev)
+                update.info <-
+                    victim.update.function(graphs[[graph.num]], v, ev)
+                if (length(update.info$victim.vertex) > 0  &&
+                    V(graphs[[graph.num]])[update.info$victim.vertex]$opinion !=
+                        update.info$new.value) {
+                    num.effectual.encounters <- num.effectual.encounters + 1
+                }
                 V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
                     update.info$new.value
             }
@@ -148,6 +155,8 @@ sim.opinion.dynamics <- function(init.graph,
                 # this snapshot was taken.
                 graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
                     "num.encounters", encounter.num)
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                    "num.effectual.encounters", num.effectual.encounters)
             }
         }
 
@@ -162,6 +171,8 @@ sim.opinion.dynamics <- function(init.graph,
             # was taken.
             graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
                 "num.encounters", encounter.num)
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                "num.effectual.encounters", num.effectual.encounters)
         }
     }
 	cat("Done!\n")
