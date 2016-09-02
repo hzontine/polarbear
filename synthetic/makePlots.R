@@ -19,7 +19,7 @@ p <- ggplot(data, aes(x=selection,y=num.iter,fill=selection)) +
     guides(fill=FALSE) +
     ylab("# encounters before convergence") +
     xlab("Selection method / Influence direction") +
-    ylim(0,60000) +
+    ylim(0,40000) +
     geom_boxplot(notch=TRUE)
 ggsave("../CSSSA/interactionBoxplot.pdf",p,width=16,height=9,dpi=120)
 
@@ -32,7 +32,7 @@ p2 <- ggplot(subset(data,direction=="neighbor"),
     guides(fill=FALSE) +
     ylab("# encounters before convergence") +
     xlab("Selection method") +
-    ylim(0,60000) +
+    ylim(0,40000) +
     geom_boxplot(notch=TRUE)
 pdf("../CSSSA/selectionMethodBoxplot.pdf")
 print(p2)
@@ -44,7 +44,7 @@ p3 <- ggplot(subset(data,selection=="without"),
             c("neighbor influences node","node influences neighbor")) +
     ylab("# encounters before convergence") +
     xlab("Influence direction") +
-    ylim(0,60000) +
+    ylim(0,40000) +
     geom_boxplot(notch=TRUE, fill="darkgreen")
 pdf("../CSSSA/influenceDirectionBoxplot.pdf")
 print(p3)

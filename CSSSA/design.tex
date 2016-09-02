@@ -10,13 +10,13 @@ number of iterations (pairwise encounters between nodes) before total
 uniformity of opinion was reached.
 
 We ran each of the four combinations of factor levels for 200 trials. Each
-trial began with an Erdos-Renyi random graph \cite{erdos_random_1959} with 100
-nodes and an edge probability of .04, using the R \texttt{igraph} package
-\cite{igraph}. If the random graph generated for a given trial turned out not
-to be \textit{connected} (\textit{i.e.}, not all nodes were reachable from all
-others via some walk), that graph was discarded and another generated until a
-connected graph was produced. (This is because the model does not guarantee
-convergence to uniformity of opinion for unconnected graphs.)
+trial began with an Erd\"{o}s-R\'{e}nyi random graph \cite{erdos_random_1959}
+with 100 nodes and an edge probability of .04, using the R \texttt{igraph}
+package \cite{igraph}. If the random graph generated for a given trial turned
+out not to be \textit{connected} (\textit{i.e.}, not all nodes were reachable
+from all others via some walk), that graph was discarded and another generated
+until a connected graph was produced. (This is because the model does not
+guarantee convergence to uniformity of opinion for unconnected graphs.)
 
 Each node was initially assigned one of the two opinion values at random, with
 a probability of p=.5 for each opinion value. 
