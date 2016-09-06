@@ -1,0 +1,23 @@
+
+Stephen model
+    - Alignment of opinions  ("packaging of opinions")
+
+
+Stubbornness
+    - Partial stubbornness
+
+
+
+Dynamic networks
+    - The Dave model
+    - The "Encounter model" -- nodes periodically encounter people from the
+      population at large, and use homophily to help decide whether to become
+      friends
+    - Is there research in this?? Why haven't we found it? (Look for "dynamic
+      networks" "dynamic graphs")
+
+
+Ways to freaking get non-uniformity
+    Low Bounded confidence threshold
+    Latent opinions
+    Stubbornness

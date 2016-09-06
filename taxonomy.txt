@@ -3,7 +3,7 @@ How are opinions represented?
 -----------------------------
     - univariate 
 X       Binary: (Yildiz et al. 2013) (Folmer 1974) (Weisbuch and Boudjema 1999)
-           * Binary Voter Model: (Holley and Liggett 1975) and (Clifford and Sudbury 1973)
+X          * Binary Voter Model: (Holley and Liggett 1975) and (Clifford and Sudbury 1973)
 X       Discrete:
 X       Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000) (Weisbuch et al. 2001)
     - vector of opinions
@@ -14,15 +14,15 @@ X       Continuous: (Ghaderi, Srikant 2012)   (Deffuant 2000) (Weisbuch et al. 2
 
 Which vertices influence you?
 -----------------------------
-    - do you interact with the whole graph, or with just neighbors?
-        - whole graph: DeGroot; HK; DW; Weisbuch
-        - graph neighbors: Clifford; Holley; Yildiz; Follmer
+X   - do you interact with the whole graph, or with just neighbors?
+X       - whole graph: DeGroot; HK; DW; Weisbuch
+X       - graph neighbors: Clifford; Holley; Yildiz; Follmer
         - (note: SD/HZ variant: weighted probability between global and neighbors)
     - do you choose randomly from this set, or do you interact with the entire set?
         - whole set at once: DeGroot; HK
-        - pairwise at a time: Clifford; Holley; DW; Yildiz; Weisbuch
-        - is the victim randomly chosen first, then influencer, or the other
-          way around?
+X       - pairwise at a time: Clifford; Holley; DW; Yildiz; Weisbuch
+X       - is the victim randomly chosen first, then influencer, or the other
+X         way around?
     (note: no examples of interacting with just neighbors and all at once.)
 
 
