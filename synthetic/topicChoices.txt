@@ -1,4 +1,20 @@
 
+Latent vs expressed opinions
+    - "the hidden Trump vote"
+    - two different ways in which people are influenced:
+        1. anonymously (chat room -ish)
+        2. non-anonymously (social connections)
+    - how do the two variables affect each other?
+        a. the Hannah effect: some probability that you'll get guts enough to
+            express what you actually feel
+        b. the Stephen effect: other people's expressed opinions can change
+            your latent opinion (as well as your expressed of course)
+    - a dial: how often do you interact in 1 v 2 mode
+    - a dial: how much more convincing is a non-anonymous person
+    - maybe "aligned" people (expressed==latent) are more influential (or more
+          stubborn?)
+
+
 Stephen model
     - Alignment of opinions  ("packaging of opinions")
 
