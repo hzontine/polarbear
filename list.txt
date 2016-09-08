@@ -1,0 +1,38 @@
+
+Travel grant blurb
+------------------
+Write draft
+Stephen picks holes in it
+Rewrite draft
+This is writing intensive yay
+
+
+Lit search
+----------
+Follow references forward from Friedkin. Are others doing and talking about
+    "latent" vs "expressed"
+
+"Hidden Trump vote" phenomenon. (People may not be truthful in responses to
+    polls.)
+
+
+
+Code
+----
+1. Add a second attribute to the graph nodes
+
+2. Figure out the cleanest wayS to add a "second encounter function" to the
+    main OD loop.
+
+    - A list of encounter functions and a list of update victim functions
+      instead of just one of each.
+
+    - Way 2?
+
+    - Way 3?
+
+3. Deal with the fact that update victim functions have to tell the main
+    function which attribute (e.g., "expressed" or "latent") of the victim 
+    node needs to be changed.
+
+4. Write the new encounter and update victim functions.

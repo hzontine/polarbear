@@ -15,6 +15,9 @@ Latent vs expressed opinions
           stubborn?)
 
 
+Third party: how much of a seed group does there need to be for a third-party
+    to gain traction in an all blue-and-red graph?
+
 Stephen model
     - Alignment of opinions  ("packaging of opinions")
 
