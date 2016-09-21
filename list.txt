@@ -19,10 +19,6 @@ Code
     - A list of encounter functions and a list of update victim functions
       instead of just one of each.
 
-    - Way 2?
-
-    - Way 3?
-
 3. Deal with the fact that update victim functions have to tell the main
     function which attribute (e.g., "expressed" or "latent") of the victim 
     node needs to be changed.
