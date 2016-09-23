@@ -463,10 +463,25 @@ get.bounded.confidence.update.victim.function <- function(threshold.value=0.3,
 # outward influence. (in other words, the node-in-question is always the
 # influencer, never the influencee.)
 
+
+get.expressed.encounter.func <- function(num.vert){
+    return (
+        function(graph, vertex){
+            # Each vertex encounters some other vertices that he is already connected to
+            # and may or may not update his expressed or latent opinion or both as a result.
+            vert.neighbors <- neighbors(graph, V(graph)[vertex], mode = "out")
+            return (sample(vert.neighbors, num.vert))
+        }
+    )
+}
+
+
+
 get.mean.field.encounter.func <- function(num.vertices) {
     return(
         function(graph, vertex) {
-            # Each vertex encounters some others at random (mean field).
+            # Each vertex encounters some other vertices at random (mean field) and may or may 
+            # not update his/her latent opinion as a result.
             return (
                 sample((1:gorder(graph))[-vertex],num.vertices)
             )

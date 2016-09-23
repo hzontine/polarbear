@@ -10,11 +10,11 @@ source("opinionDynamics.R")
 sim <- function(num=100, prob=0.25){
     init <- get.expressed.latent.graph(num.agents=num, prob.connected=prob, dir=TRUE)
     graphs <<- sim.opinion.dynamics(init, num.encounters=20000,
-        encounter.func=list( ),
+        encounter.func=list(
+            get.expressed.encounter.func(1), get.mean.field.encounter.func(1)),
         victim.update.function=list(
             get.expressed.update.victim.function(A.is.victim=TRUE,prob.update=0.3),
-            get.latent.update.victim.function(A.is.victim=TRUE, prob.update=0.3)
-        ),
+            get.latent.update.victim.function(A.is.victim=TRUE, prob.update=0.3)),
         edge.update.function=get.no.edge.update.function(),
         verbose=TRUE,
         termination.function=get.never.termination.function(),
