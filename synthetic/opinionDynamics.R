@@ -149,20 +149,14 @@ sim.opinion.dynamics <- function(init.graph,
             #}else{
             for (i in length(list.of.encounter.functions)){
            
-    
-                #anonymous: a) not updating/ or looking at expressed b)change latent if you != them
-                # third parameter of prob
-
-                #    only access graph neighbors
-                #public: a) see other ppl's expressed b)if you expressed != them expressed, then maybe set 
-                # expressed you = to expressed them (higher prob) c) if you == them, then maybe set your
-                # hidden to = them (lower prob)
+                # only access graph neighbors
+                # public: if your expressed != them expressed, then maybe set your expressed = to 
+                # their expressed (higher prob)
+                # if you == them, then maybe set your hidden to = them (lower prob)
 
 
                 # maybe set your expressed to = latent //separate process//
-                # loop through whole graph
 
-                    #for expressed
                     
                 if(list.of.encounter.functions[[i]]$type == "public"){
 
@@ -175,43 +169,41 @@ sim.opinion.dynamics <- function(init.graph,
                         #}
                     
 
-                    # "latent" or "expressed" or "opinion" as the third argument
 
                         update.info <- victim.update.function(graphs[[graph.num]], v, ev, "expressed")
-                        if (length(update.info[[1]]$victim.vertex) > 0  &&
-                            V(graphs[[graph.num]])[update.info[[1]]$victim.vertex]$expressed !=
-                                update.info[[1]]$new.value) {
-                            num.effectual.encounters <- num.effectual.encounters + 1
-                        }
-                        V(graphs[[graph.num]])[update.info$victim.vertex][update.info$type] <- 
-                            update.info$new.value
-                    }
-                }else{
-                    if(list.of.encounter.functions[[i]]$type == "anon"){
-                    
-                    #for latent
-                    for(en in list.of.encounter.functions[[i]]){
-                        hidden.encounter.num <- hidden.encounter.num + 1
-                        encounter.num <- encounter.num + 1
-                        update.info2 <- victim.update.function(graphs[[graph.num]], v, ev, "hidden")
-                        if (length(update.info2$victim.vertex) > 0  &&
-                            V(graphs[[graph.num]])[update.info2$victim.vertex]$hidden !=
-                                update.info2$new.value) {
+                        if (length(update.info$victim.vertex) > 0  &&
+                            V(graphs[[graph.num]])[update.info$victim.vertex]$expressed !=
+                                update.info$new.value) {
                             num.effectual.encounters <- num.effectual.encounters + 1
                             if(higher.prob)){
-                                V(graphs[[graph.num]])[update.info2$victim.vertex][update.info2$type] <- 
-                                update.info2$new.value
+                                V(graphs[[graph.num]])[update.info$victim.vertex][update.info$type] <- 
+                                    update.info$new.value
                             }
                         }else{
-                            if(V(graphs[[graph.num]])[update.info2$victim.vertex]$hidden ==
-                               update.info2$new.value){
+                            if(V(graphs[[graph.num]])[update.info$victim.vertex]$expressed ==
+                                update.info$new.value) {
                                 if(lower.prob){       
-                                    V(graphs[[graph.num]])[update.info2$victim.vertex]["expressed"] <- 
-                                    update.info2$new.value
+                                        V(graphs[[graph.num]])[update.info$victim.vertex]["hidden"] <- 
+                                        update.info$new.value
                                 }
                             }
-
                         }
+                    }
+                }else{ 
+                    #anonymous: a) don't look at expressed b) change latent if your latent != their latent
+                    if(list.of.encounter.functions[[i]]$type == "anon"){
+                    
+                        for(en in list.of.encounter.functions[[i]]){
+                            hidden.encounter.num <- hidden.encounter.num + 1
+                            encounter.num <- encounter.num + 1
+                            update.info2 <- victim.update.function(graphs[[graph.num]], v, ev, "hidden")
+                            if (length(update.info2$victim.vertex) > 0  &&
+                                V(graphs[[graph.num]])[update.info2$victim.vertex]$hidden !=
+                                    update.info2$new.value) {
+                                num.effectual.encounters <- num.effectual.encounters + 1
+                            }
+                            V(graphs[[graph.num]])[update.info2$victim.vertex]["hidden"] <- undate.info2$new.value
+                        }                                    
                     }
                 }
             }
