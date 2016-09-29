@@ -2,6 +2,8 @@
 # Network paradigm, p.194
 # Super flexible: all coefficients and scaling factors differ per time period.
 
+use.scaling <- TRUE
+
 # number of agents
 n <- 10
 
@@ -22,8 +24,13 @@ X <- array(runif(n*k*num.iter,min=-1,max=1),dim=c(n,k,num.iter))
 B <- matrix(runif(k*1*num.iter,min=-1,max=1),nrow=k)
 
 # scaling factors (variable over time)
-alpha <- runif(num.iter)
-beta <- runif(num.iter)
+if (use.scaling) {
+    alpha <- runif(num.iter)
+    beta <- runif(num.iter)
+} else {
+    alpha <- rep(1,num.iter)
+    beta <- rep(1,num.iter)
+}
 
 # initial condition
 Y.init <- X[,,1] %*% B[,1]
@@ -33,7 +40,7 @@ Y[,1] <- Y.init
 
 
 for (i in 2:num.iter) {
-    Y[,i] <- W[,,i] %*% Y[,i-1] + X[,,i] %*% B[,i]
+    Y[,i] <- alpha[i] * W[,,i] %*% Y[,i-1] + beta[i] * X[,,i] %*% B[,i]
 }
 
 plot(1:num.iter,Y[1,],type="n",ylim=c(min(Y),max(Y)))
