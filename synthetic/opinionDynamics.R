@@ -10,8 +10,8 @@ source("plotting.R")
 # encounters. Return a list of igraph objects, each giving the graph at a
 # snapshot in time immediately following an encounter.
 # 
-# Agents have an opinion, which could be binary or weighted, and a stubbornness
-# attribute, which can be binary or weighted (coming soon).
+# Agents have an opinion, which could be binary or weighted, and a
+# stubbornness attribute, which can be binary or weighted (coming soon).
 #
 # The probability of one agent successfully influencing another to change
 # their opinion is fixed, and not based on a homophilic threshold.
@@ -29,24 +29,27 @@ source("plotting.R")
 # will be chosen as the "encountering vertex" (in random order) before they
 # are all chosen again (i.e., no repeats are allowed.)
 #
-# encounter.func -- a function which takes a graph and a vertex ID. Returns a 
-# vector of vertex IDs of which the vector may randomly encounter in
-# the current iteration.
+# encounter.func -- either (a) a function which takes a graph and a vertex ID.
+# Returns a vector of vertex IDs of which the vector may randomly encounter in
+# the current iteration. Or (b) a list of such functions. In the former case,
+# victim.update.function must also be a function (not a list). In the latter
+# case, this list should be element-by-element paired with the list of update
+# functions in victim.update.function.
 #
-# victim.update.function -- a function which takes a graph and two vertex IDs:
-# the first is the "potential influencer" (i.e., the node whose opinion may
-# cause the second vertex's opinion to be updated) and the second is the
-# "potential victim." It will return the (possibly new) value of the second
-# vetex.
+# victim.update.function -- either (a) a function which takes a graph and two
+# vertex IDs: the first is the "potential influencer" (i.e., the node whose
+# opinion may cause the second vertex's opinion to be updated) and the second
+# is the "potential victim." It will return the (possibly new) value of the
+# second vetex. Or (b) a list of such functions. In the former case,
+# encounter.func must also be a function (not a list). In the latter case,
+# this list should be element-by-element paired with the list of encounter
+# functions in encounter.func.
 #
 # edge.update.function -- a function which takes a graph and a vertex ID. It
 # will return information about who the vertex should connect to, and
-# disconnect to.
-# A list of two elements:
-#    $new.edges -- vertex IDs this vertex is currently not connected to, but
-#    should be.
-#    $old.edges -- vertex IDs this vertex is currently connected to, but
-#    shouldn't be.
+# disconnect to. A list of two elements: $new.edges -- vertex IDs this vertex
+# is currently not connected to, but should be. $old.edges -- vertex IDs this
+# vertex is currently connected to, but shouldn't be.
 #
 # generate.graph.per.encounter -- if TRUE, return a graph for every single
 # encounter that takes place. If FALSE, only return one graph for an entire
@@ -70,6 +73,13 @@ sim.opinion.dynamics <- function(init.graph,
         verbose=TRUE) {
 
 	cat("Starting.....\n")
+
+    if (!is.list(encounter.func)) {
+        # If it's not already a list, make it one, so hereafter we can assume
+        # it's always a list of one or more encounter functions.
+        encounter.func <- list(encounter.func)
+        victim.update.function <- list(victim.update.function)
+    }
 
     if (terminate.after.max.num.encounters) {
         if (generate.graph.per.encounter) {
@@ -129,85 +139,33 @@ sim.opinion.dynamics <- function(init.graph,
             }
 
 
-            list.of.encounter.functions <- encounter.func(graphs[[graph.num]],v)
-            #if(!is.list(list.of.encounter.functions)) {
-            #    for (ev in encountered.vertices) {
-            #        encounter.num <- encounter.num + 1
-            #        #if (verbose) {
-                    #    cat("Encounter ",encounter.num," of ",num.encounters," (",
-                    #        v,")...\n", sep="")
-                    #}
-            #        update.info <- victim.update.function(graphs[[graph.num]], v, ev)
-            #        if (length(update.info$victim.vertex) > 0  &&
-            #            V(graphs[[graph.num]])[update.info$victim.vertex]$opinion !=
-            #                update.info$new.value) {
-            #            num.effectual.encounters <- num.effectual.encounters + 1
-            #        }
-            #        V(graphs[[graph.num]])[update.info$victim.vertex]$opinion <- 
-            #            update.info$new.value
-            #    }
-            #}else{
-            for (i in length(list.of.encounter.functions)){
+            for (i in length(encounter.func)){
            
-                # only access graph neighbors
-                # public: if your expressed != them expressed, then maybe set your expressed = to 
-                # their expressed (higher prob)
-                # if you == them, then maybe set your hidden to = them (lower prob)
+                list.of.vertex.IDs <- 
+                    encounter.func[[i]](graphs[[graph.num]],v)
 
+                for (id in list.of.vertex.IDs) {
+                    update.info <- 
+                        victim.update.function[[i]](graphs[[graph.num]],v,id)
 
-                # maybe set your expressed to = latent //separate process//
+                    encounter.num <- encounter.num + 1
 
-                    
-                if(list.of.encounter.functions[[i]]$type == "public"){
-
-                    for (ev in list.of.encountered.functions[[i]]$vert) {
-                        expressed.encounter.num <- expressed.encounter.num + 1
-                        encounter.num <- encounter.num + 1
-                        #if (verbose) {
-                        #    cat("Expressed:   encounter ",encounter.num," of ",num.encounters," (",
-                        #        v,")...\n", sep="")
-                        #}
-                    
-
-
-                        update.info <- victim.update.function(graphs[[graph.num]], v, ev, "expressed")
-                        if (length(update.info$victim.vertex) > 0  &&
-                            V(graphs[[graph.num]])[update.info$victim.vertex]$expressed !=
+                    if (length(update.info$victim.vertex) > 0  &&
+                        get.vertex.attribute(graphs[[graph.num]],
+                            update.info$type,
+                            update.info$victim.vertex) !=
                                 update.info$new.value) {
-                            num.effectual.encounters <- num.effectual.encounters + 1
-                            if(higher.prob)){
-                                V(graphs[[graph.num]])[update.info$victim.vertex][update.info$type] <- 
-                                    update.info$new.value
-                            }
-                        }else{
-                            if(V(graphs[[graph.num]])[update.info$victim.vertex]$expressed ==
-                                update.info$new.value) {
-                                if(lower.prob){       
-                                        V(graphs[[graph.num]])[update.info$victim.vertex]["hidden"] <- 
-                                        update.info$new.value
-                                }
-                            }
-                        }
+                        num.effectual.encounters <- 
+                            num.effectual.encounters + 1
                     }
-                }else{ 
-                    #anonymous: a) don't look at expressed b) change latent if your latent != their latent
-                    if(list.of.encounter.functions[[i]]$type == "anon"){
-                    
-                        for(en in list.of.encounter.functions[[i]]){
-                            hidden.encounter.num <- hidden.encounter.num + 1
-                            encounter.num <- encounter.num + 1
-                            update.info2 <- victim.update.function(graphs[[graph.num]], v, ev, "hidden")
-                            if (length(update.info2$victim.vertex) > 0  &&
-                                V(graphs[[graph.num]])[update.info2$victim.vertex]$hidden !=
-                                    update.info2$new.value) {
-                                num.effectual.encounters <- num.effectual.encounters + 1
-                            }
-                            V(graphs[[graph.num]])[update.info2$victim.vertex]["hidden"] <- undate.info2$new.value
-                        }                                    
+                    if (length(update.info$victim.vertex) > 0) {
+                        set.vertex.attribute(graphs[[graph.num]],
+                            update.info$type, update.info$victim.vertex,
+                            update.info$new.value)
                     }
                 }
             }
-            #}
+
 
             if (generate.graph.per.encounter) {
                 # Create a new igraph object to represent this point in time. 
@@ -231,8 +189,8 @@ sim.opinion.dynamics <- function(init.graph,
             graph.num <- graph.num + 1
 
             # Annotate the graph object with a graph attribute indicating the
-            # number of encounters that had taken place at the time this snapshot
-            # was taken.
+            # number of encounters that had taken place at the time this
+            # snapshot was taken.
             graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
                 "num.encounters", encounter.num)
             graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
@@ -295,6 +253,7 @@ get.unanimity.termination.function <- function() {
 
 # Stubbornness must be binary
 
+# Never update the victim.
 get.no.update.victim.function <- function() {
     return (
         function(graph, vertex.A, vertex.B){
@@ -303,10 +262,13 @@ get.no.update.victim.function <- function() {
     )
 }
 
-get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.update=0.4) {
+# "Always" (meaning, with the given probability) update the victim with the
+# influencer's opinion.
+get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.update=0.4,
+    opinion.type="opinion") {
     return (
         # Opinion is default
-        function(graph, vertex.A, vertex.B, opinion.type="opinion"){
+        function(graph, vertex.A, vertex.B) {
             if (A.is.victim) {
                 vertex <- vertex.B
                 victim.vertex <- vertex.A
@@ -316,25 +278,73 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.upd
             }
             if(!"stubbornness" %in% list.vertex.attributes(graph)
                 || V(graph)[victim.vertex]$stubbornness == 0){
-                
-            
 
-                if(sample(c(0,1),1,replace=TRUE, prob=c(prob.update, 1-prob.update)) == 0){
-                    return(list(new.value=V(graph)[vertex][opinion.type],
-                       victim.vertex=victim.vertex, type=opinion.type))
-                }else{
-                    return(list(new.value=0,victim.vertex=NULL, type=opinion.type))
+                if(runif(1) < prob.update) {
+                    return(list(new.value=get.vertex.attribute(graph,
+                            opinion.type,vertex),
+                        victim.vertex=victim.vertex, type=opinion.type))
+                } else{
+                    return(list(new.value=0,victim.vertex=NULL,
+                        type=opinion.type))
                 }
             } else {
                 # Nothing will get updated. We're too dang stubborn.
-                return(list(new.value=0,victim.vertex=NULL, type=opinion.type))
+                return(list(new.value=0,victim.vertex=NULL,type=opinion.type))
             }
         }
     )
 }
 
+# Possibly update my expressed opinion, and/or my hidden opinion, based on
+# what another node are expressing.
+# More precisely: (1) if our expressed opinion differs from that of the other
+# node, possibly update our expressed opinion to match the other's.
+# (Probability prob.knuckle.under.pressure.)
+# (2) Otherwise, if our expressed opinions already agree, possibly update our
+# own hidden opinion to reflect our expressed opinion. (Probability
+# prob.internalize.expressed.opinion.)
+get.peer.pressure.update.function <- function(A.is.victim=FALSE,
+    prob.knuckle.under.pressure, prob.internalize.expressed.opinion) {
+    return (
+        # Opinion is default
+        function(graph, vertex.A, vertex.B) {
+            if (A.is.victim) {
+                vertex <- vertex.B
+                victim.vertex <- vertex.A
+            } else {
+                vertex <- vertex.A
+                victim.vertex <- vertex.B
+            }
 
+            # For now, assume we're not stubborn. (This is complicated enough
+            # as it is.)
+            if (V(graph)[vertex]$expressed != 
+                V(graph)[victim.vertex]$expressed) {
+                # We don't agree with them externally. Possibly succumb to
+                # peer pressure and "pretend" we agree.
+                if (runif(1) < prob.knuckle.under.pressure) {
+                    return(list(new.value=V(graph)[vertex]$expressed,
+                       victim.vertex=victim.vertex, type="expressed"))
+                } else {
+                    return(list(new.value=0,victim.vertex=NULL, type="hannah"))
+                }
 
+            } else {
+                # We already agree with them externally. Possibly update our
+                # hidden opinion to match.
+                if (runif(1) < prob.internalize.expressed.opinion) {
+                    return(list(new.value=V(graph)[victim.vertex]$expressed,
+                       victim.vertex=victim.vertex, type="hidden"))
+                } else {
+                    return(list(new.value=0,victim.vertex=NULL, type="hannah"))
+                }
+            }
+        }
+    )
+}
+
+# Update the victim by making its opinion be whatever opinion the majority of
+# its neighbors have.
 get.update.majority.neighbors.function <- function(){
     return (
         function(graph, vertex.A, vertex.B){
@@ -459,33 +469,13 @@ get.bounded.confidence.update.victim.function <- function(threshold.value=0.3,
 # outward influence. (in other words, the node-in-question is always the
 # influencer, never the influencee.)
 
-
-get.public.encounter.func <- function(num.vert){
-    return (
-        function(graph, vertex){
-            # Each vertex encounters some other vertices that he is already connected to
-            # and may or may not update his expressed or latent opinion or both as a result.
-            vert.neighbors <- neighbors(graph, V(graph)[vertex], mode = "out")
-            return (list(vert=sample(vert.neighbors, num.vert), type="public")
-        }
-    )
-}
-
-get.anonymous.encounter.func <- function(num.verticies){
-    return(
-        function(graph,vertex){
-            return (list(vert=sample((1:gorder(graph))[-vertex],num.vertices), type="anon")
-        }
-    )
-}
-
 get.mean.field.encounter.func <- function(num.vertices) {
     return(
         function(graph, vertex) {
             # Each vertex encounters some other vertices at random (mean field) and may or may 
             # not update his/her latent opinion as a result.
             return (
-                sample(list(vert=(1:gorder(graph))[-vertex],num.vertices))
+                sample((1:gorder(graph))[-vertex],num.vertices)
             )
         }
     )
@@ -502,10 +492,9 @@ get.graph.neighbors.encounter.func <- function(num.vertices=0, all=FALSE) {
 		}
 		outgoing.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
             	if(length(outgoing.neighbors) <= num.vertices || all){
-                	return (list(vert=outgoing.neighbors))
+                	return (outgoing.neighbors)
             } else {
-                return ( 
-                    list(vert=sample(outgoing.neighbors, num.vertices))
+                return (sample(outgoing.neighbors, num.vertices)
                 )
             }
         }
@@ -659,13 +648,18 @@ get.plain.old.graph <- function(opinion=runif(30), probability.connected=0.2, di
 
 
 get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=FALSE){
+    cat("We're here, right?\n")
     if(dir){
         g <- erdos.renyi.game(num.agents, prob.connected, directed=TRUE)
     } else {
         g <- erdos.renyi.game(num.agents, prob.connected)
     }
+    # Hannah you silly girl fix this :)
     V(g)$expressed <- runif(num.agents)
     V(g)$hidden <- runif(num.agents)
+    if (!is.connected(g)) {
+        stop("WHOA!!")
+    }
     return(g)
 }
 
