@@ -108,7 +108,7 @@ sim.opinion.dynamics <- function(init.graph,
         !termination.function(graphs[[graph.num]])) {
 
         if (verbose) {
-            cat("<<<<<<<<<<<<<<<---------------------------------\n")
+            cat("Encounter #",encounter.num,"...\n")
         }
 
         # Go through all the vertices, in random order:
@@ -146,8 +146,7 @@ sim.opinion.dynamics <- function(init.graph,
 
                 for (id in list.of.vertex.IDs) {
                     update.info <- 
-                        victim.update.function[[i]](graphs[[graph.num]],v,id)
-
+                        victim.update.function[[1]](graphs[[graph.num]],v,id)
                     encounter.num <- encounter.num + 1
 
                     if (length(update.info$victim.vertex) > 0  &&
@@ -159,9 +158,10 @@ sim.opinion.dynamics <- function(init.graph,
                             num.effectual.encounters + 1
                     }
                     if (length(update.info$victim.vertex) > 0) {
-                        set.vertex.attribute(graphs[[graph.num]],
-                            update.info$type, update.info$victim.vertex,
-                            update.info$new.value)
+                        graphs[[graph.num]] <- 
+                            set.vertex.attribute(graphs[[graph.num]],
+                                update.info$type, update.info$victim.vertex,
+                                update.info$new.value)
                     }
                 }
             }
@@ -223,10 +223,11 @@ get.never.terminate.function <- function() {
 }
 
 # Terminate if the graph has total uniformity of opinions.
-get.unanimity.termination.function <- function() {
+get.unanimity.termination.function <- function(attribute.name="opinion") {
     return (
         function(graph) {
-            return (length(unique(V(graph)$opinion)) == 1)
+            return (length(unique(
+                get.vertex.attribute(graph,attribute.name))) == 1)
         }
     )
 }
@@ -490,7 +491,7 @@ get.graph.neighbors.encounter.func <- function(num.vertices=0, all=FALSE) {
 		if(num.vertices==0) {
 			all=TRUE
 		}
-		outgoing.neighbors <- neighbors(graph, V(graph)[vertex], mode="out")
+		outgoing.neighbors <- neighbors(graph, vertex, mode="out")
             	if(length(outgoing.neighbors) <= num.vertices || all){
                 	return (outgoing.neighbors)
             } else {
@@ -648,15 +649,13 @@ get.plain.old.graph <- function(opinion=runif(30), probability.connected=0.2, di
 
 
 get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=FALSE){
-    cat("We're here, right?\n")
     if(dir){
         g <- erdos.renyi.game(num.agents, prob.connected, directed=TRUE)
     } else {
         g <- erdos.renyi.game(num.agents, prob.connected)
     }
-    # Hannah you silly girl fix this :)
-    V(g)$expressed <- runif(num.agents)
-    V(g)$hidden <- runif(num.agents)
+    V(g)$expressed <- rbinom(vcount(g),size=1,prob=.5)
+    V(g)$hidden <- rbinom(vcount(g),size=1,prob=.5)
     if (!is.connected(g)) {
         stop("WHOA!!")
     }
