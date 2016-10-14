@@ -97,10 +97,10 @@ sim.opinion.dynamics <- function(init.graph,
     graphs[[1]] <- init.graph
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
-    expressed.encounter.num <- 0
-    hidden.encounter.num <- 0
-    encounter.num <- 0
-    num.effectual.encounters <- 0
+    expressed.encounter.num <<- 0
+    hidden.encounter.num <<- 0
+    encounter.num <<- 0
+    num.effectual.encounters <<- 0
     graph.num <- 1
 
     # For each iteration of the sim...
@@ -148,19 +148,16 @@ sim.opinion.dynamics <- function(init.graph,
                 for (id in list.of.vertex.IDs) {
                     update.info <- 
                         victim.update.function[[i]](graphs[[graph.num]],v,id)
-                    encounter.num <- encounter.num + 1
+                    encounter.num <<- encounter.num + 1
 
                     if (length(update.info$victim.vertex) > 0  &&
                         get.vertex.attribute(graphs[[graph.num]],
                             update.info$type,
                             update.info$victim.vertex) !=
                                 update.info$new.value) {
-                        num.effectual.encounters <- 
+                        num.effectual.encounters <<- 
                             num.effectual.encounters + 1
                     }
-                    cat("VV: ", update.info$victim.vertex, "\n")                
-                    cat("Type: ", update.info$type, "\n")                
-                    cat("New val: ", update.info$new.value, "\n")                
                     if (length(update.info$victim.vertex) > 0) {
                         graphs[[graph.num]] <- 
                             set.vertex.attribute(graphs[[graph.num]],
@@ -227,11 +224,15 @@ get.never.terminate.function <- function() {
 }
 
 # Terminate if the graph has total uniformity of opinions.
-get.unanimity.termination.function <- function(attribute.name="opinion") {
+get.unanimity.termination.function <- function(attribute1="opinion", attribute2="NULL") {
     return (
         function(graph) {
-            return (length(unique(
-                get.vertex.attribute(graph,attribute.name))) == 1)
+            if(attribute2 == "NULL"){
+                return (length(unique(get.vertex.attribute(graph,attribute1))) == 1)
+            }else{
+                return ((length(unique(get.vertex.attribute(graph,attribute1))) == 1) ||
+                    (length(unique(get.vertex.attribute(graph,attribute2))) == 1))
+            }
         }
     )
 }
@@ -284,6 +285,7 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.upd
             if(!"stubbornness" %in% list.vertex.attributes(graph)
                 || V(graph)[victim.vertex]$stubbornness == 0){
                 if(runif(1) < prob.update) {
+                    hidden.encounter.num <<- hidden.encounter.num + 1
                     return(list(new.value=get.vertex.attribute(graph,
                             opinion.type,vertex),
                         victim.vertex=victim.vertex, type=opinion.type))
@@ -326,9 +328,8 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 V(graph)[victim.vertex]$expressed) {
                 # We don't agree with them externally. Possibly succumb to
                 # peer pressure and "pretend" we agree.
-                cat("possibly succumbing to peer pressure\n")
                 if (runif(1) < prob.knuckle.under.pressure) {
-                    cat("ACTUALLY succumbing to peer pressure\n")
+                    expressed.encounter.num <<- expressed.encounter.num + 1
                     return(list(new.value=V(graph)[vertex]$expressed,
                        victim.vertex=victim.vertex, type="expressed"))
                 } else {
@@ -339,7 +340,6 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 # We already agree with them externally. Possibly update our
                 # hidden opinion to match.
                 if (runif(1) < prob.internalize.expressed.opinion) {
-                    cat("Agree with OURSELVES\n")
                     return(list(new.value=V(graph)[victim.vertex]$expressed,
                        victim.vertex=victim.vertex, type="hidden"))
                 } else {
