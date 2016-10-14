@@ -11,14 +11,14 @@ source("opinionDynamics.R")
 
 # Hidden vs. Expressed Opinions
 
-sim <- function(num=10, prob=0.25){
-    init <- get.expressed.latent.graph(num.agents=num, prob.connected=prob, dir=TRUE)
-    graphs <<- sim.opinion.dynamics(init, num.encounters=20000,
+sim <- function(num=20, prob=0.35){
+    init <<- get.expressed.latent.graph(num.agents=num, prob.connected=prob, dir=TRUE)
+    graphs <<- sim.opinion.dynamics(init, num.encounters=2000,
         encounter.func=list(
             get.mean.field.encounter.func(1),
             get.graph.neighbors.encounter.func(1)),
         victim.update.function=list(
-            get.automatically.update.victim.function(A.is.victim=TRUE,prob.update=0.3,
+            get.automatically.update.victim.function(A.is.victim=TRUE,prob.update=0.9,
                 opinion.type="hidden"),
             get.peer.pressure.update.function(A.is.victim=TRUE,
                 prob.knuckle.under.pressure=0.5,

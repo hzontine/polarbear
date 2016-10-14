@@ -74,6 +74,7 @@ sim.opinion.dynamics <- function(init.graph,
 
 	cat("Starting.....\n")
 
+
     if (!is.list(encounter.func)) {
         # If it's not already a list, make it one, so hereafter we can assume
         # it's always a list of one or more encounter functions.
@@ -146,7 +147,7 @@ sim.opinion.dynamics <- function(init.graph,
 
                 for (id in list.of.vertex.IDs) {
                     update.info <- 
-                        victim.update.function[[1]](graphs[[graph.num]],v,id)
+                        victim.update.function[[i]](graphs[[graph.num]],v,id)
                     encounter.num <- encounter.num + 1
 
                     if (length(update.info$victim.vertex) > 0  &&
@@ -157,6 +158,9 @@ sim.opinion.dynamics <- function(init.graph,
                         num.effectual.encounters <- 
                             num.effectual.encounters + 1
                     }
+                    cat("VV: ", update.info$victim.vertex, "\n")                
+                    cat("Type: ", update.info$type, "\n")                
+                    cat("New val: ", update.info$new.value, "\n")                
                     if (length(update.info$victim.vertex) > 0) {
                         graphs[[graph.num]] <- 
                             set.vertex.attribute(graphs[[graph.num]],
@@ -279,7 +283,6 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.upd
             }
             if(!"stubbornness" %in% list.vertex.attributes(graph)
                 || V(graph)[victim.vertex]$stubbornness == 0){
-
                 if(runif(1) < prob.update) {
                     return(list(new.value=get.vertex.attribute(graph,
                             opinion.type,vertex),
@@ -323,7 +326,9 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 V(graph)[victim.vertex]$expressed) {
                 # We don't agree with them externally. Possibly succumb to
                 # peer pressure and "pretend" we agree.
+                cat("possibly succumbing to peer pressure\n")
                 if (runif(1) < prob.knuckle.under.pressure) {
+                    cat("ACTUALLY succumbing to peer pressure\n")
                     return(list(new.value=V(graph)[vertex]$expressed,
                        victim.vertex=victim.vertex, type="expressed"))
                 } else {
@@ -334,6 +339,7 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 # We already agree with them externally. Possibly update our
                 # hidden opinion to match.
                 if (runif(1) < prob.internalize.expressed.opinion) {
+                    cat("Agree with OURSELVES\n")
                     return(list(new.value=V(graph)[victim.vertex]$expressed,
                        victim.vertex=victim.vertex, type="hidden"))
                 } else {
