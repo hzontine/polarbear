@@ -29,7 +29,8 @@ library(RColorBrewer)
 #
 # subtitle -- an optional subtitle for the plot.
 #
-plot.animation <- function(graphs, attribute.name="ideology", 
+plot.animation <- function(graphs, attribute.name="ideology",
+    second.atribute.name = NULL,
     try.to.keep.vertex.positions=TRUE, delay.between.frames=.5, 
     interactive=TRUE, animation.filename="polar.gif",
     overwrite.animation.file=FALSE, subtitle="") {
@@ -43,18 +44,32 @@ plot.animation <- function(graphs, attribute.name="ideology",
     if (!interactive) {
         base.filename <- tempfile(pattern="polar")
     }
-
-
-    # Detect discrete graphs so we can plot colors differently.
-    values <- get.vertex.attribute(graphs[[1]],attribute.name)
-    if (all(values == floor(values))) {
-        discrete <- TRUE
-    } else {
-        discrete <- FALSE
+    if (second.atribute.name != NULL){
+        two.attr = TRUE
+    }else{
+        two.attr = FALSE
     }
 
-    discrete.num = max(get.vertex.attribute(graphs[[1]],attribute.name)) 
-
+    # Detect discrete graphs so we can plot colors differently.
+    first.values <- get.vertex.attribute(graphs[[1]], attribute.name)
+    if(two.attr){
+        second.values <- get.vertex.attribute(graphs[[1]], second.attribute.name)
+        if (all(second.values == floor(second.values)) && all(first.values == floor(first.values))) {
+            discrete <- TRUE
+        } else {
+            discrete <- FALSE
+        }
+    }else{
+        if (all(first.values == floor(first.values))) {
+            discrete <- TRUE
+        } else {
+            discrete <- FALSE
+        }
+    }
+    if(discrete){
+        discrete.num.one = max(get.vertex.attribute(graphs[[1]],attribute.name)) 
+        dscrete.num.two = max(get.vertex.attribute(graphs[[1]],second.attribute.name)) 
+    }
     vertex.coords <- layout_with_kk(graphs[[1]])
     for (i in 1:length(graphs)) {
         if (try.to.keep.vertex.positions) {
@@ -63,14 +78,20 @@ plot.animation <- function(graphs, attribute.name="ideology",
             vertex.coords <- layout_with_kk(graphs[[i]],coords=NULL)
         }
         if (discrete) {
-            if (max(get.vertex.attribute(graphs[[1]],attribute.name)) == 1){
+            if (max(get.vertex.attribute(graphs[[1]],attribute.name)) == 1 &&
+                max(get.vertex.attribute(graphs[[1]],second.attribute.name)) == 1){
+                
                 V(graphs[[i]])$color <- ifelse(
                     get.vertex.attribute(graphs[[i]],attribute.name) == 0,
                     "blue","red")
-                V(graphs[[i]])$label.color <- ifelse(
-                    get.vertex.attribute(graphs[[i]],attribute.name) == 0,
-                    "white","black")
-            } else {
+                V(graphs[[i]])$shape <- ifelse(
+                    get.vertex.attribute(graphs[[i]],second.attribute.name) == 0,
+                    "circle","square")
+            } 
+
+
+
+                else {
                 if(discrete.num+1 > 9){
                     colors <- brewer.pal(discrete.num+1, "Set3")
                 } else {
@@ -96,13 +117,13 @@ plot.animation <- function(graphs, attribute.name="ideology",
             cat("Building frame",i,"of",length(graphs),"...\n")
         }
 
-        if ("stubbornness" %in% list.vertex.attributes(graphs[[i]])) {
-            vertex.shape <- ifelse(V(graphs[[i]])$stubbornness, "square", "circle")
-            vertex.size <- ifelse(V(graphs[[i]])$stubbornness, 15, 18)
-        } else {
-            vertex.shape <- "circle"
-            vertex.size <- 15
-        }
+       # if ("stubbornness" %in% list.vertex.attributes(graphs[[i]])) {
+       #     vertex.shape <- ifelse(V(graphs[[i]])$stubbornness, "square", "circle")
+       #     vertex.size <- ifelse(V(graphs[[i]])$stubbornness, 15, 18)
+       # } else {
+       #     vertex.shape <- "circle"
+       #     vertex.size <- 15
+       # }
 
         if (discrete) {
             if (discrete.num > 1) {
