@@ -78,38 +78,70 @@ plot.animation <- function(graphs, attribute.name="ideology",
             vertex.coords <- layout_with_kk(graphs[[i]],coords=NULL)
         }
         if (discrete) {
-            if (max(get.vertex.attribute(graphs[[1]],attribute.name)) == 1 &&
-                max(get.vertex.attribute(graphs[[1]],second.attribute.name)) == 1){
-                
+            if (max(get.vertex.attribute(graphs[[1]],attribute.name)) == 1){
+                # if the first attribute has 2 values
+
                 V(graphs[[i]])$color <- ifelse(
                     get.vertex.attribute(graphs[[i]],attribute.name) == 0,
                     "blue","red")
-                V(graphs[[i]])$shape <- ifelse(
-                    get.vertex.attribute(graphs[[i]],second.attribute.name) == 0,
-                    "circle","square")
-            } 
 
+            } else {    # if the first has more than two values
 
-
-                else {
-                if(discrete.num+1 > 9){
-                    colors <- brewer.pal(discrete.num+1, "Set3")
-                } else {
-                    colors <- brewer.pal(discrete.num+1, "Pastel1")
-                }
-                for (node in 1:vcount(graphs[[i]])){ 
-                    ideology <- vertex_attr(graphs[[i]],attribute.name,node)
-                    for (num in 0:discrete.num){
-                        if(ideology == num) {
-                            V(graphs[[i]])[node]$color <- colors[num+1]
+                    if(discrete.num.one+1 > 9){
+                        colors <- brewer.pal(discrete.num.one+1, "Set3")
+                    } else {
+                        colors <- brewer.pal(discrete.num.one+1, "Pastel1")
+                    }
+                    for (node in 1:vcount(graphs[[i]])){ 
+                        ideology <- vertex_attr(graphs[[i]],attribute.name,node)
+                        for (num in 0:discrete.num.one){
+                            if(ideology == num) {
+                                V(graphs[[i]])[node]$color <- colors[num+1]
+                            }
                         }
                     }
+
+                    if(two.attr && max(get.vertex.attribute(graphs[[1]],second.attribute.name)) == 1){
+
+                         # if there is a second attrbute that has exactly two values
+                         vertex.shape <- ifelse(
+                             get.vertex.attribute(graphs[[i]],second.attribute.name) == 0,
+                             "circle","square")
+                    } else {
+                    
+                         if(two.attr){   
+                         # there is a second one and it has more than two...
+                            if(discrete.num.two <  ){
+                                #shapes <-
+                                # not supported yet
+                            } else { }
+                            # we didn't have enough shapes
+                        }
+                    }
+
+
+             }
+        } else { # not dealing with two discrete attributes
+    
+            # let's check if the first attribute is the one that's not discrete
+            if (all(first.values != floor(first.values))) {
+                V(graphs[[i]])$color <- 
+                    colorRampPalette(c("blue","white","red"))(100)[ceiling(
+                    get.vertex.attribute(graphs[[i]],attribute.name) * 100)]
+            }else{
+                # so it's not the first attribute that is not discrete
+                # let's double check the second
+                if (all(second.values != floor(second.values))) {
+                    # shapes <- c("circle", "square", "what other shapes are there?")   
+                    # not supported yet
+                }else{
+                    vertex.shape <- ifelse(get.vertex.attribute(graphs[[i]], 
+                        second.attribute.name) == 0, "circle", "square")
                 }
+                V(graphs[[i]])$color <- ifelse(
+                    get.vertex.attribute(graphs[[i]],attribute.name) == 0,
+                    "blue","red")
             }
-        } else {
-            V(graphs[[i]])$color <- 
-                colorRampPalette(c("blue","white","red"))(100)[ceiling(
-                get.vertex.attribute(graphs[[i]],attribute.name) * 100)]
         }
         if (!interactive) {
             png(paste0(base.filename,"plot",
@@ -125,22 +157,24 @@ plot.animation <- function(graphs, attribute.name="ideology",
        #     vertex.size <- 15
        # }
 
+        vertex.size <- 15
+
         if (discrete) {
-            if (discrete.num > 1) {
+            if (discrete.num.one > 1) {
                 plot(graphs[[i]],
                     layout=vertex.coords,
                     vertex.shape=vertex.shape,
                     vertex.size=vertex.size,
                     main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
-                    #legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
-                    #fill=c("blue","white","red"))
+                    legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
+                    fill=c("blue","white","red"))
             } else {
                 plot(graphs[[i]],
                     layout=vertex.coords,
                     vertex.shape=vertex.shape,
                     vertex.size=vertex.size,
-                    main=paste("Graph B"), sub=subtitle)
-                legend("bottomright",legend=c("Liberal","Conservative"),
+                    main=paste("Iteration ", i, "of", length(graphs)), sub=subtitle)
+                    legend("bottomright",legend=c("Liberal","Conservative"),
                     fill=c("blue","red"))
             }
         } else {
@@ -149,13 +183,13 @@ plot.animation <- function(graphs, attribute.name="ideology",
                 vertex.shape=vertex.shape,
                 vertex.size=vertex.size,
                 main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
-            legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
+                legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
                 fill=c("blue","white","red"))
         }
-        if ("stubbornness" %in% list.vertex.attributes(graphs[[i]])) {
-            legend("bottomleft",legend=c("Stubborn","Open-minded"),
-                pch=c(0,1))
-        }
+        # if ("stubbornness" %in% list.vertex.attributes(graphs[[i]])) {
+        #    legend("bottomleft",legend=c("Stubborn","Open-minded"),
+        #        pch=c(0,1))
+        #}
         if (interactive) {
             Sys.sleep(delay.between.frames)
         } else {
