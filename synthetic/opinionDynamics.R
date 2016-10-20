@@ -682,8 +682,7 @@ param.sweep <- function(init.graph) {
             encounter.func=get.graph.neighbors.encounter.func(encs.per.iter),
             victim.update.function=
                 get.bounded.confidence.update.victim.function(bc.thresh,
-                    migration.factor=migration.factor))
-        plot.animation(graphs,"opinion",delay.between.frames=.25,
+                    migration.factor=migration.factor),
             interactive=FALSE,
             subtitle=paste0("encounter: ",encs.per.iter,
                                             " graph neighbor per iteration\n",
@@ -702,18 +701,18 @@ main <- function() {
     #param.sweep(get.barely.connected.polarized.graph())
 
     # Discrete Opinions
-    da.graph <- get.discrete.graph(2,stubborn=TRUE)
-    graphs <<- sim.opinion.dynamics(da.graph, 
-        num.encounters=80*vcount(da.graph), 
+   #  da.graph <- get.discrete.graph(2,stubborn=TRUE)
+   # graphs <<- sim.opinion.dynamics(da.graph, 
+   #     num.encounters=80*vcount(da.graph), 
         #encounter.func=get.graph.neighbors.encounter.func(2),
-        encounter.func=get.mean.field.encounter.func(3),
+   #     encounter.func=get.mean.field.encounter.func(3),
         #victim.update.function=get.proportional.to.in.degree.update.victim.function())
-        victim.update.function=get.automatically.update.victim.function())
+   #     victim.update.function=get.automatically.update.victim.function())
 
     # Continuous Opinions
     # graphs <- sim.opinion.dynamics(get.stubborn.graph(), num.encounters=200,
     #   encounter.func=get.graph.neighbors.encounter.func(4),
     #   victim.update.function=get.bounded.confidence.update.victim.function(0.5, 0.2))
 
-    plot.animation(graphs, "opinion", delay.between.frames=.25)
+    #(graphs, "opinion", delay.between.frames=.25)
 }

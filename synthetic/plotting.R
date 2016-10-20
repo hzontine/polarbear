@@ -30,7 +30,7 @@ library(RColorBrewer)
 # subtitle -- an optional subtitle for the plot.
 #
 plot.animation <- function(graphs, attribute.name="ideology",
-    second.atribute.name = NULL,
+    second.atribute.name = "none",
     try.to.keep.vertex.positions=TRUE, delay.between.frames=.5, 
     interactive=TRUE, animation.filename="polar.gif",
     overwrite.animation.file=FALSE, subtitle="") {
@@ -44,7 +44,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
     if (!interactive) {
         base.filename <- tempfile(pattern="polar")
     }
-    if (second.atribute.name != NULL){
+    if (second.atribute.name != "none"){
         two.attr = TRUE
     }else{
         two.attr = FALSE
@@ -109,14 +109,14 @@ plot.animation <- function(graphs, attribute.name="ideology",
                              "circle","square")
                     } else {
                     
-                         if(two.attr){   
+                         #if(two.attr){   
                          # there is a second one and it has more than two...
-                            if(discrete.num.two <  ){
+                            #if(discrete.num.two <  ){
                                 #shapes <-
                                 # not supported yet
-                            } else { }
+                            #} else { }
                             # we didn't have enough shapes
-                        }
+                        #}
                     }
 
 
