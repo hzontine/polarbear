@@ -32,7 +32,7 @@ sim <- function(num=20, prob=0.35){
     num.expressed.1s <<- sapply(1:length(graphs),function(i) { sum(get.vertex.attribute(graphs[[i]],"expressed"))})
 
     animated.graph <- plot.animation(graphs, attribute.name="expressed", second.attribute = "hidden",
-        delay.between.frames=0.5)
+        delay.between.frames=0.9)
     plot(animated.graph)
 
 }
