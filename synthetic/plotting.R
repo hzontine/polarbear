@@ -105,9 +105,9 @@ plot.animation <- function(graphs, attribute.name="ideology",
             }
             if(two.attr && max(get.vertex.attribute(graphs[[1]],second.attribute)) == 1){
                  # if there is a second attrbute that has exactly two values
-                 vertex.shape <- ifelse(
+                 vert.frame.color <- ifelse(
                  get.vertex.attribute(graphs[[i]],second.attribute) == 0,
-                       "circle","square")
+                       "blue","red")
             } else {
                     
                          #if(two.attr){   
@@ -135,8 +135,8 @@ plot.animation <- function(graphs, attribute.name="ideology",
                     # not supported yet
                     vertex.shape <- "circle"
                 }else{
-                    vertex.shape <- ifelse(get.vertex.attribute(graphs[[i]], 
-                        second.attribute) == 0, "circle", "square")
+                    vert.frame.color <- ifelse(get.vertex.attribute(graphs[[i]], 
+                        second.attribute) == 0, "blue", "red")
                 }
                 V(graphs[[i]])$color <- ifelse(
                     get.vertex.attribute(graphs[[i]],attribute.name) == 0,
@@ -165,28 +165,27 @@ plot.animation <- function(graphs, attribute.name="ideology",
                     plot(graphs[[i]],
                         layout=vertex.coords,
                         vertex.shape=vertex.shape,
+                        vertex.frame.color=vert.frame.color,
                         vertex.size=vertex.size,
                         main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
                         legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
                         fill=c("blue","white","red"))
-                        legend("bottomleft", legend=c(attribute.name, second.attribute),
-                        pch=c(21, 22))
                 } else {
                     plot(graphs[[i]],
                         layout=vertex.coords,
                         vertex.shape=vertex.shape,
+                        vertex.frame.color=vert.frame.color,
                         vertex.size=vertex.size,
                         main=paste("Iteration ", i, "of", length(graphs)), sub=subtitle)
                         legend("bottomright",legend=c("Liberal","Conservative"),
                         fill=c("blue","red"))
-                        legend("bottomleft", legend=c(attribute.name, second.attribute),
-                        pch=c(21, 22))
                }
             } else {
                 if(discrete.num.one > 1){
                     plot(graphs[[i]],
                         layout=vertex.coords,
                         vertex.shape=vertex.shape,
+                        vertex.frame.color=vert.frame.color,
                         vertex.size=vertex.size,
                         main=paste("Iteration",i,"of",length(graphs)), sub=subtitle)
                         legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
@@ -196,6 +195,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
                         layout=vertex.coords,
                         vertex.size=vertex.size,
                         vertex.shape=vertex.shape,
+                        vertex.frame.color=vert.frame.color,
                         main=paste("Iteration ", i, "of", length(graphs)), sub=subtitle)
                         legend("bottomright",legend=c("Liberal","Conservative"),
                         fill=c("blue","red"))
