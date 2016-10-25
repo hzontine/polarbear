@@ -74,6 +74,9 @@ plot.animation <- function(graphs, attribute.name="ideology",
     }
     vertex.coords <- layout_with_kk(graphs[[1]])
     for (i in 1:length(graphs)) {
+
+    # break for termination function
+
         if (try.to.keep.vertex.positions) {
             vertex.coords <- layout_with_kk(graphs[[i]],coords=vertex.coords)
         } else {

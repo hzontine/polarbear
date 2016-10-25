@@ -31,9 +31,9 @@ sim <- function(num=20, prob=0.25){
     num.hidden.1s <<- sapply(1:length(graphs),function(i) { sum(get.vertex.attribute(graphs[[i]],"hidden"))})
     num.expressed.1s <<- sapply(1:length(graphs),function(i) { sum(get.vertex.attribute(graphs[[i]],"expressed"))})
 
-    #animated.graph <- plot.animation(graphs, attribute.name="expressed", second.attribute = "hidden",
-    #    delay.between.frames=0.9)
+    animated.graph <- plot.animation(graphs, attribute.name="expressed", second.attribute = "hidden",
+        delay.between.frames=1)
     #plot(animated.graph)
-    plot.binary.opinions(graphs, attribute1="hidden", attribute2="expressed")
+    plot.binary.opinions(graphs, attribute1="expressed", attribute2="hidden")
 }
 
