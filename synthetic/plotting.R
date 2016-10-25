@@ -244,18 +244,45 @@ plot.polarization <- function(graphs, attribute.name="ideology") {
 
 # Given a list of igraph objects representing an evolving graph, plot the 
 # fraction of vertices with opinion 1 over time.
-plot.binary.opinions <- function(graphs) {
+plot.binary.opinions <- function(graphs, attribute1="opinion", attribute2="none") {
 
-    frac.opinion <- function(graph, opinion=0) {
-        sum(V(graph)$opinion == opinion) / gorder(graph)
+
+    if(attribute2 != "none"){
+        attr1 <- function(graph, op){
+            sum(get.vertex.attribute(graph, attribute1) == op) / gorder(graph)
+        }
+        attr2 <- function(graph, op){
+            sum(get.vertex.attribute(graph, attribute2) == op) / gorder(graph)
+        }
+        frac.0s <- sapply(graphs, attr1, op=0)
+        frac2.0s <- sapply(graphs, attr2, op=0)
+        frac.1s <- sapply(graphs, attr1, op=1)
+        frac2.1s <- sapply(graphs, attr2, op=1)
+
+        time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+
+        plot(time.pts,frac.0s,ylim=c(0,1),type="l",col="blue",
+            xlab="time (encounters)", lwd=3)
+        lines(time.pts, frac2.1s, col="red", lty="dashed", lwd=3)
+        lines(time.pts, frac.1s, col="red", lwd=3)
+        lines(time.pts, frac2.0s, col="blue", lty="dashed", lwd=3)
+
+        legend("topleft",legend=c("Liberal","Conservative"),
+            fill=c("blue","red"))
+        legend("bottomleft",legend=c(attribute1,attribute2),
+            lty=c("solid","dashed"))
+
+    } else {
+        attr <- function(graph, op){
+            sum(get.vertex.attribute(graph, attribute1) == op) / gorder(graph)
+        }
+        frac.1s <- sapply(graphs, attr, op=1)
+        frac.0s <- sapply(graphs, attr, op=0)
+        time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+
+        plot(time.pts,frac.0s,ylim=c(0,1),type="l",col="blue",
+            xlab="time (encounters)",ylab="Fraction of agents with opinion 1")
+        lines(time.pts, frac.1s, col="red")
     }
-
-    frac.1s <- sapply(graphs, frac.opinion)
-
-    time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
-
-    plot(time.pts,frac.1s,ylim=c(0,1),type="l",col="blue",
-        xlab="time (encounters)",ylab="Fraction of agents with opinion 1")
-    abline(h=.5, lty="dashed", col="grey")
 }
 
