@@ -1,0 +1,30 @@
+
+HZ - dust off binary.voter(). add code to run binary.voter() a bunch of
+times and detect course reversals. Then run the original Holley sim a bunch of
+times, plotting only the time series fraction-of-liberals, and see whether
+there are any course reversals.
+
+    - first, figure out how often this course reversal happens
+
+    - "turn off" the variable interaction by making expressed only affect
+      expressed and hidden only affect hidden. Verify that you see convergence
+      to uniformity by both variables (which could converge to the same
+      opinion or to the opposite) but that you never see course reversal.
+
+
+HZ - Set the seed based on system clock and then output it to screen at some
+point in the sim (so we can recreate results).
+
+
+HZ - Plot the genuineness percentage over time. (What % of people have a
+matching expressed and hidden?)
+
+
+HZ - Verify that the following statement is true: it is impossible to get a
+model to "reverse course" (i.e., liberals ahead of conservatives, but then the
+conservatives make a comeback, or vice versa) without having expressed and
+hidden as two separate variables.
+
+
+SD - Make the node border widths wider:
+http://lists.gnu.org/archive/html/igraph-help/2013-03/msg00030.html
