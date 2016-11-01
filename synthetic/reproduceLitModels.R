@@ -26,6 +26,7 @@ binary.voter <- function(plot=TRUE, num=50) {
         choose.randomly.each.encounter=TRUE)
     if (plot) {
         plot.animation(graphs, "opinion", delay.between.frames=.5)
+        plot.binary.opinions(graphs, attribute1="opinion")
     }
     return(graphs)
 }
