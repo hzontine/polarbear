@@ -16,19 +16,16 @@ source("opinionDynamics.R")
 # "encountering vertex" (in random order) before they are all chosen again
 # (i.e., no repeats are allowed.)
 #
-binary.voter <- function(choose.randomly.each.encounter=FALSE, plot=TRUE) {
+binary.voter <- function(plot=TRUE, num=50) {
     #set.seed(111234)
-    init <- get.plain.old.graph(opinion=rbinom(50,1,0.5), 
-        probability.connected=0.2)
-    graphs <<- sim.opinion.dynamics(init, num.encounters=100*vcount(init),
+    init <- get.plain.old.graph(opinion=rbinom(num,1,0.5), 
+        probability.connected=0.3)
+    graphs <<- sim.opinion.dynamics(init.graph=init, num.encounters = 5000,
         encounter.func=get.graph.neighbors.encounter.func(1),
-        victim.update.function=get.automatically.update.victim.function(
-                                                            A.is.victim=FALSE), 
-        choose.randomly.each.encounter=choose.randomly.each.encounter,
-        termination.function=get.unanimity.termination.function(),
-        verbose=FALSE)
+        victim.update.function=get.automatically.update.victim.function(A.is.victim=FALSE), 
+        choose.randomly.each.encounter=TRUE)
     if (plot) {
-        plot.animation(graphs, "opinion", delay.between.frames=.15)
+        plot.animation(graphs, "opinion", delay.between.frames=.5)
     }
     return(graphs)
 }

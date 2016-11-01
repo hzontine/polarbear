@@ -125,7 +125,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
             }
         } else { # not dealing with two discrete attributes
     
-            # let's check if the first attribute is the one that's not discrete
+            # let's check if the first attribute is the one that is not discrete
             if (all(first.values != floor(first.values))) {
                 V(graphs[[i]])$color <- 
                     colorRampPalette(c("blue","white","red"))(100)[ceiling(
@@ -133,17 +133,17 @@ plot.animation <- function(graphs, attribute.name="ideology",
             }else{
                 # so it's not the first attribute that is not discrete
                 # let's double check the second
-                if (all(second.values != floor(second.values))) {
+                #if (all(second.values != floor(second.values))) {
                     # shapes <- c("circle", "square", "what other shapes are there?")   
                     # not supported yet
                     vertex.shape <- "circle"
-                }else{
+                #}else{
                     vert.frame.color <- ifelse(get.vertex.attribute(graphs[[i]], 
                         second.attribute) == 0, "blue", "red")
-                }
-                V(graphs[[i]])$color <- ifelse(
-                    get.vertex.attribute(graphs[[i]],attribute.name) == 0,
-                    "blue","red")
+                #}
+                #V(graphs[[i]])$color <- ifelse(
+                #    get.vertex.attribute(graphs[[i]],attribute.name) == 0,
+                #    "blue","red")
             }
         }
         if (!interactive) {
@@ -194,11 +194,14 @@ plot.animation <- function(graphs, attribute.name="ideology",
                         legend("bottomright",legend=c("Liberal","Moderate","Conservative"),
                         fill=c("blue","white","red"))
                 }else{
+                    V(graphs[[i]])$color <- ifelse(
+                    get.vertex.attribute(graphs[[i]],attribute.name) == 0,
+                    "blue","red")
                     plot(graphs[[i]],
                         layout=vertex.coords,
                         vertex.size=vertex.size,
                         vertex.shape=vertex.shape,
-                        vertex.frame.color=vert.frame.color,
+                        #vertex.frame.color=vert.frame.color,
                         main=paste("Iteration ", i, "of", length(graphs)), sub=subtitle)
                         legend("bottomright",legend=c("Liberal","Conservative"),
                         fill=c("blue","red"))
