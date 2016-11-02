@@ -671,9 +671,9 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
 param.sweep <- function(init.graph) {
 
     library(doParallel)
-    registerDoParallel(8)
+    registerDoParallel(50)
 
-    encs.per.iter <- 4
+    encs.per.iter <- 1
 
     invisible(foreach (migration.factor=seq(0.2,1,.2)) %dopar% {
       for (bc.thresh in seq(0.2,1,.2)) {
@@ -695,6 +695,39 @@ param.sweep <- function(init.graph) {
       }
     })
 }
+
+
+detect.course.reversals <- function(graphs, initial.graph){
+    num <- vcount(initial.graph)
+
+    # do we have two attributes: hidden and expressed?
+    if ("hidden" %in% list.vertex.attributes(initial.graph) &&
+        "expressed" %in% list.vertex.attributes(initial.graph)) {
+        
+        # find the last value for the two attributes
+        hidden <- sapply(1:length(graphs), function(x) get.vertex.attribute(graphs[[length(graphs)]], 
+            "hidden", V(graphs[[length(graphs)]])[x]))
+        expressed <- sapply(1:length(graphs), function(y) get.vertex.attribute(graphs[[length(graphs)]],
+            "expressed", V(graphs[[length(graphs)]])[y]))
+
+    }else{
+
+        # find the last value for the attribute
+        opinion <- sapply(1:length(graphs), function(x) get.vertex.attribute(graphs[[length(graphs)]], 
+            "opinion", V(graphs[[length(graphs)]])[x]))
+        if(length(which(opinion == 0)) >= length(length(opinion) / 2)){ 
+
+
+        } else{
+
+
+        }
+    }
+
+    return (opinion) 
+}
+
+
 
 main <- function() {
     set.seed(11111)

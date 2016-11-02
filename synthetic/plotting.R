@@ -287,7 +287,7 @@ plot.binary.opinions <- function(graphs, attribute1="opinion", attribute2="none"
         time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
 
         plot(time.pts,frac.0s,ylim=c(0,1),type="l",col="blue",
-            xlab="time (encounters)",ylab="Fraction of agents with opinion 1")
+            xlab="time (encounters)")
         lines(time.pts, frac.1s, col="red")
     }
 }
