@@ -704,27 +704,75 @@ detect.course.reversals <- function(graphs, initial.graph){
     if ("hidden" %in% list.vertex.attributes(initial.graph) &&
         "expressed" %in% list.vertex.attributes(initial.graph)) {
         
-        # find the last value for the two attributes
-        hidden <- sapply(1:length(graphs), function(x) get.vertex.attribute(graphs[[length(graphs)]], 
+        # find the last value for hidden
+        hidden <- sapply(1:num, function(x) get.vertex.attribute(graphs[[length(graphs)]], 
             "hidden", V(graphs[[length(graphs)]])[x]))
-        expressed <- sapply(1:length(graphs), function(y) get.vertex.attribute(graphs[[length(graphs)]],
+
+        # find the last value for expressed
+        expressed <- sapply(1:num, function(y) get.vertex.attribute(graphs[[length(graphs)]],
             "expressed", V(graphs[[length(graphs)]])[y]))
+
+
+
+
+
+
+
 
     }else{
 
-        # find the last value for the attribute
-        opinion <- sapply(1:length(graphs), function(x) get.vertex.attribute(graphs[[length(graphs)]], 
+        # find the last value for opinion
+        opinion <- sapply(1:num, function(x) get.vertex.attribute(graphs[[length(graphs)]], 
             "opinion", V(graphs[[length(graphs)]])[x]))
-        if(length(which(opinion == 0)) >= length(length(opinion) / 2)){ 
+        
+        # if the number of agents whose opinion is 0 is greater than
+        # half of the total number of agents
+        if(length(which(opinion == 0)) > (num / 2)){ 
+            # 0 is the max and 1 is the min
+            # was 1 ever the max?
 
+            # for each graph in graphs, what is the highest 1 ever got to?
+            for(g in 1:length(graphs)){
+                op <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
+                "opinion", V(graphs[[g]])[x]))
+                if(length(which(op == 1)) > (num / 2)){
+                    # then there used to be more 1s than 0s at graphs[[g]] 
 
-        } else{
+                    # so it counts as a course reversal if at SOME point
+                    # there were more 1s than 0s but it ended up that there 
+                    # were actually more 0s than 1s.
+                    return(TRUE, g) 
+                }
+            }
+            return(FALSE, 0)
 
+        } else{ # if opinion is split in half evenly
+            if(length(which(opinion == 0)) == length(length(opinion) / 2)){ 
+                # definitely not a course reversal               
+                return (FALSE, 0) 
+            } else { # if the number of agents whose opinion is 0 is less than
+                     # half of the total number of agents (AKA more 1s than 0s)
+                     # 1 is the max and 0 is the min
+                
+                # was 0 ever the max?
+                # for each graph in graphs, what is the highest 0 ever got to?
+                for(g in 1:length(graphs)){
+                    op <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
+                    "opinion", V(graphs[[g]])[x]))
+                    if(length(which(op == 0)) > (num / 2)){
+                        # then there used to be more 0s than 1s at graphs[[g]] 
 
+                        # so it counts as a course reversal if at SOME point
+                        # there were more 1s than 1s but it ended up that there 
+                        # were actually more 1s than 0s.
+                        return(TRUE, g) 
+                    }
+                }
+                return(FALSE, 0)
+            }
         }
     }
 
-    return (opinion) 
 }
 
 
