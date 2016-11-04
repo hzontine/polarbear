@@ -28,12 +28,13 @@ sim <- function(num=20, prob=0.25){
         termination.function=get.unanimity.termination.function("expressed", "hidden"),
 		choose.randomly.each.encounter=TRUE)
 
-    num.hidden.1s <<- sapply(1:length(graphs),function(i) { sum(get.vertex.attribute(graphs[[i]],"hidden"))})
-    num.expressed.1s <<- sapply(1:length(graphs),function(i) { sum(get.vertex.attribute(graphs[[i]],"expressed"))})
+    #num.hidden.1s <<- sapply(1:length(graphs),function(i) { sum(get.vertex.attribute(graphs[[i]],"hidden"))})
+    #num.expressed.1s <<- sapply(1:length(graphs),function(i) { sum(get.vertex.attribute(graphs[[i]],"expressed"))})
 
-    animated.graph <- plot.animation(graphs, attribute.name="expressed", second.attribute = "hidden",
-        delay.between.frames=1)
+    #animated.graph <- plot.animation(graphs, attribute.name="expressed", second.attribute = "hidden",
+    #    delay.between.frames=1)
     #plot(animated.graph)
     plot.binary.opinions(graphs, attribute1="expressed", attribute2="hidden")
+    return(graphs)
 }
 

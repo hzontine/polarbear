@@ -16,10 +16,10 @@ source("opinionDynamics.R")
 # "encountering vertex" (in random order) before they are all chosen again
 # (i.e., no repeats are allowed.)
 #
-binary.voter <- function(plot=TRUE, num=50) {
+binary.voter <- function(plot=TRUE, num=50, prob=0.3) {
     #set.seed(111234)
     init <- get.plain.old.graph(opinion=rbinom(num,1,0.5), 
-        probability.connected=0.3)
+        probability.connected=prob)
     while(!(is.connected(init))){
         init <- get.plain.old.graph(opinion=rbinom(num,1,0.5), probability.connected=0.3)
     }
@@ -31,8 +31,6 @@ binary.voter <- function(plot=TRUE, num=50) {
         #plot.animation(graphs, "opinion", delay.between.frames=.5)
         #plot.binary.opinions(graphs, attribute1="opinion")
     }
-    #course <- detect.course.reversals(graphs, init)
-    #return(course)
     return(graphs)
 }
 
