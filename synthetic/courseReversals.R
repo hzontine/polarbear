@@ -10,25 +10,25 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 	registerDoParallel(50)
 	
 	if(attribute2 == "NULL"){
-		data <- matrix(nrow=n, ncol=1)
-		colnames(data) <- c(attribute1)
+		result <- matrix(nrow=n, ncol=1)
+		colnames(result) <- c(attribute1)
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-			graph <- binary.voter(plot=FALSE, num=50, prob=0.35)		
-			data[trial, attribute1] <- detect.course.reversals(graph)
-			return(data)
+			graph <- binary.voter(plot=FALSE, num=75, prob=0.25)		
+			course <- detect.course.reversal(graph)	
+			cat("Trial: ", trial, "  -  ", course, "\n")
+			return(course)
 		}
 	} else{
-		data <- matrix(nrow=n, ncol=2)
-		colnames(data) <- c(attribute1, attribute2)
+		result <- matrix(nrow=n, ncol=2)
+		colnames(result) <- c(attribute1, attribute2)
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-			graph <- hannahModel(num=100, prob=0.3)	 
-			rev <- detect.course.reversals(graph)
-			data[trial, attribute1] <- rev[1]
-			data[trial, attribute2] <- rev[2]
-			return(data)
+			graph <- hannahModel(num=75, prob=0.25)	 
+			rev <- detect.course.reversal(graph)
+			cat("Trial: ", trial, "  -  ", rev[1],"  ", rev[2],"\n")
+			return(rev)
 		}
 	}
-	return(data)
+	return(result)
 }
 
 

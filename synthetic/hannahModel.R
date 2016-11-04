@@ -34,7 +34,7 @@ hannahModel <- function(num=20, prob=0.25){
     #animated.graph <- plot.animation(graphs, attribute.name="expressed", second.attribute = "hidden",
     #    delay.between.frames=1)
     #plot(animated.graph)
-    plot.binary.opinions(graphs, attribute1="expressed", attribute2="hidden")
+    #plot.binary.opinions(graphs, attribute1="expressed", attribute2="hidden")
     return(graphs)
 }
 

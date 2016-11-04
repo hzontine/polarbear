@@ -70,7 +70,7 @@ sim.opinion.dynamics <- function(init.graph,
         generate.graph.per.encounter=FALSE,
         termination.function=get.unanimity.termination.function(),
         terminate.after.max.num.encounters=!is.infinite(num.encounters),
-        verbose=TRUE) {
+        verbose=FALSE) {
 
 	cat("Starting.....\n")
 
