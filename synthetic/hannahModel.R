@@ -11,7 +11,7 @@ source("opinionDynamics.R")
 
 # Hidden vs. Expressed Opinions
 
-sim <- function(num=20, prob=0.25){
+hannahModel <- function(num=20, prob=0.25){
     init <<- get.expressed.latent.graph(num.agents=num, prob.connected=prob, dir=TRUE)
     graphs <<- sim.opinion.dynamics(init, num.encounters=2000,
         encounter.func=list(
@@ -24,7 +24,7 @@ sim <- function(num=20, prob=0.25){
                 prob.knuckle.under.pressure=0.5,
                 prob.internalize.expressed.opinion=0.5)),
         edge.update.function=get.no.edge.update.function(),
-        verbose=TRUE,
+        verbose=FALSE,
         termination.function=get.unanimity.termination.function("expressed", "hidden"),
 		choose.randomly.each.encounter=TRUE)
 

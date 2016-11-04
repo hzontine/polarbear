@@ -28,8 +28,8 @@ binary.voter <- function(plot=TRUE, num=50, prob=0.3) {
         victim.update.function=get.automatically.update.victim.function(A.is.victim=FALSE), 
         choose.randomly.each.encounter=TRUE)
     if (plot) {
-        #plot.animation(graphs, "opinion", delay.between.frames=.5)
-        #plot.binary.opinions(graphs, attribute1="opinion")
+        plot.animation(graphs, "opinion", delay.between.frames=.5)
+        plot.binary.opinions(graphs, attribute1="opinion")
     }
     return(graphs)
 }

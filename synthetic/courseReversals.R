@@ -3,9 +3,37 @@ library(igraph)
 source("reproduceLitModels.R")
 
 
+# Sweep of # of course reversals for n trials of either
+# opinion OR hidden and expressed.e
+parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
+	library(doParallel)	
+	registerDoParallel(50)
+	
+	if(attribute2 == "NULL"){
+		data <- matrix(nrow=n, ncol=1)
+		colnames(data) <- c(attribute1)
+		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
+			graph <- binary.voter(plot=FALSE, num=50, prob=0.35)		
+			data[trial, attribute1] <- detect.course.reversals(graph)
+			return(data)
+		}
+	} else{
+		data <- matrix(nrow=n, ncol=2)
+		colnames(data) <- c(attribute1, attribute2)
+		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
+			graph <- hannahModel(num=100, prob=0.3)	 
+			rev <- detect.course.reversals(graph)
+			data[trial, attribute1] <- rev[1]
+			data[trial, attribute2] <- rev[2]
+			return(data)
+		}
+	}
+	return(data)
+}
 
 
-detect.course.reversals <- function(graphs){
+# For one simluation
+detect.course.reversal <- function(graphs){
     num <- vcount(graphs[[1]])
 
     # do we have two attributes: hidden and expressed?
