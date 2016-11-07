@@ -2,13 +2,13 @@
 # Network paradigm, p.194
 # Super flexible: all coefficients and scaling factors differ per time period.
 
-use.scaling <- TRUE
+use.scaling <- FALSE
 
 # number of agents
-n <- 10
+n <- 6
 
 # number of exogenous variables
-k <- 5
+k <- 3
 
 # how long to run simulation
 num.iter <- 100
@@ -28,8 +28,8 @@ if (use.scaling) {
     alpha <- runif(num.iter)
     beta <- runif(num.iter)
 } else {
-    alpha <- rep(1,num.iter)
-    beta <- rep(1,num.iter)
+    alpha <- rep(.5,num.iter)
+    beta <- rep(.5,num.iter)
 }
 
 # initial condition
@@ -43,7 +43,9 @@ for (i in 2:num.iter) {
     Y[,i] <- alpha[i] * W[,,i] %*% Y[,i-1] + beta[i] * X[,,i] %*% B[,i]
 }
 
+colors <- c("red","blue","green","orange","purple","yellow")
+
 plot(1:num.iter,Y[1,],type="n",ylim=c(min(Y),max(Y)))
 for (i in 1:n) {
-    lines(1:num.iter,Y[i,],type="l")
+    lines(1:num.iter,Y[i,],type="l",col=colors[i])
 }

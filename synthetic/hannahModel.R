@@ -13,7 +13,7 @@ source("opinionDynamics.R")
 
 hannahModel <- function(num=20, prob=0.25){
     init <<- get.expressed.latent.graph(num.agents=num, prob.connected=prob, dir=TRUE)
-    graphs <<- sim.opinion.dynamics(init, num.encounters=2000,
+    graphs <<- sim.opinion.dynamics(init, num.encounters=200000,
         encounter.func=list(
             get.mean.field.encounter.func(1),
             get.graph.neighbors.encounter.func(1)),
