@@ -121,6 +121,7 @@ detect.course.reversal <- function(graphs){
                         max <- percentage
                     }
                 }
+		expressed.result <- max
             }
         }
  
