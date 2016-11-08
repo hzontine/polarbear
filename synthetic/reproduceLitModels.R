@@ -27,10 +27,9 @@ binary.voter <- function(plot=TRUE, num=50, prob=0.3) {
     }
     sample <- sample(values)
     cat(table(sample), "\n")
-    init <- get.plain.old.graph(opinion=sample, 
-        probability.connected=prob)
+    init <- get.plain.old.graph(opinion=sample, probability.connected=prob)
     while(!(is.connected(init))){
-        init <- get.plain.old.graph(opinion=rbinom(num,1,0.5), probability.connected=0.3)
+        init <- get.plain.old.graph(opinion=sample, probability.connected=0.3)
     }
     graphs <<- sim.opinion.dynamics(init.graph=init, num.encounters = Inf,
         encounter.func=get.graph.neighbors.encounter.func(1),

@@ -131,6 +131,10 @@ detect.course.reversal <- function(graphs){
         return(c(hidden.result, expressed.result))
 
     }else{
+	op1 <- sapply(1:num, function(x) get.vertex.attribute(graphs[[1]], "opinion",
+		V(graphs[[1]])[x]))
+	cat("Starting table in CR: \n",table(op1), "\n")
+
 
         # find vector of opinion values that represent the last graph
         opinion <- sapply(1:num, function(x) get.vertex.attribute(graphs[[length(graphs)]], 
@@ -141,7 +145,7 @@ detect.course.reversal <- function(graphs){
         if(length(which(opinion == 0)) > (num / 2)){ 
             # 0 is the max and 1 is the min
             # so we need to find the maximum percentage that 1 ever had?
-            max <- 50.0
+            max <- 0
             # for each graph in graphs, what is the highest 1 ever got to?
             for(g in 1:length(graphs)){
                 op <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
@@ -149,7 +153,7 @@ detect.course.reversal <- function(graphs){
 
                 percentage <- length(which(op == 1)) / num 
                 if(percentage > max){
-                    max <- percentage
+                    	max <- percentage
                 }
             }
             return(max)
@@ -161,14 +165,14 @@ detect.course.reversal <- function(graphs){
                      # half of the total number of agents (AKA more 1s than 0s)
                      # 1 is the max and 0 is the min
 
-                    max <- 50.0
+                    max <- 0
                     # what is the maximum percentage that 0 ever reached?
                     for(g in 1:length(graphs)){
                         op <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
                             "opinion", V(graphs[[g]])[x]))
                         percentage <- length(which(op == 0)) / num
                         if(percentage > max){
-                            max <- percentage
+                            	max <- percentage
                         }
                     }
                     return(max)
