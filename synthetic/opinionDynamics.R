@@ -660,8 +660,14 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
     } else {
         g <- erdos.renyi.game(num.agents, prob.connected)
     }
-    V(g)$expressed <- rbinom(vcount(g),size=1,prob=.5)
-    V(g)$hidden <- rbinom(vcount(g),size=1,prob=.5)
+    if(num.agents %% 2 == 0){
+        values <- c(rep(0, num.agents/2), rep(1, num.agents/2))
+    }else{
+        cat("You should have an even number of nodes in the graph!\n")
+        values <- c(rep(0, num.agents/2), rep(1, (num.agents/2)+1))
+    }
+    V(g)$expressed <- sample(values)
+    V(g)$hidden <- sample(values)
     if (!is.connected(g)) {
         stop("WHOA!!")
     }
