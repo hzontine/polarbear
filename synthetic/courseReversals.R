@@ -55,7 +55,8 @@ detect.course.reversal <- function(graphs){
         if(length(which(hidden == 0)) > (num / 2)){ 
             # 0 is the max and 1 is the min
             # what is the maximum percentage 1 ever got to?
-            max <- 0
+            # if any instances of 1 greater than 50%
+            max <- 50.0
             for(g in 1:length(graphs)){
                 h <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
                     "hidden", V(graphs[[g]])[x]))
@@ -66,6 +67,7 @@ detect.course.reversal <- function(graphs){
             }
             hidden.result <- max
         } else{ # if hidden is split in half evenly
+            # should literally never happen bec we terminate after unanimity
             if(length(which(hidden == 0)) == (num / 2)){ 
                 hidden.result <- 0
             } else { # if the number of agents whose hidden opinion is 0 is less than
@@ -73,7 +75,7 @@ detect.course.reversal <- function(graphs){
                      # 1 is the max and 0 is the min
                 
                 #what is the highest percentage that 0 ever got to?
-                max <- 0
+                max <- 50.0
                 for( g in 1:length(graphs)){
                     h <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
                     "hidden", V(graphs[[g]])[x]))
@@ -92,7 +94,7 @@ detect.course.reversal <- function(graphs){
         # greater than half of the total number of agents
         if(length(which(expressed == 0)) > (num / 2)){ 
             # 0 is the max and 1 is the min
-            max <- 0
+            max <- 50.0
             # what is the highest percentage that 1 ever got to?
             for(g in 1:length(graphs)){
                 ex <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
@@ -105,13 +107,13 @@ detect.course.reversal <- function(graphs){
             expressed.result <- max
         } else{ # if opinion is split in half evenly
             if(length(which(expressed == 0)) == (num / 2)){ 
-                # definitely not a course reversal               
+                # should literally never happen
                 expressed.result <- 0
             } else { # if the number of agents whose opinion is 0 is less than
                      # half of the total number of agents (AKA more 1s than 0s)
                      # 1 is the max and 0 is the min
                 # was 0 ever the max?
-                max <- 0
+                max <- 50.0
                 # what is the highest percentage that 0 ever got to?
                 for (g in 1:length(graphs)){
                     ex <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
@@ -121,7 +123,7 @@ detect.course.reversal <- function(graphs){
                         max <- percentage
                     }
                 }
-		expressed.result <- max
+		        expressed.result <- max
             }
         }
  
@@ -139,7 +141,7 @@ detect.course.reversal <- function(graphs){
         if(length(which(opinion == 0)) > (num / 2)){ 
             # 0 is the max and 1 is the min
             # so we need to find the maximum percentage that 1 ever had?
-            max <- 0
+            max <- 50.0
             # for each graph in graphs, what is the highest 1 ever got to?
             for(g in 1:length(graphs)){
                 op <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
@@ -150,15 +152,16 @@ detect.course.reversal <- function(graphs){
                     max <- percentage
                 }
             }
-
+            return(max)
         } else { # if opinion is split in half evenly
             if(length(which(opinion == 0)) == (length(opinion) / 2)){ 
+                # should never happen
                 return (0) 
             } else { # if the number of agents whose opinion is 0 is less than
                      # half of the total number of agents (AKA more 1s than 0s)
                      # 1 is the max and 0 is the min
 
-                    max <- 0
+                    max <- 50.0
                     # what is the maximum percentage that 0 ever reached?
                     for(g in 1:length(graphs)){
                         op <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
@@ -168,9 +171,9 @@ detect.course.reversal <- function(graphs){
                             max <- percentage
                         }
                     }
+                    return(max)
             }
         }
-        return(max)
     }
 
 }

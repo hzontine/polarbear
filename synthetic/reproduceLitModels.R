@@ -25,7 +25,9 @@ binary.voter <- function(plot=TRUE, num=50, prob=0.3) {
         you want opinion to be split evenly")
         values <- c(rep(0, num/2), rep(1, (num/2)+1))
     }
-    init <- get.plain.old.graph(opinion=sample(values), 
+    sample <- sample(values)
+    cat(table(sample), "\n")
+    init <- get.plain.old.graph(opinion=sample, 
         probability.connected=prob)
     while(!(is.connected(init))){
         init <- get.plain.old.graph(opinion=rbinom(num,1,0.5), probability.connected=0.3)
