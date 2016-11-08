@@ -66,7 +66,7 @@ sim.opinion.dynamics <- function(init.graph,
         encounter.func=get.mean.field.encounter.func(1),
         victim.update.function=get.no.update.victim.function(),
         choose.randomly.each.encounter=FALSE,
-        edge.update.function=get.no.edge.update.function(),
+#        edge.update.function=get.no.edge.update.function(),
         generate.graph.per.encounter=FALSE,
         termination.function=get.unanimity.termination.function(),
         terminate.after.max.num.encounters=!is.infinite(num.encounters),
@@ -95,13 +95,19 @@ sim.opinion.dynamics <- function(init.graph,
     }
 
     graphs[[1]] <- init.graph
+    o <- sapply(1:vcount(init.graph), function(x) get.vertex.attribute(init.graph, "opinion", V(init.graph)[x]))
+    cat("IN INIT, " ,table(o), "\n")
+    p <- sapply(1:vcount(graphs[[1]]), function(x) get.vertex.attribute(graphs[[1]], "opinion", V(graphs[[1]])[x]))
+    cat("IN GRAPHS[[1]], " ,table(p), "\n")
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
+
+    graph.num <- 1
+    copy.of.current.graph <- graphs[[graph.num]]
 
     expressed.encounter.num <<- 0
     hidden.encounter.num <<- 0
     encounter.num <<- 0
     num.effectual.encounters <<- 0
-    graph.num <- 1
 
     # For each iteration of the sim...
     while ((!terminate.after.max.num.encounters ||
@@ -125,19 +131,19 @@ sim.opinion.dynamics <- function(init.graph,
                 v <- sample(1:gorder(graphs[[graph.num]]),1)
             }
 
-            list.of.edges <- edge.update.function(graphs[[graph.num]],v)
-            new <- list.of.edges[[1]]
-            old <- list.of.edges[[2]]
-            for(n in new){
+#            list.of.edges <- edge.update.function(graphs[[graph.num]],v)
+#            new <- list.of.edges[[1]]
+#            old <- list.of.edges[[2]]
+#            for(n in new){
                 # Probability ?
-                graphs[[graph.num]] <- add_edges(graphs[[graph.num]],
-                    c(V(graphs[[graph.num]])[v], V(graphs[[graph.num]])[n]))
-            }
-            for(o in old) {
+#                graphs[[graph.num]] <- add_edges(graphs[[graph.num]],
+#                    c(V(graphs[[graph.num]])[v], V(graphs[[graph.num]])[n]))
+#            }
+#            for(o in old) {
                 # Probability ?
-                graphs[[graph.num]] <- delete_edges(graphs[[graph.num]],
-                    get.edge.ids(graphs[[graph.num]],c(v,o),directed=TRUE))
-            }
+#                graphs[[graph.num]] <- delete_edges(graphs[[graph.num]],
+#                    get.edge.ids(graphs[[graph.num]],c(v,o),directed=TRUE))
+#            }
 
 
             for (i in length(encounter.func)){
@@ -159,10 +165,11 @@ sim.opinion.dynamics <- function(init.graph,
                             num.effectual.encounters + 1
                     }
                     if (length(update.info$victim.vertex) > 0) {
-                        graphs[[graph.num]] <- 
-                            set.vertex.attribute(graphs[[graph.num]],
-                                update.info$type, update.info$victim.vertex,
-                                update.info$new.value)
+                        copy.of.current.graph <- 
+                        	set.vertex.attribute(graphs[[graph.num]],
+                               	update.info$type, update.info$victim.vertex,
+                               	update.info$new.value)
+	
                     }
                 }
             }
@@ -170,7 +177,7 @@ sim.opinion.dynamics <- function(init.graph,
 
             if (generate.graph.per.encounter) {
                 # Create a new igraph object to represent this point in time. 
-                graphs[[graph.num+1]] <- graphs[[graph.num]]
+                graphs[[graph.num+1]] <- copy.of.current.graph
                 graph.num <- graph.num + 1
 
                 # Annotate the graph object with a graph attribute indicating
@@ -186,7 +193,7 @@ sim.opinion.dynamics <- function(init.graph,
         if (!termination.function(graphs[[graph.num]])  &&
                 !generate.graph.per.encounter) {
             # Create a new igraph object to represent this point in time. 
-            graphs[[graph.num+1]] <- graphs[[graph.num]]
+            graphs[[graph.num+1]] <- copy.of.current.graph
             graph.num <- graph.num + 1
 
             # Annotate the graph object with a graph attribute indicating the
