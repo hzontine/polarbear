@@ -7,13 +7,13 @@ source("reproduceLitModels.R")
 # opinion OR hidden and expressed.e
 parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 	library(doParallel)	
-	registerDoParallel(50)
+	registerDoParallel(60)
 	
 	if(attribute2 == "NULL"){
 		result <- matrix(nrow=n, ncol=1)
 		colnames(result) <- c("opinion")
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-			graph <- binary.voter(plot=FALSE, num=100, prob=0.3)		
+			graph <- binary.voter(plot=FALSE, num=50, prob=0.3)		
 			course <- detect.course.reversal(graph)	
 			cat("Trial: ", trial, "  -  ", course, "\n")
 			return(course)
@@ -22,7 +22,7 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 		result <- matrix(nrow=n, ncol=2)
 		colnames(result) <- c("hidden", "expressed")
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-			graph <- hannahModel(num=100, prob=0.3)
+			graph <- hannahModel(num=50, prob=0.3)
 			rev <- detect.course.reversal(graph)
 			cat("Trial: ", trial, "  -  ", rev[1],"  ", rev[2],"\n")
 			return(rev)
