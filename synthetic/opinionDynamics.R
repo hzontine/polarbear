@@ -95,10 +95,6 @@ sim.opinion.dynamics <- function(init.graph,
     }
 
     graphs[[1]] <- init.graph
-    o <- sapply(1:vcount(init.graph), function(x) get.vertex.attribute(init.graph, "opinion", V(init.graph)[x]))
-    cat("IN INIT, " ,table(o), "\n")
-    p <- sapply(1:vcount(graphs[[1]]), function(x) get.vertex.attribute(graphs[[1]], "opinion", V(graphs[[1]])[x]))
-    cat("IN GRAPHS[[1]], " ,table(p), "\n")
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
     graph.num <- 1

@@ -13,7 +13,7 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 		result <- matrix(nrow=n, ncol=1)
 		colnames(result) <- c("opinion")
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-			graph <- binary.voter(plot=FALSE, num=20, prob=0.3)		
+			graph <- binary.voter(plot=FALSE, num=100, prob=0.3)		
 			course <- detect.course.reversal(graph)	
 			cat("Trial: ", trial, "  -  ", course, "\n")
 			return(course)

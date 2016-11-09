@@ -25,11 +25,9 @@ binary.voter <- function(plot=TRUE, num=50, prob=0.3) {
         you want opinion to be split evenly")
         values <- c(rep(0, num/2), rep(1, (num/2)+1))
     }
-    sample <- sample(values)
-    cat(table(sample), "\n")
-    init <- get.plain.old.graph(opinion=sample, probability.connected=prob)
+    init <- get.plain.old.graph(opinion=sample(values), probability.connected=prob)
     while(!(is.connected(init))){
-        init <- get.plain.old.graph(opinion=sample, probability.connected=0.3)
+        init <- get.plain.old.graph(opinion=sample(values), probability.connected=0.3)
     }
     graphs <<- sim.opinion.dynamics(init.graph=init, num.encounters = Inf,
         encounter.func=get.graph.neighbors.encounter.func(1),
