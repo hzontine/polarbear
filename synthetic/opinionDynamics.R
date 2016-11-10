@@ -362,17 +362,8 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
             } else {
                 # We already agree with them externally. Possibly update our
                 # hidden opinion to match.
-                if (runif(1) < prob.internalize.expressed.opinion) {
-                    if (V(graph)[victim.vertex]$expressed !=
-                        V(graph)[victim.vertex]$hidden) {
-                    return(list(new.value=V(graph)[victim.vertex]$expressed,
-                       victim.vertex=victim.vertex, type="hidden",
-                       message=paste0("toface: ", vertex," convinces ", 
-                            victim.vertex, 
-                            ", who was nominally already ", 
-                            color.for(V(graph)[vertex]$expressed), 
-                            ", to be true believer")))
-                    } else {
+                if (V(graph)[victim.vertex]$expressed ==
+                    V(graph)[victim.vertex]$hidden) {
                         return(list(new.value=0,victim.vertex=NULL, 
                             type="hannah",
                             message=paste0("toface: (", 
@@ -380,7 +371,15 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                                 victim.vertex, " already true ",
                                 color.for(V(graph)[vertex]$expressed), 
                                 " believer)")))
-                    }
+                }
+                if (runif(1) < prob.internalize.expressed.opinion) {
+                    return(list(new.value=V(graph)[victim.vertex]$expressed,
+                       victim.vertex=victim.vertex, type="hidden",
+                       message=paste0("toface: ", vertex," convinces ", 
+                            victim.vertex, 
+                            ", who was nominally already ", 
+                            color.for(V(graph)[vertex]$expressed), 
+                            ", to be true believer")))
                 } else {
                     return(list(new.value=0,victim.vertex=NULL, type="hannah",
                        message=paste0("toface: ", vertex," can't convince ", 
