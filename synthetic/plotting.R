@@ -13,6 +13,7 @@ plot.polar.graph <- function(graph, legend, legend.fill, vertex.coords,
 
     plot(graph,
         layout=vertex.coords,
+        edge.arrow.size=1.5,
         vertex.shape="fcircle",
         vertex.frame.color=vertex.frame.color,
         vertex.frame.width=8,
