@@ -4,6 +4,7 @@
 
 library(igraph)
 library(RColorBrewer)
+library(stringr)
 
 source("fatCircle.R")
 
@@ -170,6 +171,9 @@ plot.animation <- function(graphs, attribute.name="ideology",
         }
 
 
+        message.for.next.frame <- 
+            get.graph.attribute(graphs[[i+1]],"message")
+
         plot.polar.graph(graphs[[i]],
             legend=legend,
             legend.fill=fill,
@@ -177,8 +181,10 @@ plot.animation <- function(graphs, attribute.name="ideology",
             vertex.frame.color=vertex.frame.color,
             main.title=paste("Iteration",i,"of",length(graphs)),
             subtitle=ifelse(nchar(subtitle)==0 && i<length(graphs),
-                paste0("this is about to happen:\n",
-                    get.graph.attribute(graphs[[i+1]],"message")),
+                ifelse(is.null(message.for.next.frame),
+                    "(no changes about to happen)", 
+                    paste0("this is about to happen:\n",
+                        message.for.next.frame)),
                 subtitle))
 
         if (interactive) {
