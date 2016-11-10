@@ -18,8 +18,7 @@ hannahModel <- function(num=20, prob=0.25, num.enc=2000){
             get.mean.field.encounter.func(1),
             get.graph.neighbors.encounter.func(1)),
         victim.update.function=list(
-            get.automatically.update.victim.function(A.is.victim=TRUE,prob.update=0.5,
-                opinion.type="hidden"),
+            get.automatically.update.victim.function(A.is.victim=TRUE,prob.update=0.5, opinion.type="hidden"),
             get.peer.pressure.update.function(A.is.victim=TRUE,
                 prob.knuckle.under.pressure=0.5,
                 prob.internalize.expressed.opinion=0.5)),
@@ -36,6 +35,11 @@ hannahModel <- function(num=20, prob=0.25, num.enc=2000){
     #    delay.between.frames=1)
     #plot(animated.graph)
     #plot.binary.opinions(graphs, attribute1="expressed", attribute2="hidden")
+
+    print.transcript(graphs)
+    plot.animation(graphs,attribute.name="hidden",
+        second.attribute="expressed", delay.between.frames=NA, subtitle="")
     return(invisible(graphs))
 }
 
+hannahModel()
