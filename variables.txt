@@ -1,0 +1,31 @@
+
+    (Do the *'s first)
+
+IV
+*How efficacious is each type of encounter? (For online, it's prob of
+    Conversion. For in-person, it's prob of Knuckle under, and prob of
+    Internalizing)
+
+    Simplification for now: make K and I be the same, and C + K&I = 1.0.
+
+Each iteration, how many graph neighbors do you encounter vs. how many
+    mean-field (online) neighbors do you encounter?
+
+Order and size of the graph
+
+
+DV
+*Percent genuineness over time (expressed=hidden)
+    (break it down by color)
+    Confusion matrix Snapshot (at several points? at iteration 1000, 2000, 
+        and 3000, say?)
+    Count (1) how many blue/blues, (2) how many blue/reds, (3) how many
+        red/blues, and (4) how many red/reds.
+
+*Max percentage of people who ever had the eventually losing opinion
+
+*Conversion rate (# of encounters to unanimity)
+
+Measuring polarization
+    - Assortativity by opinion
+    - How frequent are opinion changes
