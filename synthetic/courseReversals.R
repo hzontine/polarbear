@@ -14,7 +14,7 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 		colnames(result) <- c("opinion")
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
 			num.nodes <- 50
-			graph <- binary.voter(plot=FALSE, num=num.nodes, prob=0.35, num.enc=num.nodes*1500)		
+			graph <- binary.voter(plot=FALSE, num=num.nodes, prob=0.35, num.enc=num.nodes*2000)		
 			course <- detect.course.reversal(graph)	
 			cat("Trial: ", trial, "  -  ", course, "\n")
 			cat("#",trial, "took this long: ", length(graph), "\n")
@@ -25,7 +25,7 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 		colnames(result) <- c("hidden", "expressed")
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
 			num.nodes <- 50
-			graph <- hannahModel(num=num.nodes, prob=0.35, num.enc=num.nodes*1500)
+			graph <- hannahModel(num=num.nodes, prob=0.35, num.enc=num.nodes*2000)
 			rev <- detect.course.reversal(graph)
 			cat("Trial: ", trial, "  -  ", rev[1],"  ", rev[2],"\n")
 			cat("#",trial, "took this long: ", length(graph), "\n")
