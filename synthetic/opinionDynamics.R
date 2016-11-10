@@ -142,7 +142,7 @@ sim.opinion.dynamics <- function(init.graph,
 #            }
 
 
-            for (i in length(encounter.func)){
+            for (i in 1:length(encounter.func)){
            
                 list.of.vertex.IDs <- 
                     encounter.func[[i]](graphs[[graph.num]],v)
