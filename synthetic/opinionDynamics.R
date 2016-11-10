@@ -156,15 +156,14 @@ sim.opinion.dynamics <- function(init.graph,
                             update.info$type,
                             update.info$victim.vertex) !=
                                 update.info$new.value) {
-                        num.effectual.encounters[i] <<- 
-                            num.effectual.encounters[i] + 1
-                    }
-                    if (length(update.info$victim.vertex) > 0) {
+
                         graphs[[graph.num]] <- 
                         	set.vertex.attribute(graphs[[graph.num]],
                                	update.info$type, update.info$victim.vertex,
                                	update.info$new.value)
 	
+                        num.effectual.encounters[i] <<- 
+                            num.effectual.encounters[i] + 1
                     }
                     graphs[[graph.num]] <- append.message(graphs[[graph.num]],
                         update.info$message)
