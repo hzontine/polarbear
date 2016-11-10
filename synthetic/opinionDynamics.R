@@ -97,7 +97,8 @@ sim.opinion.dynamics <- function(init.graph,
     graphs[[1]] <- init.graph
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
-    graph.num <- 1
+    graphs[[2]] <- graphs[[1]]
+    graph.num <- 2
 
     expressed.encounter.num <<- 0
     hidden.encounter.num <<- 0
