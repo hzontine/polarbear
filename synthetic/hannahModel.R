@@ -24,7 +24,8 @@ hannahModel <- function(num=20, prob=0.25, num.enc=2000){
                 prob.knuckle.under.pressure=0.5,
                 prob.internalize.expressed.opinion=0.5)),
 #        edge.update.function=get.no.edge.update.function(),
-        verbose=FALSE,
+        verbose=TRUE,
+        generate.graph.per.encounter=TRUE,
         termination.function=get.unanimity.termination.function("expressed", "hidden"),
 		choose.randomly.each.encounter=TRUE)
 
@@ -35,6 +36,6 @@ hannahModel <- function(num=20, prob=0.25, num.enc=2000){
     #    delay.between.frames=1)
     #plot(animated.graph)
     #plot.binary.opinions(graphs, attribute1="expressed", attribute2="hidden")
-    return(graphs)
+    return(invisible(graphs))
 }
 

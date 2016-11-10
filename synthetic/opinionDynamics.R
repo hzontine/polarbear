@@ -98,7 +98,6 @@ sim.opinion.dynamics <- function(init.graph,
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
 
     graph.num <- 1
-    copy.of.current.graph <- graphs[[graph.num]]
 
     expressed.encounter.num <<- 0
     hidden.encounter.num <<- 0
@@ -142,7 +141,7 @@ sim.opinion.dynamics <- function(init.graph,
 #            }
 
 
-            for (i in length(encounter.func)){
+            for (i in 1:length(encounter.func)){
            
                 list.of.vertex.IDs <- 
                     encounter.func[[i]](graphs[[graph.num]],v)
@@ -161,19 +160,22 @@ sim.opinion.dynamics <- function(init.graph,
                             num.effectual.encounters[i] + 1
                     }
                     if (length(update.info$victim.vertex) > 0) {
-                        copy.of.current.graph <- 
+                        graphs[[graph.num]] <- 
                         	set.vertex.attribute(graphs[[graph.num]],
                                	update.info$type, update.info$victim.vertex,
                                	update.info$new.value)
 	
                     }
+                    graphs[[graph.num]] <- append.message(graphs[[graph.num]],
+                        update.info$message)
                 }
             }
 
 
             if (generate.graph.per.encounter) {
                 # Create a new igraph object to represent this point in time. 
-                graphs[[graph.num+1]] <- copy.of.current.graph
+                graphs[[graph.num+1]] <- 
+                    set.graph.attribute(graphs[[graph.num]],"message",NULL)
                 graph.num <- graph.num + 1
 
                 # Annotate the graph object with a graph attribute indicating
@@ -193,7 +195,8 @@ sim.opinion.dynamics <- function(init.graph,
         if (!termination.function(graphs[[graph.num]])  &&
                 !generate.graph.per.encounter) {
             # Create a new igraph object to represent this point in time. 
-            graphs[[graph.num+1]] <- copy.of.current.graph
+            graphs[[graph.num+1]] <- 
+                set.graph.attribute(graphs[[graph.num]],"message",NULL)
             graph.num <- graph.num + 1
 
             # Annotate the graph object with a graph attribute indicating the
@@ -245,7 +248,20 @@ get.unanimity.termination.function <- function(attribute1="opinion", attribute2=
 }
 
 
+color.for <- function(n) {
+    ifelse(n==0,"blue","red")
+}
 
+append.message <- function(graph,message) {
+    curr.msg <- get.graph.attribute(graph, "message")
+    if (is.null(curr.msg)) {
+        return(set.graph.attribute(graph, "message", 
+                message))
+    } else {
+        return(set.graph.attribute(graph, "message", 
+            paste(curr.msg,message,sep="\n")))
+    }
+}
 
 # Terminology:
 #
@@ -295,12 +311,20 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.upd
                     hidden.encounter.num <<- hidden.encounter.num + 1
                     return(list(new.value=get.vertex.attribute(graph,
                             opinion.type,vertex),
-                        victim.vertex=victim.vertex, type=opinion.type))
+                        victim.vertex=victim.vertex, type=opinion.type,
+                        message=paste0("online: ", vertex," persuaded ", 
+                            victim.vertex, " to go ", color.for(get.vertex.attribute(graph,
+                            opinion.type,vertex)))))
                 } else{
                     return(list(new.value=0,victim.vertex=NULL,
-                        type=opinion.type))
+                        type=opinion.type,
+                        message=paste0("online: ", vertex," unable to persuade ",
+                            victim.vertex, " to go ", 
+                            color.for(get.vertex.attribute(graph,
+                                opinion.type,vertex)))))
                 }
             } else {
+                stop("stubborn")
                 # Nothing will get updated. We're too dang stubborn.
                 return(list(new.value=0,victim.vertex=NULL,type=opinion.type))
             }
@@ -338,9 +362,16 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 if (runif(1) < prob.knuckle.under.pressure) {
                     expressed.encounter.num <<- expressed.encounter.num + 1
                     return(list(new.value=V(graph)[vertex]$expressed,
-                       victim.vertex=victim.vertex, type="expressed"))
+                       victim.vertex=victim.vertex, type="expressed",
+                       message=paste0("face:   ", vertex," intimidated ", 
+                            victim.vertex, " to pretend he's ", 
+                            color.for(V(graph)[vertex]$expressed))))
                 } else {
-                    return(list(new.value=0,victim.vertex=NULL, type="hannah"))
+                    return(list(new.value=0,victim.vertex=NULL, type="hannah",
+                       message=paste0("face:   ", vertex,
+                            " stands firm under peer pressure from ",
+                            victim.vertex, " to go ", 
+                            color.for(V(graph)[vertex]$expressed))))
                 }
 
             } else {
@@ -348,9 +379,16 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 # hidden opinion to match.
                 if (runif(1) < prob.internalize.expressed.opinion) {
                     return(list(new.value=V(graph)[victim.vertex]$expressed,
-                       victim.vertex=victim.vertex, type="hidden"))
+                       victim.vertex=victim.vertex, type="hidden",
+                       message=paste0("face:   ", vertex," convinced ", victim.vertex, 
+                            ", who was nominally already ", 
+                            color.for(V(graph)[vertex]$expressed), 
+                            ", to be a true believer")))
                 } else {
-                    return(list(new.value=0,victim.vertex=NULL, type="hannah"))
+                    return(list(new.value=0,victim.vertex=NULL, type="hannah",
+                       message=paste0("face:   ", vertex," couldn't convince ", victim.vertex, 
+                            " in person to truly be ", V(graph)[vertex]$expressed, 
+                            ". Still faking it")))
                 }
             }
         }
@@ -732,4 +770,14 @@ main <- function() {
     #   victim.update.function=get.bounded.confidence.update.victim.function(0.5, 0.2))
 
     #(graphs, "opinion", delay.between.frames=.25)
+}
+
+
+print.transcript <- function(graphs, file.name="/tmp/transcript.txt") {
+    transcript <- ""
+    for (graph in graphs) {
+        transcript <- paste(transcript,get.graph.attribute(graph,"message"),sep="\n")
+        transcript <- paste(transcript,"\n------------------------\n")
+    }
+    cat(transcript,file=file.name)
 }
