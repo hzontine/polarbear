@@ -291,13 +291,28 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.upd
             }
             if(!"stubbornness" %in% list.vertex.attributes(graph)
                 || V(graph)[victim.vertex]$stubbornness == 0){
+
+                if (get.vertex.attribute(graph,opinion.type,vertex) ==
+                  get.vertex.attribute(graph,opinion.type,victim.vertex)){
+
+                    return(list(new.value=0,
+                        victim.vertex=NULL, type="hannah",
+                        message=paste0("online: ", vertex," talks, but ", 
+                            victim.vertex, " is already ", 
+                            color.for(get.vertex.attribute(graph,
+                            opinion.type,vertex)))))
+                }
+
                 if(runif(1) < prob.update) {
+
                     hidden.encounter.num <<- hidden.encounter.num + 1
+
                     return(list(new.value=get.vertex.attribute(graph,
                             opinion.type,vertex),
                         victim.vertex=victim.vertex, type=opinion.type,
                         message=paste0("online: ", vertex," persuades ", 
-                            victim.vertex, " to go ", color.for(get.vertex.attribute(graph,
+                            victim.vertex, " to go ", 
+                            color.for(get.vertex.attribute(graph,
                             opinion.type,vertex)))))
                 } else{
                     return(list(new.value=0,victim.vertex=NULL,
