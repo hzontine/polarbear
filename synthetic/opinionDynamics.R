@@ -157,8 +157,8 @@ sim.opinion.dynamics <- function(init.graph,
                             update.info$type,
                             update.info$victim.vertex) !=
                                 update.info$new.value) {
-                        num.effectual.encounters <<- 
-                            num.effectual.encounters + 1
+                        num.effectual.encounters[i] <<- 
+                            num.effectual.encounters[i] + 1
                     }
                     if (length(update.info$victim.vertex) > 0) {
                         copy.of.current.graph <- 
@@ -182,7 +182,11 @@ sim.opinion.dynamics <- function(init.graph,
                 graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
                     "num.encounters", encounter.num)
                 graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                    "num.effectual.encounters", num.effectual.encounters)
+                    "num.effectual.hidden.encounters", 
+                                num.effectual.encounters[1])
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                    "num.effectual.expressed.encounters", 
+                                num.effectual.encounters[2])
             }
         }
 

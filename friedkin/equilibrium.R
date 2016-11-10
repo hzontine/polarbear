@@ -2,10 +2,10 @@
 # Equilibrium mode, p.193
 
 # number of agents
-n <- 10
+n <- 6
 
 # number of exogenous variables
-k <- 5
+k <- 3
 
 # how long to run simulation
 num.iter <- 100
