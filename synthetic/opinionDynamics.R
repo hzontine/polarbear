@@ -218,13 +218,13 @@ get.never.terminate.function <- function() {
 }
 
 # Terminate if the graph has total uniformity of opinions.
-get.unanimity.termination.function <- function(attribute1="opinion", attribute2="NULL") {
+get.unanimity.termination.function <- function(attribute1="opinion", attribute2=NULL) {
     return (
         function(graph) {
-            if(attribute2 == "NULL"){
+            if(is.null(attribute2)) {
                 return (length(unique(get.vertex.attribute(graph,attribute1))) == 1)
             }else{
-                return ((length(unique(get.vertex.attribute(graph,attribute1))) == 1) ||
+                return ((length(unique(get.vertex.attribute(graph,attribute1))) == 1) &&
                     (length(unique(get.vertex.attribute(graph,attribute2))) == 1))
             }
         }
