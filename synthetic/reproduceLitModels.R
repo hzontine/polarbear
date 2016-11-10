@@ -29,7 +29,7 @@ binary.voter <- function(plot=TRUE, num=50, prob=0.3) {
     while(!(is.connected(init))){
         init <- get.plain.old.graph(opinion=sample(values), probability.connected=0.3)
     }
-    graphs <<- sim.opinion.dynamics(init.graph=init, num.encounters = Inf,
+    graphs <<- sim.opinion.dynamics(init.graph=init, num.encounters = vcount(init)*500,
         encounter.func=get.graph.neighbors.encounter.func(1),
         victim.update.function=get.automatically.update.victim.function(A.is.victim=FALSE), 
         choose.randomly.each.encounter=TRUE)
