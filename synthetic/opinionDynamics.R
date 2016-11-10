@@ -554,7 +554,7 @@ get.graph.neighbors.encounter.func <- function(num.vertices=0, all=FALSE) {
 		if(num.vertices==0) {
 			all=TRUE
 		}
-		outgoing.neighbors <- neighbors(graph, vertex, mode="out")
+		outgoing.neighbors <- neighbors(graph, vertex, mode="in")
             	if(length(outgoing.neighbors) <= num.vertices || all){
                 	return (outgoing.neighbors)
             } else {
