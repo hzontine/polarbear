@@ -1,7 +1,7 @@
 
 library(igraph)
 source("reproduceLitModels.R")
-
+source("hannahModel.R")
 
 # Sweep of # of course reversals for n trials of either
 # opinion OR hidden and expressed.e
@@ -13,18 +13,22 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 		result <- matrix(nrow=n, ncol=1)
 		colnames(result) <- c("opinion")
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-			graph <- binary.voter(plot=FALSE, num=50, prob=0.3)		
+			num.nodes <- 50
+			graph <- binary.voter(plot=FALSE, num=num.nodes, prob=0.35, num.enc=num.nodes*1500)		
 			course <- detect.course.reversal(graph)	
 			cat("Trial: ", trial, "  -  ", course, "\n")
+			cat("#",trial, "took this long: ", length(graph), "\n")
 			return(course)
 		}
 	} else{
 		result <- matrix(nrow=n, ncol=2)
 		colnames(result) <- c("hidden", "expressed")
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-			graph <- hannahModel(num=50, prob=0.3)
+			num.nodes <- 50
+			graph <- hannahModel(num=num.nodes, prob=0.35, num.enc=num.nodes*1500)
 			rev <- detect.course.reversal(graph)
 			cat("Trial: ", trial, "  -  ", rev[1],"  ", rev[2],"\n")
+			cat("#",trial, "took this long: ", length(graph), "\n")
 			return(rev)
 		}
 	}
@@ -48,11 +52,11 @@ detect.course.reversal <- function(graphs){
         expressed <- sapply(1:num, function(y) get.vertex.attribute(graphs[[length(graphs)]],
             "expressed", V(graphs[[length(graphs)]])[y]))
 
-
 # HIDDEN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	# If it never converges
-	if(length(unique(hidden)) == 0){
+	if(length(unique(hidden)) > 1){
 		hidden.result <- Inf
+		cat("Unique: ", unique(hidden), "\n")
 	}else{
 	        # if the number of agents whose HIDDEN opinion == 0 is 
         	# greater than half of the total number of agents
@@ -60,7 +64,7 @@ detect.course.reversal <- function(graphs){
 		    # 0 is the max and 1 is the min
 		    # what is the maximum percentage 1 ever got to?
 		    # if any instances of 1 greater than 50%
-		    max <- 50.0
+		    max <- 0
 		    for(g in 1:length(graphs)){
 			h <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
 			    "hidden", V(graphs[[g]])[x]))
@@ -79,7 +83,7 @@ detect.course.reversal <- function(graphs){
 			     # 1 is the max and 0 is the min
 			
 			#what is the highest percentage that 0 ever got to?
-			max <- 50.0
+			max <- 0
 			for( g in 1:length(graphs)){
 			    h <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
 			    "hidden", V(graphs[[g]])[x]))
@@ -96,14 +100,15 @@ detect.course.reversal <- function(graphs){
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # EXPRESSED ~~~~~~~~~~~~~~~~~~~~~~~~~
-	if(length(unique(expressed)) == 0){
+	if(length(unique(expressed)) > 1){
 		expressed.result <- Inf
+		cat("Unique: ", unique(expressed), "\n")
 	} else{
 		# if the number of agents whose expressed == 0 is 
 		# greater than half of the total number of agents
 		if(length(which(expressed == 0)) > (num / 2)){ 
 		    # 0 is the max and 1 is the min
-		    max <- 50.0
+		    max <- 0
 		    # what is the highest percentage that 1 ever got to?
 		    for(g in 1:length(graphs)){
 			ex <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
@@ -122,7 +127,7 @@ detect.course.reversal <- function(graphs){
 			     # half of the total number of agents (AKA more 1s than 0s)
 			     # 1 is the max and 0 is the min
 			# was 0 ever the max?
-			max <- 50.0
+			max <- 0
 			# what is the highest percentage that 0 ever got to?
 			for (g in 1:length(graphs)){
 			    ex <- sapply(1:num, function(x) get.vertex.attribute(graphs[[g]], 
@@ -145,7 +150,9 @@ detect.course.reversal <- function(graphs){
         # find vector of opinion values that represent the last graph
         opinion <- sapply(1:num, function(x) get.vertex.attribute(graphs[[length(graphs)]], 
             "opinion", V(graphs[[length(graphs)]])[x]))
-	if(length(unique(opinion)) == 0){
+
+	if(length(unique(opinion)) > 1){
+		cat("Unique: ", unique(opinion), "\n")
 		return(Inf)
 	}else{        
 		# if the number of agents whose opinion is 0 is greater than
