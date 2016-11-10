@@ -126,21 +126,6 @@ sim.opinion.dynamics <- function(init.graph,
                 v <- sample(1:gorder(graphs[[graph.num]]),1)
             }
 
-#            list.of.edges <- edge.update.function(graphs[[graph.num]],v)
-#            new <- list.of.edges[[1]]
-#            old <- list.of.edges[[2]]
-#            for(n in new){
-                # Probability ?
-#                graphs[[graph.num]] <- add_edges(graphs[[graph.num]],
-#                    c(V(graphs[[graph.num]])[v], V(graphs[[graph.num]])[n]))
-#            }
-#            for(o in old) {
-                # Probability ?
-#                graphs[[graph.num]] <- delete_edges(graphs[[graph.num]],
-#                    get.edge.ids(graphs[[graph.num]],c(v,o),directed=TRUE))
-#            }
-
-
             for (i in 1:length(encounter.func)){
            
                 list.of.vertex.IDs <- 
@@ -311,13 +296,14 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.upd
                     return(list(new.value=get.vertex.attribute(graph,
                             opinion.type,vertex),
                         victim.vertex=victim.vertex, type=opinion.type,
-                        message=paste0("online: ", vertex," persuaded ", 
+                        message=paste0("online: ", vertex," persuades ", 
                             victim.vertex, " to go ", color.for(get.vertex.attribute(graph,
                             opinion.type,vertex)))))
                 } else{
                     return(list(new.value=0,victim.vertex=NULL,
                         type=opinion.type,
-                        message=paste0("online: ", vertex," unable to persuade ",
+                        message=paste0("online: ", vertex,
+                            " unable to persuade ",
                             victim.vertex, " to go ", 
                             color.for(get.vertex.attribute(graph,
                                 opinion.type,vertex)))))
@@ -362,13 +348,13 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                     expressed.encounter.num <<- expressed.encounter.num + 1
                     return(list(new.value=V(graph)[vertex]$expressed,
                        victim.vertex=victim.vertex, type="expressed",
-                       message=paste0("face:   ", vertex," intimidated ", 
+                       message=paste0("toface: ", vertex," intimidates ", 
                             victim.vertex, " to pretend he's ", 
                             color.for(V(graph)[vertex]$expressed))))
                 } else {
                     return(list(new.value=0,victim.vertex=NULL, type="hannah",
-                       message=paste0("face:   ", vertex,
-                            " stands firm under peer pressure from ",
+                       message=paste0("toface: ", vertex,
+                            " UNsuccessfully tries to pressure ",
                             victim.vertex, " to go ", 
                             color.for(V(graph)[vertex]$expressed))))
                 }
@@ -377,17 +363,30 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 # We already agree with them externally. Possibly update our
                 # hidden opinion to match.
                 if (runif(1) < prob.internalize.expressed.opinion) {
+                    if (V(graph)[victim.vertex]$expressed !=
+                        V(graph)[victim.vertex]$hidden) {
                     return(list(new.value=V(graph)[victim.vertex]$expressed,
                        victim.vertex=victim.vertex, type="hidden",
-                       message=paste0("face:   ", vertex," convinced ", victim.vertex, 
+                       message=paste0("toface: ", vertex," convinces ", 
+                            victim.vertex, 
                             ", who was nominally already ", 
                             color.for(V(graph)[vertex]$expressed), 
-                            ", to be a true believer")))
+                            ", to be true believer")))
+                    } else {
+                        return(list(new.value=0,victim.vertex=NULL, 
+                            type="hannah",
+                            message=paste0("toface: (", 
+                                vertex, " talks, but ", 
+                                victim.vertex, " already true ",
+                                color.for(V(graph)[vertex]$expressed), 
+                                " believer)")))
+                    }
                 } else {
                     return(list(new.value=0,victim.vertex=NULL, type="hannah",
-                       message=paste0("face:   ", vertex," couldn't convince ", victim.vertex, 
-                            " in person to truly be ", V(graph)[vertex]$expressed, 
-                            ". Still faking it")))
+                       message=paste0("toface: ", vertex," can't convince ", 
+                            victim.vertex, " to truly be ", 
+                            color.for(V(graph)[vertex]$expressed), 
+                            " (still faking it)")))
                 }
             }
         }
