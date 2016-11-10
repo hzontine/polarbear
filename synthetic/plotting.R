@@ -39,6 +39,7 @@ plot.polar.graph <- function(graph, legend, legend.fill, vertex.coords,
 # animation file in the current directory with the name specified.
 #
 # delay.between.frames -- the delay, in seconds, between graph displays.
+# If NA, will wait for an enter keystroke between frames.
 #
 # animation.filename -- only relevant if interactive is FALSE.
 #
@@ -102,17 +103,21 @@ plot.animation <- function(graphs, attribute.name="ideology",
             vertex.coords <- layout_with_kk(graphs[[i]],coords=NULL)
         }
 
-        # Set the fill color.
+        # Set the fill color (and label color, for readability).
         if(two.attr && attr.one.is.discrete ||
             !two.attr && the.only.attr.is.discrete) {
 
-            num.distinct.attr.one.vals <- max(get.vertex.attribute(graphs[[1]],attribute.name)) + 1
+            num.distinct.attr.one.vals <- 
+                max(get.vertex.attribute(graphs[[1]],attribute.name)) + 1
 
             if (num.distinct.attr.one.vals == 2) {
 
                 V(graphs[[i]])$color <- ifelse(
                     get.vertex.attribute(graphs[[i]],attribute.name) == 0,
                     "blue","red")
+                V(graphs[[i]])$label.color <- ifelse(
+                    get.vertex.attribute(graphs[[i]],attribute.name) == 0,
+                    "white","black")
                 fill <- c("blue","red")
                 legend <- c("Liberal","Conservative")
 
@@ -171,15 +176,26 @@ plot.animation <- function(graphs, attribute.name="ideology",
             vertex.coords=vertex.coords,
             vertex.frame.color=vertex.frame.color,
             main.title=paste("Iteration",i,"of",length(graphs)),
-            subtitle=subtitle)
+            subtitle=ifelse(nchar(subtitle)==0 && i<length(graphs),
+                paste0("this is about to happen:\n",
+                    get.graph.attribute(graphs[[i+1]],"message")),
+                subtitle))
 
         if (interactive) {
-            Sys.sleep(delay.between.frames)
+            if (is.na(delay.between.frames)) {
+                cat(get.graph.attribute(graphs[[i]],"message"),"\n")
+                if (readline("Press ENTER (q to quit) ") == "q") return()
+            } else {
+                Sys.sleep(delay.between.frames)
+            }
         } else {
             dev.off()
         }
     }
     if (!interactive) {
+        if (is.na(delay.between.frames)) {
+            stop("Can't have NA delay for non-interactive mode.")
+        }
         cat("Assembling animation...\n")
         system(paste0("convert -delay ",delay.between.frames*100," ",base.filename,"plot*.png ", animation.filename))
         system(paste0("rm ",base.filename,"plot*.png"))
