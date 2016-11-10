@@ -172,8 +172,12 @@ plot.animation <- function(graphs, attribute.name="ideology",
         }
 
 
-        message.for.next.frame <- 
-            get.graph.attribute(graphs[[i+1]],"message")
+        if (i+1<=length(graphs)) {
+            message.for.next.frame <- 
+                get.graph.attribute(graphs[[i+1]],"message")
+        } else {
+            message.for.next.frame <- "last one!"
+        }
 
         plot.polar.graph(graphs[[i]],
             legend=legend,
