@@ -85,11 +85,8 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 			return(course)
 		}
 	} else{
-		result <- matrix(nrow=n, ncol=2)
-		all.the.matricies <<- list()
-		colnames(result) <- c("hidden", "expressed")
-		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-			num.nodes <- 25
+		result <- foreach(trial = 1:n, .combine=c) %dopar% {
+			num.nodes <- 20
 			graph <- hannahModel(num=num.nodes, prob=0.3, num.enc=num.nodes*1000)
 			course.reversal <- detect.course.reversal(graph)
 			cat("Trial: ", trial, "  -  ", course.reversal[1],"  ",
@@ -99,9 +96,7 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 				time.stamps=c(length(graph)#/3),(2*(length(graph)/3)),
 				#length(graph)), graph)
 				), graph=graph)
-			all.the.matricies[[trial]] <<- confusion.matricies
-			save(all.the.matricies, file="variables.RData")
-			return(course.reversal)
+			return(list(list(course.reversal, confusion.matricies)))
 		}
 		#save(result, all.the.matricies, file="variables.RData")
 	}
