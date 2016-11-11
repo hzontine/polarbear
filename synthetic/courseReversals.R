@@ -3,6 +3,69 @@ library(igraph)
 source("reproduceLitModels.R")
 source("hannahModel.R")
 
+
+
+# Calculate percent genuineness over time where expressed = hidden
+# Returns a list of confusion matricies representing the state of
+# the graph at one instance of time. The rows represent an agent's
+# expressed opinion. The columns represent an agent's hidden opinion.
+#	  	(hidden)
+#	  blue=0	red=1
+# blue=0 			(expressed)
+# red=1
+
+calculate.genuineness <- function(time.stamps, graph){
+	list.of.confusion.matricies <- list()(
+	for(i in 1:length(time.stamps)){
+		a <- matrix(nrow=2, ncol=2)
+		rownames(a) <- c("E- blue", "E- red")
+		colnames(a) <- c("H- blue", "H- red")
+		list.of.confusion.matriciesi[[i]] <- a		
+	}
+	nodes <- vcount(graph[[1]])
+	for(i in 1:length(time.stamps)){
+		blue.blue <- 0
+		blue.red <- 0
+		red.blue <- 0
+		red.red <- 0
+		hidden.results <- sapply(1:nodes, function(x) 
+			get.vertex.attribute(graph[[time.stamps[i]]],
+			"hidden", V(graph[[timestamps[i]]])[x]))
+		expressed.results <- sapply(1:nodes, function(x) 
+			get.vertex.attribute(graph[[time.stamps[i]]],
+			"expressed", V(graph[[timestamps[i]]])[x]))
+		for(j in 1:nodes){
+			if(hidden.results[j] == 0 && expressed.results[j] == 0){
+				blue.blue <- blue.blue+1
+			}else{
+				if(hidden.results[j] == 1 && expressed.results[j] == 1){
+					red.red <- red.red+1
+				} else {
+					if(hidden.results[j] == 0){
+						blue.red <- blue.red+1
+					} else {
+						if(hidden.results[j] == 1){
+							red.blue <- red.blue+1
+						} else {
+							cat("we should never get here.....\n")	
+						}
+					}
+				}
+			}
+		}
+		all <= blue.blue+blue.red+red.blue+red.red 
+		if(all== nodes){
+			list.of.confusion.matricies[[i]]["blue","blue"] <- blue.blue
+			list.of.confusion.matricies[[i]]["blue","red"] <- blue.red
+			list.of.confusion.matricies[[i]]["red","blue"] <- red.blue
+			list.of.confusion.matricies[[i]]["red","red"] <- red.red
+		} else {
+			cat("Only did ", all/nodes,"% of the nodes. I smell a bug....\n")
+		}
+	}
+	return(list.of.confusion.matricies)
+}
+
 # Sweep of # of course reversals for n trials of either
 # opinion OR hidden and expressed.e
 parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
