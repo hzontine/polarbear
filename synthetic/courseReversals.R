@@ -15,26 +15,27 @@ source("hannahModel.R")
 # red=1
 
 calculate.genuineness <- function(time.stamps, graph){
-	list.of.confusion.matricies <- list()(
+	list.of.confusion.matricies <- list()
 	for(i in 1:length(time.stamps)){
 		a <- matrix(nrow=2, ncol=2)
 		rownames(a) <- c("E- blue", "E- red")
 		colnames(a) <- c("H- blue", "H- red")
-		list.of.confusion.matriciesi[[i]] <- a		
+		list.of.confusion.matricies[[i]] <- a		
 	}
-	nodes <- vcount(graph[[1]])
+	num <- vcount(graph[[1]])
 	for(i in 1:length(time.stamps)){
+		cat("Starting time.stamps[",i,"]\n") 
 		blue.blue <- 0
 		blue.red <- 0
 		red.blue <- 0
 		red.red <- 0
-		hidden.results <- sapply(1:nodes, function(x) 
+		hidden.results <- sapply(1:num, function(x) 
 			get.vertex.attribute(graph[[time.stamps[i]]],
-			"hidden", V(graph[[timestamps[i]]])[x]))
-		expressed.results <- sapply(1:nodes, function(x) 
+			"hidden", V(graph[[time.stamps[i]]])[x]))
+		expressed.results <- sapply(1:num, function(x) 
 			get.vertex.attribute(graph[[time.stamps[i]]],
-			"expressed", V(graph[[timestamps[i]]])[x]))
-		for(j in 1:nodes){
+			"expressed", V(graph[[time.stamps[i]]])[x]))
+		for(j in 1:num){
 			if(hidden.results[j] == 0 && expressed.results[j] == 0){
 				blue.blue <- blue.blue+1
 			}else{
@@ -42,10 +43,10 @@ calculate.genuineness <- function(time.stamps, graph){
 					red.red <- red.red+1
 				} else {
 					if(hidden.results[j] == 0){
-						blue.red <- blue.red+1
+						red.blue <- red.blue+1
 					} else {
 						if(hidden.results[j] == 1){
-							red.blue <- red.blue+1
+							blue.red <- blue.red+1
 						} else {
 							cat("we should never get here.....\n")	
 						}
@@ -53,14 +54,14 @@ calculate.genuineness <- function(time.stamps, graph){
 				}
 			}
 		}
-		all <= blue.blue+blue.red+red.blue+red.red 
-		if(all== nodes){
-			list.of.confusion.matricies[[i]]["blue","blue"] <- blue.blue
-			list.of.confusion.matricies[[i]]["blue","red"] <- blue.red
-			list.of.confusion.matricies[[i]]["red","blue"] <- red.blue
-			list.of.confusion.matricies[[i]]["red","red"] <- red.red
+		all <- blue.blue+blue.red+red.blue+red.red 
+		if(all == num){
+			list.of.confusion.matricies[[i]]["E- blue","H- blue"] <- blue.blue
+			list.of.confusion.matricies[[i]]["E- blue","H- red"] <- blue.red
+			list.of.confusion.matricies[[i]]["E- red","H- blue"] <- red.blue
+			list.of.confusion.matricies[[i]]["E- red","H- red"] <- red.red
 		} else {
-			cat("Only did ", all/nodes,"% of the nodes. I smell a bug....\n")
+			cat("Only did ", all/num,"% of the nodes. I smell a bug....\n")
 		}
 	}
 	return(list.of.confusion.matricies)
@@ -85,16 +86,26 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 		}
 	} else{
 		result <- matrix(nrow=n, ncol=2)
+		all.the.matricies <<- list()
 		colnames(result) <- c("hidden", "expressed")
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-			num.nodes <- 50
-			graph <- hannahModel(num=num.nodes, prob=0.35, num.enc=num.nodes*2000)
-			rev <- detect.course.reversal(graph)
-			cat("Trial: ", trial, "  -  ", rev[1],"  ", rev[2],"\n")
+			num.nodes <- 25
+			graph <- hannahModel(num=num.nodes, prob=0.3, num.enc=num.nodes*1000)
+			course.reversal <- detect.course.reversal(graph)
+			cat("Trial: ", trial, "  -  ", course.reversal[1],"  ",
+				course.reversal[2],"\n")
 			cat("#",trial, "took this long: ", length(graph), "\n")
-			return(rev)
+			confusion.matricies <- calculate.genuineness(
+				time.stamps=c(length(graph)#/3),(2*(length(graph)/3)),
+				#length(graph)), graph)
+				), graph=graph)
+			all.the.matricies[[trial]] <<- confusion.matricies
+			save(all.the.matricies, file="variables.RData")
+			return(course.reversal)
 		}
+		#save(result, all.the.matricies, file="variables.RData")
 	}
+
 	return(result)
 }
 
@@ -116,6 +127,7 @@ detect.course.reversal <- function(graphs){
             "expressed", V(graphs[[length(graphs)]])[y]))
 
 # HIDDEN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	cat("starting hidden....\n")
 	# If it never converges
 	if(length(unique(hidden)) > 1){
 		hidden.result <- Inf
@@ -162,6 +174,7 @@ detect.course.reversal <- function(graphs){
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+	cat("starting expressed....\n")
 # EXPRESSED ~~~~~~~~~~~~~~~~~~~~~~~~~
 	if(length(unique(expressed)) > 1){
 		expressed.result <- Inf
