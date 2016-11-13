@@ -6,7 +6,7 @@ source("hannahModel.R")
 
 
 # Calculate percent genuineness over time where expressed = hidden
-# Returns a list of confusion matricies representing the state of
+# Returns a list of confusion matrices representing the state of
 # the graph at one instance of time. The rows represent an agent's
 # expressed opinion. The columns represent an agent's hidden opinion.
 #	  	(hidden)
@@ -14,57 +14,15 @@ source("hannahModel.R")
 # blue=0 			(expressed)
 # red=1
 
-calculate.genuineness <- function(time.stamps, graph){
-	list.of.confusion.matricies <- list()
-	for(i in 1:length(time.stamps)){
-		a <- matrix(nrow=2, ncol=2)
-		rownames(a) <- c("E- blue", "E- red")
-		colnames(a) <- c("H- blue", "H- red")
-		list.of.confusion.matricies[[i]] <- a		
-	}
-	num <- vcount(graph[[1]])
+calculate.genuineness <- function(time.stamps, graphs){
+	list.of.confusion.matrices <- list()
+	num <- vcount(graphs[[1]])
 	for(i in 1:length(time.stamps)){
 		cat("Starting time.stamps[",i,"]\n") 
-		blue.blue <- 0
-		blue.red <- 0
-		red.blue <- 0
-		red.red <- 0
-		hidden.results <- sapply(1:num, function(x) 
-			get.vertex.attribute(graph[[time.stamps[i]]],
-			"hidden", V(graph[[time.stamps[i]]])[x]))
-		expressed.results <- sapply(1:num, function(x) 
-			get.vertex.attribute(graph[[time.stamps[i]]],
-			"expressed", V(graph[[time.stamps[i]]])[x]))
-		for(j in 1:num){
-			if(hidden.results[j] == 0 && expressed.results[j] == 0){
-				blue.blue <- blue.blue+1
-			}else{
-				if(hidden.results[j] == 1 && expressed.results[j] == 1){
-					red.red <- red.red+1
-				} else {
-					if(hidden.results[j] == 0){
-						red.blue <- red.blue+1
-					} else {
-						if(hidden.results[j] == 1){
-							blue.red <- blue.red+1
-						} else {
-							cat("we should never get here.....\n")	
-						}
-					}
-				}
-			}
-		}
-		all <- blue.blue+blue.red+red.blue+red.red 
-		if(all == num){
-			list.of.confusion.matricies[[i]]["E- blue","H- blue"] <- blue.blue
-			list.of.confusion.matricies[[i]]["E- blue","H- red"] <- blue.red
-			list.of.confusion.matricies[[i]]["E- red","H- blue"] <- red.blue
-			list.of.confusion.matricies[[i]]["E- red","H- red"] <- red.red
-		} else {
-			cat("Only did ", all/num,"% of the nodes. I smell a bug....\n")
-		}
+        list.of.confusion.matrices[[i]] <- 
+            compute.confusion.matrix(graphs[[time.stamps[i]]])
 	}
-	return(list.of.confusion.matricies)
+	return(list.of.confusion.matrices)
 }
 
 # Sweep of # of course reversals for n trials of either
@@ -78,27 +36,27 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 		colnames(result) <- c("opinion")
 		result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
 			num.nodes <- 50
-			graph <- binary.voter(plot=FALSE, num=num.nodes, prob=0.35, num.enc=num.nodes*2000)		
-			course <- detect.course.reversal(graph)	
+			graphs <- binary.voter(plot=FALSE, num=num.nodes, prob=0.35, num.enc=num.nodes*2000)		
+			course <- detect.course.reversal(graphs)	
 			cat("Trial: ", trial, "  -  ", course, "\n")
-			cat("#",trial, "took this long: ", length(graph), "\n")
+			cat("#",trial, "took this long: ", length(graphs), "\n")
 			return(course)
 		}
 	} else{
 		result <- foreach(trial = 1:n, .combine=c) %dopar% {
 			num.nodes <- 20
-			graph <- hannahModel(num=num.nodes, prob=0.3, num.enc=num.nodes*1000)
-			course.reversal <- detect.course.reversal(graph)
-			cat("Trial: ", trial, "  -  ", course.reversal[1],"  ",
-				course.reversal[2],"\n")
-			cat("#",trial, "took this long: ", length(graph), "\n")
-			confusion.matricies <- calculate.genuineness(
-				time.stamps=c(length(graph)#/3),(2*(length(graph)/3)),
+			graphs <- hannahModel(num=num.nodes, prob=0.3, num.enc=num.nodes*1000)
+			course.reversal <- detect.course.reversal(graphs)
+			#cat("Trial: ", trial, "  -  ", course.reversal[1],"  ",
+				#course.reversal[2],"\n")
+			#cat("#",trial, "took this long: ", length(graphs), "\n")
+			confusion.matrices <- calculate.genuineness(
+				time.stamps=c(length(graphs)#/3),(2*(length(graph)/3)),
 				#length(graph)), graph)
-				), graph=graph)
-			return(list(list(course.reversal, confusion.matricies)))
+				), graphs=graphs)
+			return(list(list(course.reversal, confusion.matrices)))
 		}
-		#save(result, all.the.matricies, file="variables.RData")
+		#save(result, all.the.matrices, file="variables.RData")
 	}
 
 	return(result)
