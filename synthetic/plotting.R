@@ -8,8 +8,10 @@ library(stringr)
 
 source("fatCircle.R")
 
-plot.polar.graph <- function(graph, legend, legend.fill, vertex.coords,
-    vertex.frame.color, main.title="", subtitle="") {
+plot.polar.graph <- function(graph, legend=c("L","C"), 
+    legend.fill=c("blue","red"), 
+    vertex.coords=NULL,
+    vertex.frame.color="black", main.title="", subtitle="") {
 
     plot(graph,
         layout=vertex.coords,
@@ -48,8 +50,13 @@ plot.polar.graph <- function(graph, legend, legend.fill, vertex.coords,
 # overwrite.animation.file -- controls whether to overwrite or error out if
 # file already exists. Only relevant if interactive is FALSE.
 #
-# subtitle -- an optional subtitle for the plot.
+# subtitle -- either a character string giving a subtitle for the plot (could
+# be empty string for no subtitle), or else the value TRANSCRIPT to use the
+# transcript for the upcoming frame, or the value SUMMARY.STATS to use
+# "current frame's graph statistics".
 #
+TRANSCRIPT <- 1
+SUMMARY.STATS <- 2
 plot.animation <- function(graphs, attribute.name="ideology",
     second.attribute = "none",
     try.to.keep.vertex.positions=TRUE, delay.between.frames=.5, 
@@ -172,25 +179,47 @@ plot.animation <- function(graphs, attribute.name="ideology",
         }
 
 
-        if (i+1<=length(graphs)) {
-            message.for.next.frame <- 
-                get.graph.attribute(graphs[[i+1]],"message")
+        if (is.character(subtitle)) {
+            # The caller is explicitly giving us a subtitle to use. Use it.
+            subtitle.to.plot <- subtitle
+        } else if (is.numeric(subtitle) && subtitle == TRANSCRIPT) {
+            if (i+1<=length(graphs)) {
+                message.for.next.frame <- 
+                    get.graph.attribute(graphs[[i+1]],"message")
+                if (is.null(message.for.next.frame)) {
+                    subtitle.to.plot <- "(no changes about to happen)"
+                } else {
+                    subtitle.to.plot <- paste0("this is about to happen:\n",
+                        message.for.next.frame)
+                }
+            } else {
+                subtitle.to.plot <- "last one!"
+            }
+        } else if (is.numeric(subtitle) && subtitle == SUMMARY.STATS) {
+            mat <- compute.confusion.matrix(graphs[[i]])
+            total <- sum(mat)
+            subtitle.to.plot <- paste0(
+                "B(B): ",round(mat[1,1]/total*100,1),"%  ",
+                "B(R): ",round(mat[1,2]/total*100,1),"%  ",
+                "R(B): ",round(mat[2,1]/total*100,1),"%  ",
+                "R(R): ",round(mat[2,2]/total*100,1),"%\n",
+                "genuine: ",
+                    round((mat[1,1]+mat[2,2])/total*100,1),"%\n",
+                "true blue: ",
+                    round((mat[1,1]+mat[2,1])/total*100,1),"%  ",
+                "true red: ",
+                    round((mat[1,2]+mat[2,2])/total*100,1),"%\n")
         } else {
-            message.for.next.frame <- "last one!"
+            stop(paste0("Illegal subtitle value ", subtitle, ".\n"))
         }
-
+    
         plot.polar.graph(graphs[[i]],
             legend=legend,
             legend.fill=fill,
             vertex.coords=vertex.coords,
             vertex.frame.color=vertex.frame.color,
             main.title=paste("Iteration",i,"of",length(graphs)),
-            subtitle=ifelse(nchar(subtitle)==0 && i<length(graphs),
-                ifelse(is.null(message.for.next.frame),
-                    "(no changes about to happen)", 
-                    paste0("this is about to happen:\n",
-                        message.for.next.frame)),
-                subtitle))
+            subtitle=subtitle.to.plot)
 
         if (interactive) {
             if (is.na(delay.between.frames)) {

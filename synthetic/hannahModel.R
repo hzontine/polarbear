@@ -37,10 +37,25 @@ hannahModel <- function(num=20, prob=0.25, num.enc=2000){
     #plot.binary.opinions(graphs, attribute1="expressed", attribute2="hidden")
 
     #print.transcript(graphs)
-    #plot.animation(graphs,attribute.name="hidden",
-    #    second.attribute="expressed", delay.between.frames=NA, subtitle="")
-    #return(invisible(graphs))
-    return(graphs)
+    plot.animation(graphs,attribute.name="hidden",
+        second.attribute="expressed", delay.between.frames=.5, 
+        subtitle=SUMMARY.STATS)
+    return(invisible(graphs))
+    #return(graphs)
 }
 
+compute.confusion.matrix <- function(graph) {
+    confusion.matrix <- matrix(rep(0,4),nrow=2)
+    rownames(confusion.matrix) <- c("E- blue", "E- red")
+    colnames(confusion.matrix) <- c("H- blue", "H- red")
+    hidden.results <- sapply(1:vcount(graph), function(x) 
+        get.vertex.attribute(graph, "hidden", V(graph)[x]))
+    expressed.results <- sapply(1:vcount(graph), function(x) 
+        get.vertex.attribute(graph, "expressed", V(graph)[x]))
+    for(j in 1:vcount(graph)){
+        confusion.matrix[expressed.results[j]+1,hidden.results[j]+1] <- 
+            confusion.matrix[expressed.results[j]+1,hidden.results[j]+1]+1
+    }
+    confusion.matrix
+}
 #hannahModel()
