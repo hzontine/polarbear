@@ -93,10 +93,10 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2="NULL"){
 				course.reversal[2],"\n")
 			cat("#",trial, "took this long: ", length(graph), "\n")
 			confusion.matricies <- calculate.genuineness(
-				time.stamps=c(length(graph)#/3),(2*(length(graph)/3)),
-				#length(graph)), graph)
-				), graph=graph)
-			return(list(list(course.reversal, confusion.matricies)))
+				time.stamps=c((length(graph)/3),(2*(length(graph)/3)),
+				length(graph)), graph)
+				#), graph=graph)
+			return(list(list(length(graph), course.reversal, confusion.matricies)))
 		}
 		#save(result, all.the.matricies, file="variables.RData")
 	}

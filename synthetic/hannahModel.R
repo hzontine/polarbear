@@ -18,10 +18,10 @@ hannahModel <- function(num=20, prob=0.25, num.enc=2000){
             get.mean.field.encounter.func(1),
             get.graph.neighbors.encounter.func(1)),
         victim.update.function=list(
-            get.automatically.update.victim.function(A.is.victim=TRUE,prob.update=0.5, opinion.type="hidden"),
+            get.automatically.update.victim.function(A.is.victim=TRUE,prob.update=0.1, opinion.type="hidden"),
             get.peer.pressure.update.function(A.is.victim=TRUE,
-                prob.knuckle.under.pressure=0.5,
-                prob.internalize.expressed.opinion=0.5)),
+                prob.knuckle.under.pressure=0.9,
+                prob.internalize.expressed.opinion=0.9)),
 #        edge.update.function=get.no.edge.update.function(),
 #        verbose=TRUE,
         generate.graph.per.encounter=TRUE,
