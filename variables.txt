@@ -41,7 +41,7 @@ Conversion	Knuckle.Under	Internalize
 0.3		0.7		0.7		data.3 
 0.4		0.6		0.6		data.4
 0.5		0.5		0.5		data.5
-0.6		0.4		0.4		data.6
+0.6		0.4		0.4		data.6 ***
 0.7		0.3		0.3		data.7
 0.8		0.2		0.2		data.8
 0.9		0.1		0.1		data.9
