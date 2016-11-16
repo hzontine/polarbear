@@ -70,7 +70,8 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2=NULL){
             the.sys.time <- Sys.time()
             set.seed(the.sys.time)
             graphs <- hannahModel(num=num.nodes, prob=0.3, 
-                num.enc=num.nodes*200)
+                num.enc=num.nodes*200, update=0.0,
+                peer=1.0, knuckle=1.0)
             course.reversal <- detect.course.reversal(graphs)
             cat("Trial: ", trial, "  -  ", course.reversal[1],"  ",
                 course.reversal[2],"\n")
