@@ -37,7 +37,7 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2=NULL){
     registerDoParallel(60)
     
     if(is.null(attribute2)) {
-        result <- foreach(trial = 1:n, .combine=c) %do% {
+        result <- foreach(trial = 1:n, .combine=c) %dopar% {
             num.nodes <- 20
             the.sys.time <- Sys.time()
             set.seed(the.sys.time)
