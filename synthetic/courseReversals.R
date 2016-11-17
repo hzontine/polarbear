@@ -54,15 +54,6 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2=NULL){
                 num.iter=length(graphs), 
                 max.fraction.losing.opinion=course.reversal, 
                 confusion.vectors=confusion.vectors)))
-#        result <- matrix(nrow=n, ncol=1)
-#        colnames(result) <- c("opinion")
-#        result <<- foreach(trial = 1:n, .combine=rbind) %dopar% {
-#            num.nodes <- 50
-#            graphs <- binary.voter(plot=FALSE, num=num.nodes, prob=0.35, num.enc=num.nodes*2000)        
-#            course <- detect.course.reversal(graphs)    
-#            cat("Trial: ", trial, "  -  ", course, "\n")
-#            cat("#",trial, "took this long: ", length(graphs), "\n")
-#            return(course)
         }
     } else{
         result <- foreach(trial = 1:n, .combine=c) %dopar% {
