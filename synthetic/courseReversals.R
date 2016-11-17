@@ -46,10 +46,35 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2=NULL){
             course.reversal <- detect.course.reversal(graphs)
             cat("Trial: ", trial, "  -  ", course.reversal, "\n")
             cat("#",trial, "took this long: ", length(graphs), "\n")
-            confusion.vectors <- 
-                sapply(graphs[(1:NUM.PARTITIONS)/NUM.PARTITIONS*length(graphs)],
+            if (is.infinite(course.reversal)) {
+                time.stamps <- c(1,
+                    (1:NUM.PARTITIONS)/NUM.PARTITIONS*length(graphs))
+            } else {
+                time.stamps <- c(1,
+                    (1:(NUM.PARTITIONS-1))/NUM.PARTITIONS*length(graphs))
+            }
+            confusion.vectors <-
+                sapply(graphs[time.stamps],
                     function(graph) { 
-                        table(get.vertex.attribute(graph,"opinion")) } )
+                        the.table <- 
+                           table(get.vertex.attribute(graph,"opinion"))
+                        names(the.table) <- c("blue","red")
+                        return(the.table)} )
+
+            if (!is.infinite(course.reversal)) {
+
+                the.winning.opinion <- 
+                    unique(get.vertex.attribute(graphs[[length(graphs)]],
+                        "opinion"))
+
+                if (the.winning.opinion == 0) {
+                    confusion.vectors <- cbind(confusion.vectors, 
+                        c("blue"=num.nodes,"red"=0))
+                } else {
+                    confusion.vectors <- cbind(confusion.vectors,
+                        c("blue"=0,"red"=num.nodes))
+                }
+            }
             return(list(list(seed=as.numeric(the.sys.time),
                 num.iter=length(graphs), 
                 max.fraction.losing.opinion=course.reversal, 
@@ -57,17 +82,17 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2=NULL){
         }
     } else{
         result <- foreach(trial = 1:n, .combine=c) %dopar% {
-            num.nodes <- 52
+            num.nodes <- 20
             the.sys.time <- Sys.time() + trial
             set.seed(the.sys.time)
             graphs <- hannahModel(num=num.nodes, prob=0.3, 
-                num.enc=num.nodes*200)
+                num.enc=num.nodes*100)
             course.reversal <- detect.course.reversal(graphs)
             cat("Trial: ", trial, "  -  ", course.reversal[1],"  ",
                 course.reversal[2],"\n")
             cat("#",trial, "took this long: ", length(graphs), "\n")
             confusion.matrices <- calculate.genuineness(
-                time.stamps=(1:NUM.PARTITIONS)/NUM.PARTITIONS*length(graphs),
+                time.stamps=c(1,(1:NUM.PARTITIONS)/NUM.PARTITIONS*length(graphs)),
                 graphs)
             confusion.vectors <- sapply(confusion.matrices, 
                 function (cm) { the.vec <- as.vector(cm)

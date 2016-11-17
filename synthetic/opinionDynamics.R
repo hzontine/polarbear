@@ -718,14 +718,20 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
     } else {
         g <- erdos.renyi.game(num.agents, prob.connected)
     }
-    if(num.agents %% 2 == 0){
-        values <- c(rep(0, num.agents/2), rep(1, num.agents/2))
+    if(num.agents %% 4 == 0){
+        # Note: "0" means B(B), "1" means B(R), "2" means R(B), "3" means
+        # R(R). We are doing this to ensure we start with a population evenly
+        # divided among these four opinion-pairings.
+        values <- c(rep(0, num.agents/4), rep(1, num.agents/4),
+                    rep(2, num.agents/4), rep(3, num.agents/4))
     }else{
-        cat("You should have an even number of nodes in the graph!\n")
-        values <- c(rep(0, num.agents/2), rep(1, (num.agents/2)+1))
+        stop("You should have a divisible-by-4 number of nodes in the graph!\n")
     }
-    V(g)$expressed <- sample(values)
-    V(g)$hidden <- sample(values)
+    shuffled.agent.opinions <- sample(values)
+    V(g)$expressed <- 
+        ifelse(shuffled.agent.opinions==0 | shuffled.agent.opinions==1, 0, 1)
+    V(g)$hidden <- 
+        ifelse(shuffled.agent.opinions==0 | shuffled.agent.opinions==2, 0, 1)
     if (!is.connected(g)) {
         stop("WHOA!!")
     }
