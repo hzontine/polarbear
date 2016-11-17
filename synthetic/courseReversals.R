@@ -39,7 +39,7 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2=NULL){
     if(is.null(attribute2)) {
         result <- foreach(trial = 1:n, .combine=c) %dopar% {
             num.nodes <- 20
-            the.sys.time <- Sys.time()
+            the.sys.time <- Sys.time() + trial
             set.seed(the.sys.time)
             graphs <- binary.voter(plot=FALSE, num=num.nodes, prob=0.3, 
                 num.enc=num.nodes*200)
@@ -65,9 +65,9 @@ parameter.sweep <- function(n=200, attribute1="Opinion", attribute2=NULL){
 #            return(course)
         }
     } else{
-        result <- foreach(trial = 1:n, .combine=c) %do% {
-            num.nodes <- 20
-            the.sys.time <- Sys.time()
+        result <- foreach(trial = 1:n, .combine=c) %dopar% {
+            num.nodes <- 52
+            the.sys.time <- Sys.time() + trial
             set.seed(the.sys.time)
             graphs <- hannahModel(num=num.nodes, prob=0.3, 
                 num.enc=num.nodes*200)
