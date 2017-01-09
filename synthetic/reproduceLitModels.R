@@ -10,12 +10,6 @@ source("opinionDynamics.R")
 # Only one encounter per iteration
 # Results: Opinions will always converge to a consensus
 #
-# choose.randomly.each.encounter -- if TRUE, this is Holley's original: each
-# encounter will have a completely random "encountering vertex" chosen. If
-# FALSE, this is the Zontine variant: all the vertices will be chosen as the
-# "encountering vertex" (in random order) before they are all chosen again
-# (i.e., no repeats are allowed.)
-#
 binary.voter <- function(plot=TRUE, num=50, prob=0.3, num.enc=2000) {
     #set.seed(111234)
     if(num %% 2 == 0) {
@@ -27,7 +21,7 @@ binary.voter <- function(plot=TRUE, num=50, prob=0.3, num.enc=2000) {
     }
     init <- get.plain.old.graph(opinion=sample(values), probability.connected=prob)
     while(!(is.connected(init))){
-        init <- get.plain.old.graph(opinion=sample(values), probability.connected=0.3)
+        init <- get.plain.old.graph(opinion=sample(values), probability.connected=prob)
     }
     graphs <<- sim.opinion.dynamics(init.graph=init, num.encounters = num.enc,
         encounter.func=get.graph.neighbors.encounter.func(1),

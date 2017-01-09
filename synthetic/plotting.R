@@ -23,7 +23,7 @@ plot.polar.graph <- function(graph, legend=c("L","C"),
         main=main.title, 
         sub=subtitle)
 
-        legend("bottomright",legend=legend, fill=legend.fill)
+        legend("bottomleft",legend=legend, fill=legend.fill)
 }
 
 # Given a list of graphs, plot them, (possibly) ensuring that vertices are
@@ -237,7 +237,7 @@ plot.animation <- function(graphs, attribute.name="ideology",
             stop("Can't have NA delay for non-interactive mode.")
         }
         cat("Assembling animation...\n")
-        system(paste0("convert -delay ",delay.between.frames*100," ",base.filename,"plot*.png ", animation.filename))
+        system(paste0("convert -loop 1 -delay ",delay.between.frames*100," ",base.filename,"plot*.png ", animation.filename))
         system(paste0("rm ",base.filename,"plot*.png"))
         cat("Animation in file ",animation.filename,".\n",sep="")
     }
@@ -285,15 +285,16 @@ plot.binary.opinions <- function(graphs, attribute1="opinion", attribute2="none"
         time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
 
         plot(time.pts,frac.0s,ylim=c(0,1),type="l",col="blue",
-            xlab="time (encounters)", lwd=3)
-        lines(time.pts, frac2.1s, col="red", lty="dashed", lwd=3)
-        lines(time.pts, frac.1s, col="red", lwd=3)
-        lines(time.pts, frac2.0s, col="blue", lty="dashed", lwd=3)
+            xlab="time (encounters)", ylab="Fraction of agents with opinion",
+            lwd=2)
+        lines(time.pts, frac2.1s, col="red", lty="dotted", lwd=2)
+        lines(time.pts, frac.1s, col="red", lwd=2)
+        lines(time.pts, frac2.0s, col="blue", lty="dotted", lwd=2)
 
         legend("topleft",legend=c("Liberal","Conservative"),
             fill=c("blue","red"))
         legend("bottomleft",legend=c(attribute1,attribute2),
-            lty=c("solid","dashed"))
+            lty=c("solid","dotted"))
 
     } else {
         attr <- function(graph, op){
