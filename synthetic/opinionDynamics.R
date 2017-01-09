@@ -3,7 +3,6 @@
 # Stephen and Hannah
 
 library(igraph)
-source("synthetic.R")
 source("plotting.R")
 
 # Run an opinion dynamics simulation with n agents for num.encounters
@@ -27,7 +26,8 @@ source("plotting.R")
 # choose.randomly.each.encounter -- if TRUE, each encounter will have a
 # completely random "encountering vertex" chosen. If FALSE, all the vertices
 # will be chosen as the "encountering vertex" (in random order) before they
-# are all chosen again (i.e., no repeats are allowed.)
+# are all chosen again (i.e., no repeats are allowed.) (Note: TRUE corresponds
+# to Holley's original; FALSE is the Zontine variant.)
 #
 # encounter.func -- either (a) a function which takes a graph and a vertex ID.
 # Returns a vector of vertex IDs of which the vector may randomly encounter in
@@ -132,6 +132,7 @@ sim.opinion.dynamics <- function(init.graph,
                 list.of.vertex.IDs <- 
                     encounter.func[[i]](graphs[[graph.num]],v)
 
+                # (R passes by value, so this part is harder.)
                 for (id in list.of.vertex.IDs) {
                     update.info <- 
                         victim.update.function[[i]](graphs[[graph.num]],v,id)
@@ -166,6 +167,10 @@ sim.opinion.dynamics <- function(init.graph,
                 # Annotate the graph object with a graph attribute indicating
                 # the number of encounters that had taken place at the time
                 # this snapshot was taken.
+
+                # (This is hardcoded to assume exactly two encounter/vupdate
+                # functions, the first of which updates hidden and the second
+                # of which updates expressed.)
                 graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
                     "num.encounters", encounter.num)
                 graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
@@ -187,6 +192,9 @@ sim.opinion.dynamics <- function(init.graph,
             # Annotate the graph object with a graph attribute indicating the
             # number of encounters that had taken place at the time this
             # snapshot was taken.
+
+            # (This should be updated to match the above? (hidden vs
+            # effectual?))
             graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
                 "num.encounters", encounter.num)
             graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
@@ -534,24 +542,23 @@ get.bounded.confidence.update.victim.function <- function(threshold.value=0.3,
 # outward influence. (in other words, the node-in-question is always the
 # influencer, never the influencee.)
 
+# Each vertex encounters some other vertices at random (mean field) and may or
+# may not update his/her latent opinion as a result.
 get.mean.field.encounter.func <- function(num.vertices) {
     return(
         function(graph, vertex) {
-            # Each vertex encounters some other vertices at random (mean field) and may or may 
-            # not update his/her latent opinion as a result.
             return (
                 sample((1:gorder(graph))[-vertex],num.vertices)
             )
         }
     )
 }
+
+# Each vertex encounters some others at random from a vector of its "outgoing"
+# neighbors, of whom he may pass information to/influence.
 get.graph.neighbors.encounter.func <- function(num.vertices=0, all=FALSE) {
     return(
         function(graph,vertex) {
-            # Each vertex encounters some others at random from a vector
-            # of its "outgoing" neighbors, of whom he may pass 
-            # information to/influence.
-            
 		if(num.vertices==0) {
 			all=TRUE
 		}
