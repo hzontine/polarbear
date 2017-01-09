@@ -11,8 +11,8 @@ source("opinionDynamics.R")
 
 # Hidden vs. Expressed Opinions
 
-hannahModel <- function(num=20, prob=0.25, num.enc=2000, update=0.5, peer=0.5, knuckle=0.5){
-    init <<- get.expressed.latent.graph(num.agents=num, prob.connected=prob, dir=TRUE)
+hannahModel <- function(num=20, prob=0.25, num.enc=2000, update=0.5, internalize=0.5, peer=0.5){
+    init <<- get.expressed.latent.graph(num.agents=num, prob.connected=prob, dir=FALSE)
     graphs <<- sim.opinion.dynamics(init, num.encounters=num.enc,
         encounter.func=list(
             get.mean.field.encounter.func(1),
@@ -21,7 +21,7 @@ hannahModel <- function(num=20, prob=0.25, num.enc=2000, update=0.5, peer=0.5, k
             get.automatically.update.victim.function(A.is.victim=TRUE,prob.update=update, opinion.type="hidden"),
             get.peer.pressure.update.function(A.is.victim=TRUE,
                 prob.knuckle.under.pressure=peer,
-                prob.internalize.expressed.opinion=knuckle)),
+                prob.internalize.expressed.opinion=internalize)),
 #        edge.update.function=get.no.edge.update.function(),
 #        verbose=TRUE,
         generate.graph.per.encounter=TRUE,
@@ -39,9 +39,10 @@ hannahModel <- function(num=20, prob=0.25, num.enc=2000, update=0.5, peer=0.5, k
     #print.transcript(graphs)
 #    plot.animation(graphs,attribute.name="hidden",
 #        second.attribute="expressed", delay.between.frames=.5, 
+#        interactive=FALSE, animation.filename="thing.gif",
 #        subtitle=SUMMARY.STATS)
-    return(invisible(graphs))
-    #return(graphs)
+#    return(invisible(graphs))
+    return(graphs)
 }
 
 compute.confusion.matrix <- function(graph) {

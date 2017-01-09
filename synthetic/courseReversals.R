@@ -280,20 +280,20 @@ detect.course.reversal <- function(graphs){
 
 
 
-data.6 <- parameter.sweep(attribute1="Hidden", attribute2="Expressed", 
-    conversion=0.5, knuckleUnder=0.5, internal=0.5)
-cat("Done with #6....\n")
-data.7 <- parameter.sweep(attribute1="Hidden", attribute2="Expressed", 
-    conversion=0.6, knuckleUnder=0.4, internal=0.4)
-cat("Done with #7....\n")
-data.8 <- parameter.sweep(attribute1="Hidden", attribute2="Expressed", 
-    conversion=0.7, knuckleUnder=0.3, internal=0.3)
-cat("Done with #8....\n")
-data.9 <- parameter.sweep(attribute1="Hidden", attribute2="Expressed", 
-    conversion=0.8, knuckleUnder=0.2, internal=0.2)
-cat("Done with #9....\n")
-
-
-cat("Saving......\n")
-save(data.6, data.7, data.8, data.9, file="paramTester.RData")
+#data.6 <- parameter.sweep(attribute1="Hidden", attribute2="Expressed", 
+#    conversion=0.5, knuckleUnder=0.5, internal=0.5)
+#cat("Done with #6....\n")
+#data.7 <- parameter.sweep(attribute1="Hidden", attribute2="Expressed", 
+#    conversion=0.6, knuckleUnder=0.4, internal=0.4)
+#cat("Done with #7....\n")
+#data.8 <- parameter.sweep(attribute1="Hidden", attribute2="Expressed", 
+#    conversion=0.7, knuckleUnder=0.3, internal=0.3)
+#cat("Done with #8....\n")
+#data.9 <- parameter.sweep(attribute1="Hidden", attribute2="Expressed", 
+#    conversion=0.8, knuckleUnder=0.2, internal=0.2)
+#cat("Done with #9....\n")
+#
+#
+#cat("Saving......\n")
+#save(data.6, data.7, data.8, data.9, file="paramTester.RData")
 
