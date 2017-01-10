@@ -6,6 +6,9 @@ import random
 
 from IPython.core.debugger import Tracer
 
+import plotting
+
+
 # Holley and Liggett 1975        Clifford and Sudbury 1973
 # Vertex always changes her opinion to reflect that of the victim's opinion
 # Only one encounter per iteration
@@ -32,9 +35,9 @@ def binary_voter(plot=True, num=10, prob=0.3, num_enc=2000):
         victim_update_function="automatically_update_victim_function",
         choose_randomly_each_encounter=True)
 
-#   if plot:
+    if plot:
 #       plot_animation(graphs, "opinion", delay_between_frames=.5)
-#       plot_binary_opinions(graphs, attribute1="opinion")
+        plotting.plot_binary_opinions(graphs, attr1="opinion")
 
     return graphs
 
