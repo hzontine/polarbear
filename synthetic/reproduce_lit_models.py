@@ -36,14 +36,14 @@ def binary_voter(plot=True, num=10, prob=0.3, num_enc=2000):
         choose_randomly_each_encounter=True)
 
     if plot:
-        plotting.plot_animation(graphs, "opinion", delay_between_frames=0)
-        plotting.plot_binary_opinions(graphs, attr1="opinion")
+        plotting.plot_animation(graphs, "opinion", delay_between_frames=.5)
+        #plotting.plot_binary_opinions(graphs, attr1="opinion")
 
     return graphs
 
 
 def main():
-    random.seed(1234)
+    random.seed(12345)
     return binary_voter()
 
 graphs = main()

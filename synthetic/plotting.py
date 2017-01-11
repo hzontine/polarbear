@@ -3,6 +3,8 @@
 # Stephen and Hannah
 
 import igraph
+import cairo
+from igraph.drawing.text import TextDrawer
 import pandas as pd
 from collections import Counter
 import matplotlib.pyplot as plt
@@ -25,14 +27,27 @@ def plot_polar_graph(
     subtitle,
     filename=None):
 
-    p = igraph.plot(graph,layout=vertex_coords,edge_arrow_size=1.5,
-        vertex_shape='circle',vertex_frame_color=vertex_frame_color,
-        vertex_frame_width=1,vertex_size=15,main=main_title,
-        sub=subtitle)
-    if filename is None:
-        p.show()
-    else:
-        p.save(filename)
+    bbox = igraph.BoundingBox(800,800)
+    plot = igraph.Plot(filename, bbox=bbox, background="white")
+    bbox = bbox.contract(50)
+    plot.add(graph,bbox=(50,110,750,690),
+        layout=vertex_coords,
+        edge_arrow_size=1.5,
+        vertex_shape='circle',
+        vertex_frame_color=vertex_frame_color,
+        vertex_frame_width=1,
+        vertex_size=30)
+    plot.redraw()
+
+    ctx = cairo.Context(plot.surface)
+    ctx.set_font_size(36)
+    drawer = TextDrawer(ctx, main_title, halign=TextDrawer.CENTER)
+    drawer.draw_at(0, 40, width=800)
+    ctx.set_font_size(20)
+    drawer = TextDrawer(ctx, subtitle, halign=TextDrawer.CENTER)
+    drawer.draw_at(0, 750, width=800)
+
+    plot.save()
 
 
 # Given a list of graphs, plot them, (possibly) ensuring that vertices are
@@ -65,11 +80,11 @@ def plot_animation(
     else:
         vertex_coords = None
 
-    for i in range(1,len(graphs)):
+    for i in range(len(graphs)):
         graph = graphs[i]
         num_distinct_attr_one_vals = len(set(graph.vs[attr_name]))
 
-        if num_distinct_attr_one_vals == 2:
+        if num_distinct_attr_one_vals <= 2:
             graph.vs['color'] = [ "blue" if attr is 0 else "red"
                 for attr in graph.vs[attr_name] ]
             graph.vs['label_color'] = [ "white" if attr is 0 else "black"
@@ -107,16 +122,17 @@ def plot_animation(
         if interactive:
             filename = None
         else:
-            number = ''.join(map(str,([0]*(3-math.floor(math.log10(i))+1))))
-            filename = base_filename + number + str(i) + ".png"
+            number = str(i+1).zfill(5)
+            filename = base_filename + number + ".png"
+        print("filename is: ", filename)
 
         plot_polar_graph(graph,legend,fill,vertex_coords,vertex_frame_color,
-            main_title="Iteration " + str(i) + " of " + str(len(graphs)),
+            main_title="Iteration " + str(i+1) + " of " + str(len(graphs)),
             subtitle=subtitle_to_plot,filename=filename)
         if interactive:
             time.sleep(delay_between_frames) 
         else:
-            print("Generating animation frame",i,"of", len(graphs),"...")
+            print("Generating animation frame",i+1,"of", len(graphs),"...")
     
     if not interactive:
         print("Assembling animation...")

@@ -16,7 +16,7 @@ def sim_opinion_dynamics(
     encounter_func="graph_neighbors_encounter_function",
     victim_update_function="automatically_update_victim_function",
     choose_randomly_each_encounter=False,
-    generate_graph_per_encounter=False,
+    generate_graph_per_encounter=True,
     termination_function="unanimity_termination_function",
     terminate_after_max_num_encounters=True,
     verbose=False):
@@ -46,10 +46,10 @@ def sim_opinion_dynamics(
             T[termination_function](graphs[graph_num])):
 
         if verbose:
-            print("Encounter #",encounter_num,"...\n",sep="")
+            print("Encounter #",encounter_num,"...",sep="")
 
         # Go through all the vertices, in random order:
-        vertices = list(range(0,graphs[graph_num].vcount()))
+        vertices = list(range(graphs[graph_num].vcount()))
         random.shuffle(vertices)
         for v in vertices:
 
@@ -61,11 +61,12 @@ def sim_opinion_dynamics(
             if choose_randomly_each_encounter:
                 v = random.randint(0, graphs[graph_num].vcount()-1)
 
-            for i in range(0,len(encounter_func)):
+            for i in range(len(encounter_func)):
                 list_of_vertex_IDs = E[encounter_func[i]](
                                                         graphs[graph_num],v)
                 # (Python passes by reference, so we can do this part easier.)
                 for id in list_of_vertex_IDs:
+                    print("updating ", v, " graph_num=",graph_num,"...")
                     did_update = VU[victim_update_function[i]](
                                                         graphs[graph_num],v,id)
                     if did_update:
@@ -105,7 +106,7 @@ def sim_opinion_dynamics(
             graphs[graph_num]["num_encounters"] = encounter_num
 
     print("Done!")
-    return graphs[0:graph_num]
+    return graphs
 
 
 
@@ -120,6 +121,7 @@ def get_plain_old_graph(
     g = igraph.Graph.Erdos_Renyi(
         n=len(opinion),p=probability_connected,directed=dir)
     g.vs['opinion'] = opinion
+    g.vs['label'] = [ str(i) for i in range(len(opinion)) ]
     return(g)
 
 
