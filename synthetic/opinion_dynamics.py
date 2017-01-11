@@ -38,7 +38,7 @@ def sim_opinion_dynamics(
     graph_num = 1
 
     encounter_num = 0
-    num_effectual_encounters = 0
+    num_effectual_encounters = [0,0]
 
     # For each iteration of the sim...
     while (((not terminate_after_max_num_encounters) or
@@ -74,9 +74,9 @@ def sim_opinion_dynamics(
 
             if generate_graph_per_encounter:
                 # Create a new igraph object to represent this point in time. 
-                graphs[graph_num+1] = graphs[graph_num].copy()
-                graphs[graph_num]["message"] = ""
+                graphs.append(graphs[graph_num].copy())
                 graph_num += 1
+                graphs[graph_num]["message"] = ""
 
                 # Annotate the graph object with a graph attribute indicating
                 # the number of encounters that had taken place at the time
@@ -190,19 +190,19 @@ def automatically_update_victim_function(
 
             graph["message"] += ("online: " + str(vertex) + " talks, but " +
                 str(victim_vertex) + " is already " +
-                color_for(graph.vs[vertex][opinion_type]))
+                color_for(graph.vs[vertex][opinion_type]) + "\n")
 
-        if random.random() < prob_update:
+        elif random.random() < prob_update:
             hidden_encounter_num += 1
             graph.vs[victim_vertex][opinion_type] = \
                                             graph.vs[vertex][opinion_type]
             graph["message"] += ("online: " + str(vertex) + " persuades " +
                 str(victim_vertex) + " to go " +
-                color_for(graph.vs[vertex][opinion_type]))
+                color_for(graph.vs[vertex][opinion_type]) + "\n")
         else:
             graph["message"] += ("online: " + str(vertex) + 
                 " unable to persuade " + str(victim_vertex) + " to go " +
-                color_for(graph.vs[vertex][opinion_type]))
+                color_for(graph.vs[vertex][opinion_type]) + "\n")
     else:
         sys.exit("*** stubborn ***")
         # Nothing will get updated. We're too dang stubborn.
