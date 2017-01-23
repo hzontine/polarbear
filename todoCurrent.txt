@@ -1,41 +1,14 @@
+(January 2017 Reboot)
 
-HZ - dust off binary.voter(). add code to run binary.voter() a bunch of
-times and detect course reversals. Then run the original Holley sim a bunch of
-times, plotting only the time series fraction-of-liberals, and see whether
-there are any course reversals.
-
-    - first, figure out how often this course reversal happens
-
-    - "turn off" the variable interaction by making expressed only affect
-      expressed and hidden only affect hidden. Verify that you see convergence
-      to uniformity by both variables (which could converge to the same
-      opinion or to the opposite) but that you never see course reversal.
-
-
-HZ - Set the seed based on system clock and then output it to screen at some
-point in the sim (so we can recreate results).
-
-
-HZ - Plot the genuineness percentage over time. (What % of people have a
-matching expressed and hidden?)
-
-
-HZ - Verify that the following statement is true: it is impossible to get a
-model to "reverse course" (i.e., liberals ahead of conservatives, but then the
-conservatives make a comeback, or vice versa) without having expressed and
-hidden as two separate variables.
-
-
-SD - Make the node border widths wider:
-http://lists.gnu.org/archive/html/igraph-help/2013-03/msg00030.html
-
-
---------------------------------------------------------------------------
-January 2017 Reboot
-
-Review correspondence from CSSSA people. Who should we be contacting?
+Review correspondence from CSSSA/WSC people. Who should we be contacting?
+    - Look for email from Yining (maybe??) where I said "I'm busy, but will
+      get back to you soon (in January?)"
 
 Read and classify papers from CSSSA/WSC.
+    - Joseph Harrison dissertation
+
+Chase down references that claim to have any data at all (even if just
+    qualitative or anecdotal) that there was indeed a hidden Trump effect
 
 Is there anyone from Social Psych we should touch base with to verify the
 basic model processes?
@@ -49,4 +22,24 @@ Identify and list the independent variables.
 Play with sim interactively for as long as it takes to decide what we want
 formal test data for. (It's too early to do parameter sweeps now.)
 
+Create a Shiny app to do the above^^^
 
+
+
+
+
+Postpone this: course reversals
+    It would be interesting if the HM model tends to result in more extreme
+course reversals than plain old BVM.
+
+HZ - dust off binary.voter(). add code to run binary.voter() a bunch of
+times and detect course reversals. Then run the original Holley sim a bunch of
+times, plotting only the time series fraction-of-liberals, and see whether
+there are any course reversals.
+
+    - first, figure out how often this course reversal happens
+
+    - "turn off" the variable interaction by making expressed only affect
+      expressed and hidden only affect hidden. Verify that you see convergence
+      to uniformity by both variables (which could converge to the same
+      opinion or to the opposite) but that you never see course reversal.
