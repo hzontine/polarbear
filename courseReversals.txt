@@ -1,0 +1,17 @@
+
+    Wouldn't it be cool to explore this research topic sometime? (but NOT spring.)
+
+    It would be interesting if the HM model tends to result in more extreme
+course reversals than plain old BVM.
+
+HZ - dust off binary.voter(). add code to run binary.voter() a bunch of
+times and detect course reversals. Then run the original Holley sim a bunch of
+times, plotting only the time series fraction-of-liberals, and see whether
+there are any course reversals.
+
+    - first, figure out how often this course reversal happens
+
+    - "turn off" the variable interaction by making expressed only affect
+      expressed and hidden only affect hidden. Verify that you see convergence
+      to uniformity by both variables (which could converge to the same
+      opinion or to the opposite) but that you never see course reversal.

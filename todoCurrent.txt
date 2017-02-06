@@ -1,32 +1,36 @@
-(January 2017 Reboot)
 
-Read and classify papers from CSSSA/WSC.
-    - Joseph Harrison dissertation
+Date  Owner  Item
+-----------------------------------------------------------------------------------------------
+2/13  SD/HZ  *Fix Shiny app which only refreshes top graph.
 
-Define the research question. Write it down. Memorize it.
+2/13   HZ    *Spend solid quality time with the Shiny app playing with it to see what
+                affects what and how.
 
-Identify and rigorously define the dependent variable(s).
+2/8    HZ    **Define the research question. Write it down. Memorize it.
+                ("Something we can talk about" by this date. Don't worry about perfection.)
 
-Identify and list the independent variables.
+2/8    HZ    **Identify and rigorously define the dependent variable(s). (Write it down.)
+
+2/8    HZ    **Identify and list the independent variables. (Write it down.)
+
+2/10   HZ    Read and classify papers from CSSSA/WSC.
+                - Joseph Harrison dissertation
+
+2/15   HZ    Come up with a one-sentence capture of "why we want to talk to" each person on our
+                CSSSA/WSC list.
+
+2/17   HZ    Implement the "Hidden Trump Influence" (HTI) aspect to the model (that can be
+                turned on and off). when on, the model now becomes inherently asymmetric.
+
+2/13   HZ    *Add a "poll bias over time" graph. (How far off are expressed vs. hidden) Note:
+                only one line -- "how much higher is expressed-blue than hidden-blue?"
 
 
 
 
+Meetings:
+Wed -- Talk about research question and variables.
+Fri -- Talk about paper classification and where we're at.
+Mon -- Meet and go over findings from informal Shiny app play sessions.
 
 
-
-Postpone this: course reversals
-    It would be interesting if the HM model tends to result in more extreme
-course reversals than plain old BVM.
-
-HZ - dust off binary.voter(). add code to run binary.voter() a bunch of
-times and detect course reversals. Then run the original Holley sim a bunch of
-times, plotting only the time series fraction-of-liberals, and see whether
-there are any course reversals.
-
-    - first, figure out how often this course reversal happens
-
-    - "turn off" the variable interaction by making expressed only affect
-      expressed and hidden only affect hidden. Verify that you see convergence
-      to uniformity by both variables (which could converge to the same
-      opinion or to the opposite) but that you never see course reversal.
