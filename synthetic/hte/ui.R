@@ -7,18 +7,32 @@ shinyUI(fluidPage(
   
   sidebarLayout(
     sidebarPanel(
+      fluidRow(
+        column(3,
+          actionButton("runsim", label="Run sim")),
+        column(3,
+          numericInput("numEncounters", label = h5("# of Encounters"), value = 2000)),
+        column(6,
+            radioButtons("seedType",label="Seed",
+                choices=c("Random"="rand",
+                    "Specific"="specific"),
+                selected="rand",
+                inline=TRUE),
+            conditionalPanel(condition="input.seedType == 'specific'",
+                numericInput("seed","",value=0))
+            )
+        ),
       sliderInput("numAgents",
                   "# of agents:",
                   min = 4,
                   max = 80,
-                  value = 16,
+                  value = 64,
                   step = 4),
       sliderInput("probConnected",
                   "Probability of connection between Agents:",
                   min = 0.01,
                   max = 1.00,
                   value = 0.5),
-      numericInput("numEncounters", label = h4("# of Encounters"), value = 2000),
       sliderInput("probUpdate",
                   "Probability of an Agent to update opinion:",
                   min = 0.01,
@@ -35,11 +49,12 @@ shinyUI(fluidPage(
                   min = 0.01,
                   max = 1.0,
                   value = 0.5),
-      selectInput("terminate", label=h4("Terminate after uniformity of opinion"), choices = list("Hidden" = "hidden", "Expressed" = "expressed", "Both" = "both")),
-      selectInput("victim", label=h4("A is victim?"), choices = list("True" = TRUE, "False" = FALSE)),
-      selectInput("chooseRandomly", label=h4("Choose randomly?"), choices = list("Yes" = TRUE, "No" = FALSE)),
+      fluidRow(
+        column(4, selectInput("terminate", label=h5("Terminate after uniformity"), choices = list("Hidden" = "hidden", "Expressed" = "expressed", "Both" = "both", "Never terminate" = "never"))),
+        column(4, selectInput("victim", label=h5("A is victim?"), choices = list("True" = TRUE, "False" = FALSE))),
+        column(4, selectInput("chooseRandomly", label=h5("Choose randomly?"), choices = list("Yes" = TRUE, "No" = FALSE)))
+      )
       
-      submitButton("Submit")
     ),
     
     mainPanel(
