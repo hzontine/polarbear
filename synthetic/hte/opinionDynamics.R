@@ -70,7 +70,8 @@ sim.opinion.dynamics <- function(init.graph,
         generate.graph.per.encounter=FALSE,
         termination.function=get.unanimity.termination.function(),
         terminate.after.max.num.encounters=!is.infinite(num.encounters),
-        verbose=FALSE) {
+        verbose=FALSE,
+        progress=NULL) {
 
 	cat("Starting.....\n")
 
@@ -137,6 +138,11 @@ sim.opinion.dynamics <- function(init.graph,
                     update.info <- 
                         victim.update.function[[i]](graphs[[graph.num]],v,id)
                     encounter.num <<- encounter.num + 1
+                    if (!is.null(progress)) {
+                        progress$set(message=paste0("Encounter ",
+                            encounter.num,"/",num.encounters),
+                            value=encounter.num)
+                    }
 
                     if (length(update.info$victim.vertex) > 0  &&
                         get.vertex.attribute(graphs[[graph.num]],
@@ -202,6 +208,9 @@ sim.opinion.dynamics <- function(init.graph,
         }
     }
 	cat("Done!\n")
+    if (!is.null(progress)) {
+        progress$close()
+    }
     graphs[1:graph.num]
 }
 
@@ -232,10 +241,13 @@ get.unanimity.termination.function <- function(attribute1="opinion") {
         function(graph) {
             if(attribute1 == "opinion" || attribute1 == "hidden" || attribute1 == "expressed") {
                 return (length(unique(get.vertex.attribute(graph, attribute1))) == 1)
-            }else{
+            }else if (attribute1 == "both") {
                 # attribute1 == "both"
                 return ((length(unique(get.vertex.attribute(graph, "hidden"))) == 1) &&
                     (length(unique(get.vertex.attribute(graph, "expressed"))) == 1))
+            } else {
+                # Never terminate.
+                return(FALSE)
             }
         }
     )
