@@ -1,21 +1,25 @@
 Research Question:
 
-Can we use this model understand how a society can culivate an increasing difference between 
-true and expressed opinions?
+In a situation where one opinion is known to be socially unpopular, are the
+two processes we propose (one in-person, one anonymous) sufficient to explain
+the observed level of difference between people's true and expressed opinions?
 
 
 Dependent Variables:
 
-- Assortativity
-- Transitivity
+- Discrepancy between the proportion of voters who have hidden preference,
+  versus expressed preference, for the Unpopular Candidate
+- Assortativity (when model reaches equilibrium)
+- Time to reach equilibrium
 - What is the majority of hidden opinions when "election" day occurs?
-- % of true believers
 
 
 Independent Variables:
 
-- Probability of an initial connection between agents
-- Probability of an agent to hide their true opinion
+- The "Unpopularness" of the Unpopular Candidate (probability of faking
+  one's expressed opinion if one's hidden opinion is for UC)
 - Probability of an agent to bully someone into hiding their true opinion
-- Stubborn true believers 
+  (same as above?)
+- Probability of an initial connection between agents
+- Proportion of agents who are Stubborn True Believers 
 
