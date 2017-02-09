@@ -1,11 +1,21 @@
 Research Question:
 
-
+Can we use this model understand how a society can culivate an increasing difference between 
+true and expressed opinions?
 
 
 Dependent Variables:
 
-
+- Assortativity
+- Transitivity
+- What is the majority of hidden opinions when "election" day occurs?
+- % of true believers
 
 
 Independent Variables:
+
+- Probability of an initial connection between agents
+- Probability of an agent to hide their true opinion
+- Probability of an agent to bully someone into hiding their true opinion
+- Stubborn true believers 
+
