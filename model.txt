@@ -1,28 +1,50 @@
 Research Question:
 
-In a situation where one opinion is known to be socially unpopular, are the
-two processes we propose (one in-person, one anonymous) sufficient to explain
-the observed level of difference between people's true and expressed opinions?
+Quantitative and specific: In a situation where one opinion is known to be
+socially unpopular, are the two processes we propose (one in-person, one
+anonymous) sufficient to explain the observed level of difference between
+people's true and expressed opinions?
 
-Can we use this model understand why a society unknowingly will experience a 
-divergence between the majority's true and expressed opinion?
+General exploration: Can we use this model understand why a society
+unknowingly will experience a divergence between the majority's true and
+expressed opinion?
 
 
 Dependent Variables:
 
-- Discrepancy between the proportion of voters who have hidden preference,
-  versus expressed preference, for the Unpopular Candidate
+    GOOD:
+- "poll bias": Percentage of PPPs when compared with all those who express
+  Popular (HTE)
 - Assortativity (when model reaches equilibrium)
+    * Find out whether the model does reach equilibrium. If so, then we can
+      use this. If not, think about how to characterize "the assortativity of
+      the evolving graph" in a single number we can use.
+
+    MEH:
 - Time to reach equilibrium
 - What is the majority of hidden opinions when "election" day occurs?
 
 
 Independent Variables:
 
-- The "Unpopularness" of the Unpopular Candidate (probability of faking
+- The "Unpopularness" of the Unpopular Opinion (probability of faking
   one's expressed opinion if one's hidden opinion is for UC)
-- Probability of an agent to bully someone into hiding their true opinion
-  (same as above?)
-- Probability of an initial connection between agents
-- Proportion of agents who are Stubborn True Believers 
 
+- What kind of graph do we have?
+    * ER vs Barabasi vs Small World
+    * If ER: probability of an initial connection between agents
+
+- Are there more than one kind of agent with regard to Stubbornness
+    * If so, what % are stubborn believers?
+- Proportion of agents who are Stubborn True Believers 
+- Initial Assortativity (do we start off polarized or no, and by how much?)
+
+
+
+Definitions:
+"true believer" -- an agent whose expressed and hidden match. (You can be an
+Unpopular true believer or a Popular true believer.)
+"peer pressured person" (PPP) -- an agent who says "Popular" but who thinks
+"Unpopular"
+"against the grain person" (AGP) -- an agent who says "Unpopular" but who
+thinks "Popular." (shouldn't be many of these if the model works right."

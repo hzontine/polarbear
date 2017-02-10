@@ -1,36 +1,37 @@
 
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
-2/13  SD/HZ  *Fix Shiny app which only refreshes top graph.
-
-2/13   HZ    *Spend solid quality time with the Shiny app playing with it to see what
-                affects what and how.
-
-2/8    HZ    **Define the research question. Write it down. Memorize it.
-                ("Something we can talk about" by this date. Don't worry about perfection.)
-
-2/8    HZ    **Identify and rigorously define the dependent variable(s). (Write it down.)
-
-2/8    HZ    **Identify and list the independent variables. (Write it down.)
-
-2/10   HZ    Read and classify papers from CSSSA/WSC.
-                - Joseph Harrison dissertation
-
-2/15   HZ    Come up with a one-sentence capture of "why we want to talk to" each person on our
-                CSSSA/WSC list.
-
-2/17   HZ    Implement the "Hidden Trump Influence" (HTI) aspect to the model (that can be
+2/13   HZ    **Implement the "Hidden Trump Influence" (HTI) aspect to the model (that can be
                 turned on and off). when on, the model now becomes inherently asymmetric.
 
-2/13   HZ    *Add a "poll bias over time" graph. (How far off are expressed vs. hidden) Note:
+2/13   HZ    **Spend solid quality time with the Shiny app playing with it to see what
+                affects what and how. (See "notesOnPlayingWithSim.txt.")
+
+2/15   HZ    *Add a "poll bias over time" graph. (How far off are expressed vs. hidden) Note:
                 only one line -- "how much higher is expressed-blue than hidden-blue?"
 
+2/15   HZ    *Determine whether model reaches equilibrium with regards to: (1)
+             assortativity (2) poll bias.
 
+2/17   HZ    Read and classify papers from CSSSA/WSC.
+                - Joseph Harrison dissertation
+
+2/17   HZ    Come up with a one-sentence capture of "why we want to talk to" each person on our
+                CSSSA/WSC list.
+
+3/??   HZ    Implement stubborn vs. not, and % of stubborn agents (Note to
+             self: should this be two %'s, one for Pop and one for Unpop?)
+
+3/??   HZ    Implement different starting graph types (ER, Barabasi, Watts-Strogatz)
+
+       SD    How is original BVM impacted by density of starting graph? (Does
+             it converge more or less quickly if more edges?)
 
 
 Meetings:
-Wed -- Talk about research question and variables.
-Fri -- Talk about paper classification and where we're at.
-Mon -- Meet and go over findings from informal Shiny app play sessions.
+Mon 2/13 -- Meet and go over findings from informal Shiny app play sessions.
+Wed 2/15 -- Meet and go over equilibrium findings.
+Fri 2/17 -- Talk about paper classification and where we're at.
+
 
 

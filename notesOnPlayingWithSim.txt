@@ -1,0 +1,12 @@
+
+Sanity check items:
+-------------------
+When you crank up HTI, you should see a consistent poll bias in favor of
+Popular. When you dial it down it to zero, you should see no consistent poll
+bias in either direction. (CONFIRM)
+
+
+
+
+Identify CLEARLY in your mind what each of the i.v.'s are. Ask yourself: "when
+I crank this to the extremes, what ought to be the effect?"
