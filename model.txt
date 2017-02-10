@@ -1,13 +1,12 @@
 Research Question:
 
-Can we use this model understand how a society can culivate an increasing difference between 
-true and expressed opinions?
+Can we use this model understand why a society unknowingly will experience a 
+divergence between the majority's true and expressed opinion?
 
 
 Dependent Variables:
 
 - Assortativity
-- Transitivity
 - What is the majority of hidden opinions when "election" day occurs?
 - % of true believers
 
