@@ -4,6 +4,9 @@ In a situation where one opinion is known to be socially unpopular, are the
 two processes we propose (one in-person, one anonymous) sufficient to explain
 the observed level of difference between people's true and expressed opinions?
 
+Can we use this model understand why a society unknowingly will experience a 
+divergence between the majority's true and expressed opinion?
+
 
 Dependent Variables:
 
