@@ -381,8 +381,11 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 V(graph)[victim.vertex]$expressed) {
                 # We don't agree with them externally. Possibly succumb to
                 # peer pressure and "pretend" we agree.
-                if (runif(1) < prob.knuckle.under.pressure) {
-                    expressed.encounter.num <<- expressed.encounter.num + 1
+
+              # if victim is red
+                if(V(graph)[victim.vertex]$expressed == 1 && runif(1) < prob.knuckle.under.pressure) {
+                      expressed.encounter.num <<- expressed.encounter.num + 1
+                      
                     return(list(new.value=V(graph)[vertex]$expressed,
                        victim.vertex=victim.vertex, type="expressed",
                        message=paste0("toface: ", vertex," intimidates ", 
