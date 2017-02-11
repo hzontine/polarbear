@@ -363,7 +363,7 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.upd
 # own hidden opinion to reflect our expressed opinion. (Probability
 # prob.internalize.expressed.opinion.)
 get.peer.pressure.update.function <- function(A.is.victim=FALSE,
-    prob.knuckle.under.pressure, prob.internalize.expressed.opinion) {
+    prob.knuckle.under.pressure, prob.internalize.expressed.opinion, trumpEffect=TRUE) {
     return (
         # Opinion is default
         function(graph, vertex.A, vertex.B) {
@@ -382,23 +382,38 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 # We don't agree with them externally. Possibly succumb to
                 # peer pressure and "pretend" we agree.
 
-              # if victim is red
-                if(V(graph)[victim.vertex]$expressed == 1 && runif(1) < prob.knuckle.under.pressure) {
-                      expressed.encounter.num <<- expressed.encounter.num + 1
+              if(trumpEffect){
+                # if victim is red
+                  if(V(graph)[victim.vertex]$expressed == 1 && runif(1) < prob.knuckle.under.pressure) {
+                        expressed.encounter.num <<- expressed.encounter.num + 1
                       
-                    return(list(new.value=V(graph)[vertex]$expressed,
-                       victim.vertex=victim.vertex, type="expressed",
-                       message=paste0("toface: ", vertex," intimidates ", 
-                            victim.vertex, " to pretend he's ", 
-                            color.for(V(graph)[vertex]$expressed))))
-                } else {
-                    return(list(new.value=0,victim.vertex=NULL, type="hannah",
-                       message=paste0("toface: ", vertex,
-                            " UNsuccessfully tries to pressure ",
-                            victim.vertex, " to go ", 
-                            color.for(V(graph)[vertex]$expressed))))
-                }
-
+                      return(list(new.value=V(graph)[vertex]$expressed,
+                         victim.vertex=victim.vertex, type="expressed",
+                         message=paste0("toface: ", vertex," intimidates ", 
+                              victim.vertex, " to pretend he's ", 
+                              color.for(V(graph)[vertex]$expressed))))
+                  } else {
+                      return(list(new.value=0,victim.vertex=NULL, type="hannah",
+                         message=paste0("toface: ", vertex,
+                              " UNsuccessfully tries to pressure ",
+                              victim.vertex, " to go ", 
+                              color.for(V(graph)[vertex]$expressed))))
+                  }
+               } else {
+                  if(runif(1) < prob.knuckle.under.pressure){
+                      return(list(new.value=V(graph)[vertex]$expressed,
+                              victim.vertex=victim.vertex, type="expressed",
+                              message=paste0("toface: ", vertex," intimidates ", 
+                                             victim.vertex, " to pretend he's ", 
+                                             color.for(V(graph)[vertex]$expressed))))
+                  } else {
+                      return(list(new.value=0,victim.vertex=NULL, type="hannah",
+                              message=paste0("toface: ", vertex,
+                                             " UNsuccessfully tries to pressure ",
+                                             victim.vertex, " to go ", 
+                                             color.for(V(graph)[vertex]$expressed))))
+                  }
+               }
             } else {
                 # We already agree with them externally. Possibly update our
                 # hidden opinion to match.

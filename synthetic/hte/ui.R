@@ -22,6 +22,7 @@ shinyUI(fluidPage(
                 numericInput("seed","",value=0))
             )
         ),
+      selectInput("hte", label=h5("Hidden Trump Effect"), choices = list("On" = TRUE, "Off" = FALSE)),
       sliderInput("numAgents",
                   "# of agents:",
                   min = 4,
