@@ -1,8 +1,6 @@
 
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
-2/13   HZ    **Implement the "Hidden Trump Influence" (HTI) aspect to the model (that can be
-                turned on and off). when on, the model now becomes inherently asymmetric.
 
 2/13   HZ    **Spend solid quality time with the Shiny app playing with it to see what
                 affects what and how. (See "notesOnPlayingWithSim.txt.")

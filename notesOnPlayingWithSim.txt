@@ -3,10 +3,36 @@ Sanity check items:
 -------------------
 When you crank up HTI, you should see a consistent poll bias in favor of
 Popular. When you dial it down it to zero, you should see no consistent poll
-bias in either direction. (CONFIRM)
+bias in either direction. (HZ- CONFIRMED)
 
 
+Identify CLEARLY in your mind what each of the IV's are.
+When I crank this to the extremes, what ought to be the effect?"
+-----
 
+*** Probability to give into peer pressure
+With HTE on and internalize opinion at 0.5.
 
-Identify CLEARLY in your mind what each of the i.v.'s are. Ask yourself: "when
-I crank this to the extremes, what ought to be the effect?"
+- 0.01:
+Red should never feel pressure to change their external to match another.
+Interesting seeds: 207, 205
+
+- 1.00:
+Red should always be change their opinion when they interact with blue.
+Interesting seeds: 7446
+
+*** Probability to internalize your expressed opinion
+With HTE and peer pressure at 0.5.
+- 0.01:
+Expressed opinions should never be internalized. So peer pressuring will never 
+result in the influence of an agent's hidden opinion. Only the anonymous 
+process will effect hidden opinions.
+Interesting seeds: 6275, 122, 2322, 4575
+
+- 1.00: 
+If everybody always internalizes their opinion, I would expect to see internal 
+opinions to pretty much always match the external opinions. Blue should 
+always end up winning. 
+Seeds with expected results: 727, 9696, 6700
+Intersting seeds: 3481, 3326
+
