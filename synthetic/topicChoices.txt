@@ -40,3 +40,6 @@ Ways to freaking get non-uniformity
     Low Bounded confidence threshold
     Latent opinions
     Stubbornness
+    ??? Did Hannah and Stephen just come up with a fourth way?? The HTE model
+may not ever reach uniformity depending on parameters (the face2face effect
+keeps the population from ever completely tipping?)

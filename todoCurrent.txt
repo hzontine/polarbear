@@ -2,14 +2,17 @@
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
 
-2/13   HZ    **Spend solid quality time with the Shiny app playing with it to see what
-                affects what and how. (See "notesOnPlayingWithSim.txt.")
-
 2/15   HZ    *Add a "poll bias over time" graph. (How far off are expressed vs. hidden) Note:
                 only one line -- "how much higher is expressed-blue than hidden-blue?"
 
-2/15   HZ    *Determine whether model reaches equilibrium with regards to: (1)
+2/17   HZ    *Determine whether model reaches equilibrium with regards to: (1)
              assortativity (2) poll bias.
+
+2/15   HZ    *Do some screen grabs of representative "extreme" cases for your
+             thesis.
+
+2/15   HZ    *Convince ourselves that the HTE model is a fourth way of not
+                reaching uniformity of opinion.
 
 2/17   HZ    Read and classify papers from CSSSA/WSC.
                 - Joseph Harrison dissertation
@@ -27,9 +30,11 @@ Date  Owner  Item
 
 
 Meetings:
-Mon 2/13 -- Meet and go over findings from informal Shiny app play sessions.
-Wed 2/15 -- Meet and go over equilibrium findings.
-Fri 2/17 -- Talk about paper classification and where we're at.
+Tue 2/14 -- Meet and go over findings from informal Shiny app play sessions.
+Wed 2/15 -- Show Stephen your screen grabs of extreme cases.
+            Discuss conclusion about "does HTE model converge?"
+Fri 2/17 -- Meet and go over equilibrium findings.
+Mon 2/20 -- Talk about paper classification and where we're at.
 
 
 

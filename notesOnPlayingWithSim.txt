@@ -5,6 +5,8 @@ When you crank up HTI, you should see a consistent poll bias in favor of
 Popular. When you dial it down it to zero, you should see no consistent poll
 bias in either direction. (HZ- CONFIRMED)
 
+Test the two processes independently (turn each off in turn by setting probs =
+0)
 
 
 IVs:
@@ -16,6 +18,7 @@ With HTE on and update at 0.5 and internalize opinion at 0.5.
 - 0.01:
 Red should never feel pressure to change their external to match another.
 Interesting seeds: 207, 205
+Run these for longer (40000+ iterations)
 
 - 1.00:
 Red should always be change their opinion when they interact with blue.
@@ -39,3 +42,16 @@ Seeds with expected results: 727, 9696, 6700
 Interesting seeds: 3481, 3326
 
 
+
+
+
+Playing with Stephen:
+---------------------
+When HTE is OFF and prob.internalize is 0, we effectively have two separate
+BVM processes: one for expressed and one for hidden. Each one eventually
+converges to uniformity independent of the other.
+
+When HTE is on and prob.internalize is 0, we effectively have two separate
+processes: (1) online, which is plain Jane BVM, and (2) face2face which is
+assymetric biased towards blue (no one ever changes expressed from blue to
+red.)
