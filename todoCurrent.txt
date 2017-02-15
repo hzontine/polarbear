@@ -5,8 +5,14 @@ Date  Owner  Item
 2/17   HZ    *Determine whether model reaches equilibrium with regards to: (1)
              assortativity (2) poll bias.
 
-2/15   HZ    *Convince ourselves that the HTE model is a fourth way of not
-                reaching uniformity of opinion.
+2/17   HZ    Write up sanity check section -
+                * Non-conformity: externals never flip so there's
+                always pressure to turn back
+                ** Crank 1 and 3 up and down and keep 2 at 0. We expect further
+                polarization when you have more online processes.
+
+2/17   HZ    Make a chart that for the three probabilities and all the permuations of 0 and 1. Write a sentence explaining the effect of the probabilities.
+
 
 2/17   HZ    Read and classify papers from CSSSA/WSC.
                 - Joseph Harrison dissertation

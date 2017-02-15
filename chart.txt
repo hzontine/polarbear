@@ -1,0 +1,13 @@
+Update      Knuckle Under       Internalize
+--------------------------------------------
+0               0                    0      = static / nothing
+0               0                    1      = 
+0               1                    0      = BVM exp (graph)
+0               1                    1      = 
+1               0                    0      = BVM inner (MF)
+1               0                    1      = 
+1               1                    0      = 2 independent processes
+1               1                    1      =
+
+
+Write sentences about each one. 

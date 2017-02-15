@@ -47,7 +47,7 @@ plot.bias <- function(graphs){
   plot(time.pts, totals, type="l", main="Poll Bias Over Time", xlab="time (iteration)", ylab = "Difference between expressed and hidden")
 
   if(any(totals < 0)){
-    lines(time.pts, rep(0, length(time.pts)), type="l", col="red", lty=2)
+    lines(time.pts, rep(0, length(time.pts)), type="l", col="black", lty=2)
   }
 }
 
