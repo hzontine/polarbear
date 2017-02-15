@@ -50,4 +50,13 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  
+  output$biasPlot <- renderPlot({
+    if (input$runsim < 1) return(NULL)
+    isolate({
+      plot.bias(graphs)
+    })
+  })
+  
+  
 })
