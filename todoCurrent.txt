@@ -2,9 +2,6 @@
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
 
-2/15   HZ    *Add a "poll bias over time" graph. (How far off are expressed vs. hidden) Note:
-                only one line -- "how much higher is expressed-blue than hidden-blue?"
-
 2/17   HZ    *Determine whether model reaches equilibrium with regards to: (1)
              assortativity (2) poll bias.
 
