@@ -2,14 +2,6 @@
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
 
-2/17   HZ    Write up sanity check section -
-                * Our implementation causing the model to never reach uniformity:
-                    * two processes effecting the system      
-                    * we expect further polarization if we increase update and 
-                    internalize but decrease peer pressure 0
-                        * this simulates the increased influence of online social
-                            influence, as opposed to face2face interactions.
-
 2/20   HZ    Determine whether model reaches equilibrium with regards to: (1)
              assortativity (2) poll bias.
 
