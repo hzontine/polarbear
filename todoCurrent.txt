@@ -2,6 +2,20 @@
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
 
+       HZ    Sanity check -- play with prob connected between agents. More connected, the slower
+                it should take to reach uniformity.
+                * look into the literature
+
+       HZ    Add 2 graphs of true believers
+                * hidden: out of the hidden blues, what % are expressed blue? (and red)
+                * expressed: out of exp blues, what % are expressed blue? (and red)
+
+       HZ    Separate plot--- 
+             Graph the prob internalize vs. the max it gets away from 50/50. When it is at 0,
+                graph can reach uniformity, but if it is at 1, will not converge.
+
+       HZ    Write 'The Model At Its Extremes' section
+
 2/20   HZ    Determine whether model reaches equilibrium with regards to: (1)
              assortativity (2) poll bias.
 
