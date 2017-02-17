@@ -3,10 +3,12 @@ Date  Owner  Item
 -----------------------------------------------------------------------------------------------
 
 2/17   HZ    Write up sanity check section -
-                * 3 implementations that the literature has cited which causes the BVM not to conform
-                * Our 4th idea: two processes                
-                    * If we crank up update and internalize but make peer pressure 0, we expect further
-                    polarizatin. The more online processes influence the model, the more polarization.
+                * Our implementation causing the model to never reach uniformity:
+                    * two processes effecting the system      
+                    * we expect further polarization if we increase update and 
+                    internalize but decrease peer pressure 0
+                        * this simulates the increased influence of online social
+                            influence, as opposed to face2face interactions.
 
 2/20   HZ    Determine whether model reaches equilibrium with regards to: (1)
              assortativity (2) poll bias.
