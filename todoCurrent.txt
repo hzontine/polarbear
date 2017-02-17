@@ -5,7 +5,7 @@ Date  Owner  Item
                 it should take to reach uniformity.
                 * look into the literature
 
-       HZ    Add 2 graphs of true believers
+2/20   HZ    Add 2 graphs of true believers
                 * hidden: out of the hidden blues, what % are expressed blue? (and red)
                 * expressed: out of exp blues, what % are expressed blue? (and red)
 
@@ -15,7 +15,7 @@ Date  Owner  Item
 
        HZ    Write 'The Model At Its Extremes' section
 
-2/20   HZ    Determine whether model reaches equilibrium with regards to: (1)
+2/22   HZ    Determine whether model reaches equilibrium (reaches a steady state) with regards to: (1)
              assortativity (2) poll bias.
 
 2/20   HZ    Read and classify papers from CSSSA/WSC.
