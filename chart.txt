@@ -9,30 +9,39 @@ Update      Knuckle Under       Internalize
                                                 will always internalize their expressed opinion.
                                                     *  expressed opinions never leave 50/50. hidden opinions change but around 1000
                                                         iterations, remain at 50/50. 
+                                              Note: if you meet someone you externally disagree with, nothing happens. As soon as you
+                                                 meet someone you externally *agree* with, you *permanently* change hidden to match
+                                                 your expressed.
 
 0               1                    0      = Online process is always unsuccessful. Agents interact with graph neighbors sharing their
                                                 expressed opinions (like the BVM). Red agents, who interact with blue agents, always 
                                                 update their (expressed) opinion to imitate the other agent.
                                                     * expressed opinions reach uniformity
+                                              Single BVM with "expressed" opinion on graph 
 
 0               1                    1      = Online process is always ineffective. In face2face iteractions, red agents will always
                                                 change their expressed opinions to blue. If the two agents agree externally, the
-                                                victim agent will interalize that opinion.
+                                                victim agent will internalize that opinion.
                                                     * expressed opinions steadily reach uniformity of blue. hidden opinions soon
-                                                       follow to uniformity 
+                                                       follow to uniformity blue. (Note: hidden can briefly make some towards-red
+                                                       progress at the beginning, but pretty soon there are no external reds and 
+                                                       all the external blue opinions eventually become internalized.)
 
 1               0                    0      = Face2face process is unsuccessful. The online process acts like the binary voter model.
                                                 Agents interact anonymously with any other agent. If their hidden opinions disagree,
                                                 the victim agent always conforms to the other opinion.
                                                     * expressed opinions never change. hidden opinions behave like the BVM and always
                                                         reach uniformity of opinion (not influenced by the trump effect).
+                                              Single BVM with "hidden" opinion on mean field 
 
-1               0                    1      = In online iteractions, when two agents' opinions disagree, the victim always conforms 
+1               0                    1      = In online interactions, when two agents' opinions disagree, the victim always conforms 
                                                 their opinion to match the other's. In the face2face process, if two agents disagree,
                                                 nothing happens. If they agree, the victim agent will always internalize their 
                                                 expressed opinion.
                                                     * expressed opinions never change. hidden opinions never converge (at least by
                                                     50000 encounters).
+                                              Prediction: as you lower down "internalize" from 1, the farther the hidden opinions
+                                                can diverge from 50/50.
 
 1               1                    0      = The two processes (face2face and online) function independently. The online process
                                                 acts like the BVM where iteractions occur from MF and the victim agent always
@@ -41,12 +50,17 @@ Update      Knuckle Under       Internalize
                                                 opinion to blue. Agents never interalize their expressed opinion.
                                                     * expressed opinions quickly reach uniformity of blue. hidden opinions eventually
                                                         reach uniformity (after around 10000 encounters).
+                                              Two independent BVMs: "hidden" opinion on mean field, and "expressed" on graph
 
 1               1                    1      = Expressed red agents always change to blue when they interact with expressed blue agents.
                                                 When two agents agree in a face2face encounter, the victim always internalizes his
                                                 expressed opinion. Agents, when interacting online, always modify their opinion to 
                                                 mimic the other agent if their internal opinions disagree.
                                                     * expressed opinions quickly reach uniformity of blue. once that occurs, victim
-                                                        agents in face2face interactions always interalize their expressed opinion.
+                                                        agents in face2face interactions always internalize their expressed opinion.
                                                         hidden opinions constantly change through online interactions (where red is
-                                                        not negatively perceieved) and the interalizing of blue expressed opinions.
+                                                        not negatively perceived) and the internalizing of blue expressed opinions.
+                                                Expressed will go blue, followed by hidden, "guaranteed." (Guaranteed because once
+                                                all expressed's are blue, there is an ongoing pressure to turn hidden's blue, even
+                                                though there is simultaneously an unbiased BVM process going on with hidden's as 
+                                                well.)
