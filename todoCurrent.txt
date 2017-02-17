@@ -2,22 +2,18 @@
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
 
-2/17   HZ    *Determine whether model reaches equilibrium with regards to: (1)
+2/17   HZ    Write up sanity check section -
+                * 3 implementations that the literature has cited which causes the BVM not to conform
+                * Our 4th idea: two processes                
+                    * If we crank up update and internalize but make peer pressure 0, we expect further
+                    polarizatin. The more online processes influence the model, the more polarization.
+
+2/20   HZ    Determine whether model reaches equilibrium with regards to: (1)
              assortativity (2) poll bias.
 
-2/17   HZ    Write up sanity check section -
-                * Non-conformity: externals never flip so there's
-                always pressure to turn back
-                ** Crank 1 and 3 up and down and keep 2 at 0. We expect further
-                polarization when you have more online processes.
+2/20   HZ    Read and classify papers from CSSSA/WSC.
 
-2/17   HZ    Make a chart that for the three probabilities and all the permuations of 0 and 1. Write a sentence explaining the effect of the probabilities.
-
-
-2/17   HZ    Read and classify papers from CSSSA/WSC.
-                - Joseph Harrison dissertation
-
-2/17   HZ    Come up with a one-sentence capture of "why we want to talk to" each person on our
+2/20   HZ    Come up with a one-sentence capture of "why we want to talk to" each person on our
                 CSSSA/WSC list.
 
 3/??   HZ    Implement stubborn vs. not, and % of stubborn agents (Note to
@@ -33,8 +29,10 @@ Meetings:
 Tue 2/14 -- Meet and go over findings from informal Shiny app play sessions.
 Wed 2/15 -- Show Stephen your screen grabs of extreme cases.
             Discuss conclusion about "does HTE model converge?"
-Fri 2/17 -- Meet and go over equilibrium findings.
-Mon 2/20 -- Talk about paper classification and where we're at.
+Fri 2/17 -- Dicuss the effect on the model that the turning on/off the three probabilities has.
+                * chart.txt
+Mon 2/20 -- Talk about paper classification and where we're at. Go over equilibrium findings.
+
 
 
 
