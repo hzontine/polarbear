@@ -1,7 +1,6 @@
 
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
-
 2/20   HZ    Determine whether model reaches equilibrium with regards to: (1)
              assortativity (2) poll bias.
 
@@ -26,7 +25,8 @@ Wed 2/15 -- Show Stephen your screen grabs of extreme cases.
 Fri 2/17 -- Dicuss the effect on the model that the turning on/off the three probabilities has.
                 * chart.txt
 Mon 2/20 -- Talk about paper classification and where we're at. Go over equilibrium findings.
-
-
+Wed 2/22 -- Go over 1. the thesis outline, and 2. the vanilla "binary voter model" section.
+Fri 2/24 -- Go over 1. the "Hidden Trump Model" section, and 2. the "model at its extremes" 
+                section.
 
 
