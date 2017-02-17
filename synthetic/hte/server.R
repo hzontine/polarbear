@@ -45,6 +45,7 @@ shinyServer(function(input, output, session) {
   
   output$polarPlot <- renderPlot({
     if (input$runsim < 1) return(NULL)
+    cat("Redrawing polarization\n")
     isolate({
       plot.polarization(graphs)
     })
@@ -53,6 +54,7 @@ shinyServer(function(input, output, session) {
   
   output$biasPlot <- renderPlot({
     if (input$runsim < 1) return(NULL)
+    cat("Redrawing bias\n")
     isolate({
       plot.bias(graphs)
     })
