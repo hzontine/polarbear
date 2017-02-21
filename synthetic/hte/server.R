@@ -33,7 +33,7 @@ shinyServer(function(input, output, session) {
                                   get.peer.pressure.update.function(A.is.victim=input$victim,
                                       prob.knuckle.under.pressure=input$probPressure,
                                       prob.internalize.expressed.opinion=input$probInternalize, trumpEffect=input$hte)),
-                                  generate.graph.per.encounter=TRUE,
+                                  generate.graph.per.encounter=FALSE,
                                   termination.function=get.unanimity.termination.function(input$terminate),
                                   choose.randomly.each.encounter=input$chooseRandomly, progress=progress)
     
@@ -45,7 +45,7 @@ shinyServer(function(input, output, session) {
   
   output$polarPlot <- renderPlot({
     if (input$runsim < 1) return(NULL)
-    cat("Redrawing polarization\n")
+    cat("Drawing polarization\n")
     isolate({
       plot.polarization(graphs)
     })
@@ -54,11 +54,27 @@ shinyServer(function(input, output, session) {
   
   output$biasPlot <- renderPlot({
     if (input$runsim < 1) return(NULL)
-    cat("Redrawing bias\n")
+    cat("Drawing bias\n")
     isolate({
       plot.bias(graphs)
     })
   })
   
+  
+  output$hiddenPlot <- renderPlot({
+    if (input$runsim < 1) return(NULL)
+    cat("Drawing hidden true believers\n")
+    isolate({
+      plot.hidden(graphs)
+    })
+  })
+  
+  output$expPlot <- renderPlot({
+    if (input$runsim < 1) return(NULL)
+    cat("Drawing expressed true believers\n")
+    isolate({
+      plot.expressed(graphs)
+    })
+  })
   
 })

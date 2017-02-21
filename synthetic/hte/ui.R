@@ -62,7 +62,9 @@ shinyUI(fluidPage(
     mainPanel(
       plotOutput("binaryPlot"),
       plotOutput("polarPlot"),
-      plotOutput("biasPlot")
+      plotOutput("biasPlot"),
+      plotOutput("hiddenPlot"),
+      plotOutput("expPlot")
     )
   )
 ))

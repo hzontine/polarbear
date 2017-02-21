@@ -5,11 +5,7 @@ Date  Owner  Item
                 it should take to reach uniformity.
                 * look into the literature
 
-2/20   HZ    Add 2 graphs of true believers
-                * hidden: out of the hidden blues, what % are expressed blue? (and red)
-                * expressed: out of exp blues, what % are expressed blue? (and red)
-
-       HZ    Separate plot--- 
+       HZ    Param sweep plot---- 
              Graph the prob internalize vs. the max it gets away from 50/50. When it is at 0,
                 graph can reach uniformity, but if it is at 1, will not converge.
 
@@ -17,11 +13,8 @@ Date  Owner  Item
 
 2/22   HZ    Determine whether model reaches equilibrium (reaches a steady state) with regards to: (1)
              assortativity (2) poll bias.
-
-2/20   HZ    Read and classify papers from CSSSA/WSC.
-
-2/20   HZ    Come up with a one-sentence capture of "why we want to talk to" each person on our
-                CSSSA/WSC list.
+                * specfically, when it does not converge (gets more polarized)
+                * what does the poll bias look like when the model refuses to converge
 
 3/??   HZ    Implement stubborn vs. not, and % of stubborn agents (Note to
              self: should this be two %'s, one for Pop and one for Unpop?)
@@ -33,12 +26,7 @@ Date  Owner  Item
 
 
 Meetings:
-Tue 2/14 -- Meet and go over findings from informal Shiny app play sessions.
-Wed 2/15 -- Show Stephen your screen grabs of extreme cases.
-            Discuss conclusion about "does HTE model converge?"
-Fri 2/17 -- Dicuss the effect on the model that the turning on/off the three probabilities has.
-                * chart.txt
-Mon 2/20 -- Talk about paper classification and where we're at. Go over equilibrium findings.
+Mon 2/20 -- Talk about who we need to email. Check out true believer graphs.
 Wed 2/22 -- Go over sections 2. ("OD models") and 2.1 ("BMV" and its main results)
 Fri 2/24 -- Go over section 3. (the "Hidden Trump Model")
 Mon 2/?? -- Go over section 4. (the "model at its extremes")
