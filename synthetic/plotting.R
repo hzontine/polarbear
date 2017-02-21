@@ -65,7 +65,7 @@ plot.hidden <- function(graphs){
   
 }
 
-plot.expressed <- function(graph){
+plot.expressed <- function(graphs){
 
   blue <- sapply(graphs, function(graph) {
     all.exp <- sapply(1:length(V(graph)), function(v){
