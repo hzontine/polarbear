@@ -1,7 +1,7 @@
 library(shiny)
 library(igraph)
 
-source("opinionDynamics.R")
+source("../opinionDynamics.R")
 
 shinyServer(function(input, output, session) {
   

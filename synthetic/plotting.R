@@ -6,7 +6,124 @@ library(igraph)
 library(RColorBrewer)
 library(stringr)
 
-source("fatCircle.R")
+#source("fatCircle.R")
+
+plot.hidden <- function(graphs){
+  blue <- sapply(graphs, function(graph) {
+    all.hidden <- sapply(1:length(V(graph)), function(v){
+      get.vertex.attribute(graph, "hidden", index=v)
+    })
+    sum.blue <- length(which(all.hidden == 0))
+    if(sum.blue == 0){
+      0
+    } else{
+      x <- sapply(1:length(V(graph)), function(v){
+        hidden <- get.vertex.attribute(graph, "hidden", index=v)
+        if(hidden == 0){
+          exp <- get.vertex.attribute(graph, "expressed", index=v)
+          if(exp == 0){
+            1
+          } else{
+            0
+          }
+        } else{
+          0
+        }
+      })
+      trunc(((length(which(x == 1))) / sum.blue) * 100)
+    }
+  })
+
+  red <- sapply(graphs, function(graph) {
+    all.hidden <- sapply(1:length(V(graph)), function(v){
+      get.vertex.attribute(graph, "hidden", index=v)
+    })
+    sum.red <- length(which(all.hidden == 1))
+    if(sum.red == 0){
+      0
+    } else{
+      x <- sapply(1:length(V(graph)), function(v){
+        hidden <- get.vertex.attribute(graph, "hidden", index=v)
+        if(hidden == 1){
+          exp <- get.vertex.attribute(graph, "expressed", index=v)
+          if(exp == 1){
+            1
+          } else{
+            0
+          }
+        } else{
+          0
+        }
+      })  
+      trunc(((length(which(x == 1))) / sum.red) * 100)
+    }
+  })
+  
+  time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+  plot(time.pts, blue, type="l", lwd=2, col="blue", main="(hidden) True Believers", xlab="time (iteration)", ylab = "% of hidden who are also expressed", ylim=c(0,100))
+  lines(time.pts, red, type="l", lwd=2, col="red")
+  
+}
+
+plot.expressed <- function(graph){
+
+  blue <- sapply(graphs, function(graph) {
+    all.exp <- sapply(1:length(V(graph)), function(v){
+      get.vertex.attribute(graph, "expressed", index=v)
+    })
+    sum.blue <- length(which(all.exp == 0))
+    if(sum.blue == 0){
+      0
+    } else{
+      x <- sapply(1:length(V(graph)), function(v){
+        exp <- get.vertex.attribute(graph, "expressed", index=v)
+        if(exp == 0){
+          hidden <- get.vertex.attribute(graph, "hidden", index=v)
+          if(hidden == 0){
+            1
+          } else{
+            0
+          }
+        } else{
+          0
+        }
+      })
+      trunc(((length(which(x == 1))) / sum.blue) * 100)
+    }
+  })
+  
+  red <- sapply(graphs, function(graph) {
+    all.exp <- sapply(1:length(V(graph)), function(v){
+      get.vertex.attribute(graph, "expressed", index=v)
+    })
+    sum.red <- length(which(all.exp == 1))
+    if(sum.red == 0){
+      0
+    } else{
+      x <- sapply(1:length(V(graph)), function(v){
+        exp <- get.vertex.attribute(graph, "expressed", index=v)
+        if(exp == 1){
+          hidden <- get.vertex.attribute(graph, "hidden", index=v)
+          if(hidden == 1){
+            1
+          } else{
+            0
+          }
+        } else{
+          0
+        }
+      })  
+      trunc(((length(which(x == 1))) / sum.red) * 100)
+      
+    }
+  })
+
+  time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+  plot(time.pts, blue, type="l", lwd=2, col="blue", main="(expressed) True Believers", xlab="time (iteration)", ylab = "% of expressed who are also hidden", ylim=c(0,100))
+  lines(time.pts, red, type="l", lwd=2, col="red")
+  
+     
+}
 
 plot.polar.graph <- function(graph, legend=c("L","C"), 
     legend.fill=c("blue","red"), 
@@ -25,6 +142,33 @@ plot.polar.graph <- function(graph, legend=c("L","C"),
 
         legend("bottomleft",legend=legend, fill=legend.fill)
 }
+
+
+plot.bias <- function(graphs){
+  
+  expressed <- sapply(graphs, function(graph) {
+    y <- sapply(1:length(V(graph)), function(v){
+      get.vertex.attribute(graph, "expressed", index=v)
+    })
+    sum(y == 0)
+  })
+  hidden <- sapply(graphs, function(graph) {
+    x <- sapply(1:length(V(graph)), function(v){
+      get.vertex.attribute(graph, "hidden", index=v)
+    })
+    sum(x == 0)
+  })
+  totals <- expressed - hidden
+  time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+  
+  plot(time.pts, totals, type="l", lwd=2, main="Poll Bias Over Time", xlab="time (iteration)", ylab = "Difference between expressed and hidden")
+
+  if(any(totals < 0)){
+    lines(time.pts, rep(0, length(time.pts)), type="l", col="black", lty=2)
+  }
+}
+
+
 
 # Given a list of graphs, plot them, (possibly) ensuring that vertices are
 # plotted in the same location from graph to graph.
@@ -251,16 +395,24 @@ plot.animation <- function(graphs, attribute.name="ideology",
 # attribute.name -- the name of a vertex attribute whose assortativity is to
 # be computed and plotted.
 #
-plot.polarization <- function(graphs, attribute.name="ideology") {
-    assortativities <- sapply(graphs, function(graph) {
+plot.polarization <- function(graphs, attribute1="hidden", attribute2="expressed") {
+    assortativities1 <- sapply(graphs, function(graph) {
         assortativity(graph,
-            types1=get.vertex.attribute(graph,attribute.name))
+            types1=get.vertex.attribute(graph,attribute1))
     })
+    assortativities2 <- sapply(graphs, function(graph) {
+      assortativity(graph,
+                    types1=get.vertex.attribute(graph,attribute2))
+    })
+    
     time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
 
-    plot(time.pts,assortativities, type="l",ylim=c(-1,1),
+    plot(time.pts,assortativities1, type="l",ylim=c(-1,1),
         main="Polarization over time", xlab="time (iteration)",
-        ylab=paste("Assortativity of",attribute.name))
+        ylab=paste("Assortativity of opinion"), lwd=2)
+    lines(time.pts,assortativities2, lty="dashed", lwd=2)
+    legend("bottomleft",legend=c(attribute1,attribute2),
+           lty=c("solid","dashed"))
 }
 
 
@@ -285,8 +437,8 @@ plot.binary.opinions <- function(graphs, attribute1="opinion", attribute2="none"
         time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
 
         plot(time.pts,frac.0s,ylim=c(0,1),type="l",col="blue",
-            xlab="time (encounters)", ylab="Fraction of agents with opinion",
-            lwd=2)
+            xlab="time (encounters)", ylab="% of Agents",
+            lwd=2, main="Opinion Change over time")
         lines(time.pts, frac2.1s, col="red", lty="dotted", lwd=2)
         lines(time.pts, frac.1s, col="red", lwd=2)
         lines(time.pts, frac2.0s, col="blue", lty="dotted", lwd=2)
@@ -304,7 +456,7 @@ plot.binary.opinions <- function(graphs, attribute1="opinion", attribute2="none"
         frac.0s <- sapply(graphs, attr, op=0)
         time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
 
-        plot(time.pts,frac.0s,ylim=c(0,1),type="l",col="blue",
+        plot(time.pts,frac.0s,ylim=c(0,1),type="l", lwd=2, col="blue",
             xlab="time (encounters)")
         lines(time.pts, frac.1s, col="red")
     }

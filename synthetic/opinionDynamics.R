@@ -3,7 +3,13 @@
 # Stephen and Hannah
 
 library(igraph)
-source("plotting.R")
+if (file.exists("plotting.R")) {
+    source("plotting.R")
+} else if (file.exists("../plotting.R")) {
+    source("../plotting.R")
+} else {
+    stop("Whoa -- can't find plotting.R!")
+}
 
 # Run an opinion dynamics simulation with n agents for num.encounters
 # encounters. Return a list of igraph objects, each giving the graph at a
@@ -70,7 +76,8 @@ sim.opinion.dynamics <- function(init.graph,
         generate.graph.per.encounter=FALSE,
         termination.function=get.unanimity.termination.function(),
         terminate.after.max.num.encounters=!is.infinite(num.encounters),
-        verbose=FALSE) {
+        verbose=FALSE,
+        progress=NULL) {
 
 	cat("Starting.....\n")
 
@@ -137,6 +144,11 @@ sim.opinion.dynamics <- function(init.graph,
                     update.info <- 
                         victim.update.function[[i]](graphs[[graph.num]],v,id)
                     encounter.num <<- encounter.num + 1
+                    if (!is.null(progress)) {
+                        progress$set(message=paste0("Encounter ",
+                            encounter.num,"/",num.encounters),
+                            value=encounter.num)
+                    }
 
                     if (length(update.info$victim.vertex) > 0  &&
                         get.vertex.attribute(graphs[[graph.num]],
@@ -202,6 +214,9 @@ sim.opinion.dynamics <- function(init.graph,
         }
     }
 	cat("Done!\n")
+    if (!is.null(progress)) {
+        progress$close()
+    }
     graphs[1:graph.num]
 }
 
@@ -227,14 +242,18 @@ get.never.terminate.function <- function() {
 }
 
 # Terminate if the graph has total uniformity of opinions.
-get.unanimity.termination.function <- function(attribute1="opinion", attribute2=NULL) {
+get.unanimity.termination.function <- function(attribute1="opinion") {
     return (
         function(graph) {
-            if(is.null(attribute2)) {
-                return (length(unique(get.vertex.attribute(graph,attribute1))) == 1)
-            }else{
-                return ((length(unique(get.vertex.attribute(graph,attribute1))) == 1) &&
-                    (length(unique(get.vertex.attribute(graph,attribute2))) == 1))
+            if(attribute1 == "opinion" || attribute1 == "hidden" || attribute1 == "expressed") {
+                return (length(unique(get.vertex.attribute(graph, attribute1))) == 1)
+            }else if (attribute1 == "both") {
+                # attribute1 == "both"
+                return ((length(unique(get.vertex.attribute(graph, "hidden"))) == 1) &&
+                    (length(unique(get.vertex.attribute(graph, "expressed"))) == 1))
+            } else {
+                # Never terminate.
+                return(FALSE)
             }
         }
     )
@@ -350,7 +369,7 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.upd
 # own hidden opinion to reflect our expressed opinion. (Probability
 # prob.internalize.expressed.opinion.)
 get.peer.pressure.update.function <- function(A.is.victim=FALSE,
-    prob.knuckle.under.pressure, prob.internalize.expressed.opinion) {
+    prob.knuckle.under.pressure, prob.internalize.expressed.opinion, trumpEffect=TRUE) {
     return (
         # Opinion is default
         function(graph, vertex.A, vertex.B) {
@@ -368,21 +387,39 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
                 V(graph)[victim.vertex]$expressed) {
                 # We don't agree with them externally. Possibly succumb to
                 # peer pressure and "pretend" we agree.
-                if (runif(1) < prob.knuckle.under.pressure) {
-                    expressed.encounter.num <<- expressed.encounter.num + 1
-                    return(list(new.value=V(graph)[vertex]$expressed,
-                       victim.vertex=victim.vertex, type="expressed",
-                       message=paste0("toface: ", vertex," intimidates ", 
-                            victim.vertex, " to pretend he's ", 
-                            color.for(V(graph)[vertex]$expressed))))
-                } else {
-                    return(list(new.value=0,victim.vertex=NULL, type="hannah",
-                       message=paste0("toface: ", vertex,
-                            " UNsuccessfully tries to pressure ",
-                            victim.vertex, " to go ", 
-                            color.for(V(graph)[vertex]$expressed))))
-                }
 
+              if(trumpEffect){
+                # if victim is red
+                  if(V(graph)[victim.vertex]$expressed == 1 && runif(1) < prob.knuckle.under.pressure) {
+                        expressed.encounter.num <<- expressed.encounter.num + 1
+                      
+                      return(list(new.value=V(graph)[vertex]$expressed,
+                         victim.vertex=victim.vertex, type="expressed",
+                         message=paste0("toface: ", vertex," intimidates ", 
+                              victim.vertex, " to pretend he's ", 
+                              color.for(V(graph)[vertex]$expressed))))
+                  } else {
+                      return(list(new.value=0,victim.vertex=NULL, type="hannah",
+                         message=paste0("toface: ", vertex,
+                              " UNsuccessfully tries to pressure ",
+                              victim.vertex, " to go ", 
+                              color.for(V(graph)[vertex]$expressed))))
+                  }
+               } else {
+                  if(runif(1) < prob.knuckle.under.pressure){
+                      return(list(new.value=V(graph)[vertex]$expressed,
+                              victim.vertex=victim.vertex, type="expressed",
+                              message=paste0("toface: ", vertex," intimidates ", 
+                                             victim.vertex, " to pretend he's ", 
+                                             color.for(V(graph)[vertex]$expressed))))
+                  } else {
+                      return(list(new.value=0,victim.vertex=NULL, type="hannah",
+                              message=paste0("toface: ", vertex,
+                                             " UNsuccessfully tries to pressure ",
+                                             victim.vertex, " to go ", 
+                                             color.for(V(graph)[vertex]$expressed))))
+                  }
+               }
             } else {
                 # We already agree with them externally. Possibly update our
                 # hidden opinion to match.
