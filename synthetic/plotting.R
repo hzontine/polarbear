@@ -15,7 +15,7 @@ plot.hidden <- function(graphs){
     })
     sum.blue <- length(which(all.hidden == 0))
     if(sum.blue == 0){
-      0
+      NA
     } else{
       x <- sapply(1:length(V(graph)), function(v){
         hidden <- get.vertex.attribute(graph, "hidden", index=v)
@@ -40,7 +40,7 @@ plot.hidden <- function(graphs){
     })
     sum.red <- length(which(all.hidden == 1))
     if(sum.red == 0){
-      0
+      NA
     } else{
       x <- sapply(1:length(V(graph)), function(v){
         hidden <- get.vertex.attribute(graph, "hidden", index=v)
@@ -65,7 +65,7 @@ plot.hidden <- function(graphs){
   
 }
 
-plot.expressed <- function(graph){
+plot.expressed <- function(graphs){
 
   blue <- sapply(graphs, function(graph) {
     all.exp <- sapply(1:length(V(graph)), function(v){
@@ -73,7 +73,7 @@ plot.expressed <- function(graph){
     })
     sum.blue <- length(which(all.exp == 0))
     if(sum.blue == 0){
-      0
+      NA
     } else{
       x <- sapply(1:length(V(graph)), function(v){
         exp <- get.vertex.attribute(graph, "expressed", index=v)
@@ -98,7 +98,7 @@ plot.expressed <- function(graph){
     })
     sum.red <- length(which(all.exp == 1))
     if(sum.red == 0){
-      0
+      NA
     } else{
       x <- sapply(1:length(V(graph)), function(v){
         exp <- get.vertex.attribute(graph, "expressed", index=v)
@@ -121,8 +121,6 @@ plot.expressed <- function(graph){
   time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
   plot(time.pts, blue, type="l", lwd=2, col="blue", main="(expressed) True Believers", xlab="time (iteration)", ylab = "% of expressed who are also hidden", ylim=c(0,100))
   lines(time.pts, red, type="l", lwd=2, col="red")
-  
-     
 }
 
 plot.polar.graph <- function(graph, legend=c("L","C"), 
