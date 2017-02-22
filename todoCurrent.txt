@@ -17,7 +17,9 @@ Date  Owner  Item
 
 2/24   HZ    Read Claudio paper.
 
-2/24   HZ    Determine whether model reaches equilibrium (reaches a steady state) with regards to: (1)
+       HZ    Read Moscovici paper.
+
+       HZ    Determine whether model reaches equilibrium (reaches a steady state) with regards to: (1)
              assortativity (2) poll bias.
                 * specfically, when it does not converge (gets more polarized)
                 * what does the poll bias look like when the model refuses to converge
