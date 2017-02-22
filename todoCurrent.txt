@@ -12,8 +12,8 @@ Date  Owner  Item
        HZ    Write 'The Model At Its Extremes' section
 
              Send email to CSSSA/WSC people.
-
-2/22   HZ    Read paper from Jiin's email.
+    
+       HZ    Finish implementation of effective encounter plots.
 
 2/24   HZ    Read Claudio paper.
 
