@@ -11,7 +11,13 @@ Date  Owner  Item
 
        HZ    Write 'The Model At Its Extremes' section
 
-2/22   HZ    Determine whether model reaches equilibrium (reaches a steady state) with regards to: (1)
+             Send email to CSSSA/WSC people.
+
+2/22   HZ    Read paper from Jiin's email.
+
+2/24   HZ    Read Claudio paper.
+
+2/24   HZ    Determine whether model reaches equilibrium (reaches a steady state) with regards to: (1)
              assortativity (2) poll bias.
                 * specfically, when it does not converge (gets more polarized)
                 * what does the poll bias look like when the model refuses to converge
