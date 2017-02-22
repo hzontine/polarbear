@@ -103,15 +103,22 @@ sim.opinion.dynamics <- function(init.graph,
 
     graphs[[1]] <- init.graph
     graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.encounters", 0)
-
+    graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.current.hidden.encounters", 0)
+    graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.current.exp.encounters", 0)
+    graphs[[1]] <- set.graph.attribute(graphs[[1]], "num.effective.encounters", 0)
+    graphs[[1]] <- set.graph.attribute(graphs[[1]], "blue.hidden.effective.encounters", 0)
+    graphs[[1]] <- set.graph.attribute(graphs[[1]], "red.hidden.effective.encounters", 0)
+    graphs[[1]] <- set.graph.attribute(graphs[[1]], "blue.exp.effective.encounters", 0)
+    graphs[[1]] <- set.graph.attribute(graphs[[1]], "red.exp.effective.encounters", 0)
+    
+    
     graphs[[2]] <- graphs[[1]]
     graph.num <- 2
 
-    expressed.encounter.num <<- 0
-    hidden.encounter.num <<- 0
     encounter.num <<- 0
-    num.effectual.encounters <<- 0
+    num.effective.encounters <<- 0
 
+    
     # For each iteration of the sim...
     while ((!terminate.after.max.num.encounters ||
                                         encounter.num < num.encounters)  &&
@@ -121,6 +128,13 @@ sim.opinion.dynamics <- function(init.graph,
             cat("Encounter #",encounter.num,"...\n")
         }
 
+        current.hidden.encounters <- 0
+        current.exp.encounters <- 0
+        blue.hidden.encounters <- 0
+        red.hidden.encounters <- 0
+        blue.exp.encounters <- 0
+        red.exp.encounters <- 0
+        
         # Go through all the vertices, in random order:
         for (v in sample(1:gorder(graphs[[graph.num]]))) {
 
@@ -143,7 +157,15 @@ sim.opinion.dynamics <- function(init.graph,
                 for (id in list.of.vertex.IDs) {
                     update.info <- 
                         victim.update.function[[i]](graphs[[graph.num]],v,id)
+                    
                     encounter.num <<- encounter.num + 1
+                    
+                    if(update.info$type == "hidden"){
+                      current.hidden.encounters <- current.hidden.encounters + 1
+                    } else {
+                      current.exp.encounters <- current.exp.encounters + 1
+                    }
+                    
                     if (!is.null(progress)) {
                         progress$set(message=paste0("Encounter ",
                             encounter.num,"/",num.encounters),
@@ -160,9 +182,21 @@ sim.opinion.dynamics <- function(init.graph,
                         	set.vertex.attribute(graphs[[graph.num]],
                                	update.info$type, update.info$victim.vertex,
                                	update.info$new.value)
-	
-                        num.effectual.encounters[i] <<- 
-                            num.effectual.encounters[i] + 1
+
+                        if(update.info$type == "hidden"){
+                          if (update.info$new.value == 0){
+                            blue.hidden.encounters <- blue.hidden.encounters + 1
+                          } else {
+                            red.hidden.encounters <- red.hidden.encounters + 1
+                          }
+                        } else{
+                          if(update.info$new.value == 0){
+                            blue.exp.encounters <- blue.exp.encounters + 1
+                          } else{
+                            red.exp.encounters <- red.exp.encounters + 1
+                          }
+                        }
+                        num.effective.encounters <<- num.effective.encounters + 1
                     }
                     graphs[[graph.num]] <- append.message(graphs[[graph.num]],
                         update.info$message)
@@ -186,11 +220,20 @@ sim.opinion.dynamics <- function(init.graph,
                 graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
                     "num.encounters", encounter.num)
                 graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                    "num.effectual.hidden.encounters", 
-                                num.effectual.encounters[1])
+                    "num.effective.encounters", num.effective.encounters)
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                    "num.current.hidden.encounters", current.hidden.encounters)
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                    "num.current.exp.encounters", current.exp.encounters)
                 graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                    "num.effectual.expressed.encounters", 
-                                num.effectual.encounters[2])
+                    "blue.hidden.effective.encounters", blue.hidden.encounters)
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                    "red.hidden.effective.encounters", red.hidden.encounters)
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                    "blue.exp.effective.encounters", blue.exp.encounters)
+                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                    "red.exp.effective.encounters", red.exp.encounters)
+                
             }
         }
 
@@ -208,9 +251,22 @@ sim.opinion.dynamics <- function(init.graph,
             # (This should be updated to match the above? (hidden vs
             # effectual?))
             graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                "num.encounters", encounter.num)
+                 "num.encounters", encounter.num)
             graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                "num.effectual.encounters", num.effectual.encounters)
+                  "num.effective.encounters", num.effective.encounters)
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                  "num.current.hidden.encounters", current.hidden.encounters)
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                  "num.current.exp.encounters", current.exp.encounters)
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                  "blue.hidden.effective.encounters", blue.hidden.encounters)
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                  "red.hidden.effective.encounters", red.hidden.encounters)
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                  "blue.exp.effective.encounters", blue.exp.encounters)
+            graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                  "red.exp.effective.encounters", red.exp.encounters)
+ 
         }
     }
 	cat("Done!\n")

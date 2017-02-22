@@ -77,4 +77,22 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  output$effectiveHiddenPlot <- renderPlot({
+    if (input$runsim < 1) return(NULL)
+    cat("Drawing hidden effective encounters plot\n")
+    isolate({
+      plot.hidden.effective.encounters(graphs)
+    })
+  })
+  
+  
+  output$effectiveExpPlot <- renderPlot({
+    if (input$runsim < 1) return(NULL)
+    cat("Drawing expressed effective encounters plot\n")
+    isolate({
+      plot.exp.effective.encounters(graphs)
+    })
+  })
+  
+  
 })

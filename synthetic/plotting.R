@@ -8,6 +8,50 @@ library(stringr)
 
 #source("fatCircle.R")
 
+
+plot.hidden.effective.encounters <- function(graphs){
+ 
+  all <- sapply(graphs, function(g) get.graph.attribute(g, "num.current.hidden.encounters"))
+  blue <- sapply(graphs, function(g) get.graph.attribute(g, "blue.hidden.effective.encounters"))
+  red <- sapply(graphs, function(g) get.graph.attribute(g, "red.hidden.effective.encounters"))
+  
+  #browser()
+  
+  # denominator: # current online encounters
+  # encounter results in conversion
+      # red and blue
+  
+  
+  percentage.blue <- (blue / all) * 100
+  percentage.red <- (red / all) * 100
+  time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+  
+  plot(time.pts, percentage.blue, type="l", lwd=2, col="blue", main="Hidden Effective Encounters", xlab="time (iteration)", ylab = "% of hidden effective encounters out of current hidden encounters", ylim=c(0,100))
+  lines(time.pts, percentage.red, type="l", lwd=2, col="red")
+}
+
+plot.exp.effective.encounters <- function(graphs){
+  
+  all <- sapply(graphs, function(g) get.graph.attribute(g, "num.current.exp.encounters"))
+  blue <- sapply(graphs, function(g) get.graph.attribute(g, "blue.exp.effective.encounters"))
+  red <- sapply(graphs, function(g) get.graph.attribute(g, "red.exp.effective.encounters"))
+  
+  
+  # denominator: # current face-to-face encounters
+  # effective face-to-face resulting in conversion of exp ---- dotted line
+      # red and blue 
+  # face-to-face encounter that results in internalization of opinion ---- solid line
+      # red and blue 
+  
+  percentage.blue <- (blue / all) * 100
+  percentage.red <- (red / all) * 100
+  time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+  
+  plot(time.pts, percentage.blue, type="l", lwd=2, col="blue", main="Expressed Effective Encounters", xlab="time (iteration)", ylab = "% of expressed effective encounters out of current expressed encounters", ylim=c(0,100))
+  lines(time.pts, percentage.red, type="l", lwd=2, col="red")
+}
+
+
 plot.hidden <- function(graphs){
   blue <- sapply(graphs, function(graph) {
     all.hidden <- sapply(1:length(V(graph)), function(v){
