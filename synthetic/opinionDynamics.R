@@ -389,7 +389,6 @@ get.automatically.update.victim.function <- function(A.is.victim=FALSE, prob.upd
 
                 if(runif(1) < prob.update) {
 
-                    hidden.encounter.num <<- hidden.encounter.num + 1
 
                     return(list(new.value=get.vertex.attribute(graph,
                             opinion.type,vertex),
@@ -447,8 +446,7 @@ get.peer.pressure.update.function <- function(A.is.victim=FALSE,
               if(trumpEffect){
                 # if victim is red
                   if(V(graph)[victim.vertex]$expressed == 1 && runif(1) < prob.knuckle.under.pressure) {
-                        expressed.encounter.num <<- expressed.encounter.num + 1
-                      
+
                       return(list(new.value=V(graph)[vertex]$expressed,
                          victim.vertex=victim.vertex, type="expressed",
                          message=paste0("toface: ", vertex," intimidates ", 
