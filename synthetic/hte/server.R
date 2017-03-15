@@ -8,8 +8,7 @@ shinyServer(function(input, output, session) {
   sim.started <- FALSE
   progress <- NULL
 
-  output$binaryPlot <- renderPlot({
-    if (input$runsim < 1) return(NULL)
+  get.graphs <- reactive({
 
     isolate({
       progress <<- Progress$new(session,min=0,max=input$numEncounters+1)
@@ -23,7 +22,7 @@ shinyServer(function(input, output, session) {
       }
 
       init <<- get.expressed.latent.graph(num.agents=input$numAgents, prob.connected=input$probConnected, dir=FALSE)
-      graphs <<- sim.opinion.dynamics(init, num.encounters=input$numEncounters,
+      return(sim.opinion.dynamics(init, num.encounters=input$numEncounters,
                               encounter.func=list(
                                   get.mean.field.encounter.func(1),
                                   get.graph.neighbors.encounter.func(1)),
@@ -35,11 +34,17 @@ shinyServer(function(input, output, session) {
                                       prob.internalize.expressed.opinion=input$probInternalize, trumpEffect=input$hte)),
                                   generate.graph.per.encounter=FALSE,
                                   termination.function=get.unanimity.termination.function(input$terminate),
-                                  choose.randomly.each.encounter=input$chooseRandomly, progress=progress)
+                                  choose.randomly.each.encounter=input$chooseRandomly, progress=progress))
     
       #plot.animation(graphs,attribute.name="hidden", second.attribute="expressed", delay.between.frames=.5)
       #plot.polarization(graphs)
-      plot.binary.opinions(graphs, attribute1 = "hidden", attribute2 = "expressed")
+    })
+  })
+
+  output$binaryPlot <- renderPlot({
+    if (input$runsim < 1) return(NULL)
+    isolate({
+      plot.binary.opinions(get.graphs(), attribute1 = "hidden", attribute2 = "expressed")
     })
   })
   
@@ -47,7 +52,7 @@ shinyServer(function(input, output, session) {
     if (input$runsim < 1) return(NULL)
     cat("Drawing polarization\n")
     isolate({
-      plot.polarization(graphs)
+      plot.polarization(get.graphs())
     })
   })
   
@@ -56,7 +61,7 @@ shinyServer(function(input, output, session) {
     if (input$runsim < 1) return(NULL)
     cat("Drawing bias\n")
     isolate({
-      plot.bias(graphs)
+      plot.bias(get.graphs())
     })
   })
   
@@ -65,7 +70,7 @@ shinyServer(function(input, output, session) {
     if (input$runsim < 1) return(NULL)
     cat("Drawing hidden true believers\n")
     isolate({
-      plot.hidden(graphs)
+      plot.hidden(get.graphs())
     })
   })
   
@@ -73,7 +78,7 @@ shinyServer(function(input, output, session) {
     if (input$runsim < 1) return(NULL)
     cat("Drawing expressed true believers\n")
     isolate({
-      plot.expressed(graphs)
+      plot.expressed(get.graphs())
     })
   })
   
@@ -81,7 +86,7 @@ shinyServer(function(input, output, session) {
     if (input$runsim < 1) return(NULL)
     cat("Drawing hidden effective encounters plot\n")
     isolate({
-      plot.hidden.effective.encounters(graphs)
+      plot.hidden.effective.encounters(get.graphs())
     })
   })
   
@@ -90,7 +95,7 @@ shinyServer(function(input, output, session) {
     if (input$runsim < 1) return(NULL)
     cat("Drawing expressed effective encounters plot\n")
     isolate({
-      plot.exp.effective.encounters(graphs)
+      plot.exp.effective.encounters(get.graphs())
     })
   })
   
