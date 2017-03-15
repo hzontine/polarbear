@@ -10,9 +10,9 @@ shinyServer(function(input, output, session) {
 
   get.graphs <- reactive({
 
-    isolate({
       progress <<- Progress$new(session,min=0,max=input$numEncounters+1)
 
+      input$runsim
       if(input$seedType=="specific") {
         set.seed(input$seed)
       } else {
@@ -35,10 +35,6 @@ shinyServer(function(input, output, session) {
                                   generate.graph.per.encounter=FALSE,
                                   termination.function=get.unanimity.termination.function(input$terminate),
                                   choose.randomly.each.encounter=input$chooseRandomly, progress=progress))
-    
-      #plot.animation(graphs,attribute.name="hidden", second.attribute="expressed", delay.between.frames=.5)
-      #plot.polarization(graphs)
-    })
   })
 
   output$binaryPlot <- renderPlot({
