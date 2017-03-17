@@ -45,12 +45,12 @@ shinyUI(fluidPage(
                   min = 0,
                   max = 1.0,
                   value = 0.5),
+      selectInput("generate", label=h5("Generate a new graph after each encounter"), choices = list("On" = TRUE, "Off" = FALSE)),
       sliderInput("probConnected",
                   "Probability of connection between Agents:",
                   min = 0.01,
                   max = 1.00,
                   value = 0.5),
-      
       fluidRow(
         column(4, selectInput("terminate", label=h5("Terminate after uniformity"), choices = list("Hidden" = "hidden", "Expressed" = "expressed", "Both" = "both", "Never terminate" = "never"))),
         column(4, selectInput("victim", label=h5("A is victim?"), choices = list("True" = TRUE, "False" = FALSE))),
@@ -63,6 +63,7 @@ shinyUI(fluidPage(
       plotOutput("binaryPlot"),
       plotOutput("polarPlot"),
       plotOutput("biasPlot"),
+      plotOutput("genuinePlot"),
       plotOutput("hiddenPlot"),
       plotOutput("expPlot"),
       plotOutput("effectiveHiddenPlot"),

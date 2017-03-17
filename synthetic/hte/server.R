@@ -32,7 +32,7 @@ shinyServer(function(input, output, session) {
                                   get.peer.pressure.update.function(A.is.victim=input$victim,
                                       prob.knuckle.under.pressure=input$probPressure,
                                       prob.internalize.expressed.opinion=input$probInternalize, trumpEffect=input$hte)),
-                                  generate.graph.per.encounter=FALSE,
+                                  generate.graph.per.encounter=input$generate,
                                   termination.function=get.unanimity.termination.function(input$terminate),
                                   choose.randomly.each.encounter=input$chooseRandomly, progress=progress))
     
@@ -59,9 +59,17 @@ shinyServer(function(input, output, session) {
   
   output$biasPlot <- renderPlot({
     if (input$runsim < 1) return(NULL)
-    cat("Drawing bias\n")
+    cat("Drawing bias plot\n")
     isolate({
       plot.bias(get.graphs())
+    })
+  })
+  
+  output$genuinePlot <- renderPlot({
+    if (input$runsim < 1) return(NULL)
+    cat("Drawing % genuineness\n")
+    isolate({
+      plot.genuine(get.graphs())
     })
   })
   

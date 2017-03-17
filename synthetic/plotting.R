@@ -187,6 +187,30 @@ plot.polar.graph <- function(graph, legend=c("L","C"),
 
 
 plot.bias <- function(graphs){
+ 
+  # what % of expressed say blue - what % of hidden say blue * 100
+  bias <- sapply(graphs, function(graph){
+    exp <- sapply(1:length(V(graph)), function(v){
+      get.vertex.attribute(graph, "expressed", index=v)
+    })
+    hidden <- sapply(1:length(V(graph)), function(v){
+      get.vertex.attribute(graph, "hidden", index=v)
+    })
+    percent.exp <- length(which(exp == 0)) / length(exp)
+    percent.hidden <- length(which(hidden == 0)) / length(hidden)
+    return(percent.exp - percent.hidden)
+  })
+  time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
+  plot(time.pts, bias, type="l", lwd=2, main="Poll Bias Over Time", xlab="time (iteration)", ylab = "Difference between % expressed and % hidden")
+  
+  if(any(bias < 0)){
+    lines(time.pts, rep(0, length(time.pts)), type="l", col="red", lty=2)
+  }
+  
+}
+
+
+plot.genuine <- function(graphs){
   
   expressed <- sapply(graphs, function(graph) {
     y <- sapply(1:length(V(graph)), function(v){
@@ -203,10 +227,10 @@ plot.bias <- function(graphs){
   totals <- expressed - hidden
   time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
   
-  plot(time.pts, totals, type="l", lwd=2, main="Poll Bias Over Time", xlab="time (iteration)", ylab = "Difference between expressed and hidden")
+  plot(time.pts, totals, type="l", lwd=2, main="Poll % Genuinenss Over Time", xlab="time (iteration)", ylab = "Difference between expressed and hidden")
 
   if(any(totals < 0)){
-    lines(time.pts, rep(0, length(time.pts)), type="l", col="black", lty=2)
+    lines(time.pts, rep(0, length(time.pts)), type="l", col="red", lty=2)
   }
 }
 
