@@ -22,6 +22,7 @@ shinyServer(function(input, output, session) {
       }
 
       init <<- get.expressed.latent.graph(num.agents=input$numAgents, prob.connected=input$probConnected, dir=FALSE)
+      
       return(sim.opinion.dynamics(init, num.encounters=input$numEncounters,
                               encounter.func=list(
                                   get.mean.field.encounter.func(1),
@@ -34,9 +35,18 @@ shinyServer(function(input, output, session) {
                                       prob.internalize.expressed.opinion=input$probInternalize, trumpEffect=input$hte)),
                                   generate.graph.per.encounter=input$generate,
                                   termination.function=get.unanimity.termination.function(input$terminate),
-                                  choose.randomly.each.encounter=input$chooseRandomly, progress=progress))
-  })
+                                  choose.randomly.each.encounter=input$chooseRandomly, progress=progress)
+            )
 
+  })
+  output$biasPlot <- renderPlot({
+    if (input$runsim < 1) return(NULL)
+    cat("Drawing bias plot\n")
+    isolate({
+    plot.bias(get.graphs())
+    })
+  })
+  
   output$binaryPlot <- renderPlot({
     if (input$runsim < 1) return(NULL)
     isolate({
@@ -49,15 +59,6 @@ shinyServer(function(input, output, session) {
     cat("Drawing polarization\n")
     isolate({
       plot.polarization(get.graphs())
-    })
-  })
-  
-  
-  output$biasPlot <- renderPlot({
-    if (input$runsim < 1) return(NULL)
-    cat("Drawing bias plot\n")
-    isolate({
-      plot.bias(get.graphs())
     })
   })
   
