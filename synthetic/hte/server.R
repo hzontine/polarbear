@@ -33,7 +33,7 @@ shinyServer(function(input, output, session) {
                                   get.peer.pressure.update.function(A.is.victim=input$victim,
                                       prob.knuckle.under.pressure=input$probPressure,
                                       prob.internalize.expressed.opinion=input$probInternalize, trumpEffect=input$hte)),
-                                  generate.graph.per.encounter=input$generate,
+                                  generate.graph.per.encounter=ifelse(input$generate=="TRUE",TRUE,FALSE),
                                   termination.function=get.unanimity.termination.function(input$terminate),
                                   choose.randomly.each.encounter=input$chooseRandomly, progress=progress)
             )
