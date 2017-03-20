@@ -188,6 +188,8 @@ plot.polar.graph <- function(graph, legend=c("L","C"),
 
 plot.bias <- function(graphs){
  
+  SOFT.MAX <- .35
+
   # what % of expressed say blue - what % of hidden say blue * 100
   bias <- sapply(graphs, function(graph){
     exp <- sapply(1:length(V(graph)), function(v){
@@ -201,10 +203,14 @@ plot.bias <- function(graphs){
     return(percent.exp - percent.hidden)
   })
   time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
-  plot(time.pts, bias, type="l", lwd=2, main="Poll Bias Over Time", xlab="time (iteration)", ylab = "Difference between % expressed and % hidden")
+  plot(time.pts, bias, type="l", lwd=2, main="Poll Bias Over Time", xlab="time (iteration)", ylab = "Difference between % expressed and % hidden", 
+    ylim=c(min(bias),max(c(bias,SOFT.MAX))))
   
   if(any(bias < 0)){
     lines(time.pts, rep(0, length(time.pts)), type="l", col="red", lty=2)
+  }
+  if(any(bias > SOFT.MAX)){
+    lines(time.pts, rep(SOFT.MAX, length(time.pts)), type="l", col="red", lwd=2)
   }
   
 }
