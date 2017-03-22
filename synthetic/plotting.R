@@ -188,6 +188,12 @@ plot.polar.graph <- function(graph, legend=c("L","C"),
 
 plot.bias <- function(graphs){
  
+  # To keep the plots comparable between runs, impose a consistent, but
+  # "soft," scale: make the y scale always end at SOFT.MAX percentage points, 
+  # unless the bias actually goes over that, in which case draw a bold red
+  # line to make the degree of overflow clear.
+  SOFT.MAX <- 35
+
   # what % of expressed say blue - what % of hidden say blue * 100
   bias <- sapply(graphs, function(graph){
     exp <- sapply(1:length(V(graph)), function(v){
@@ -198,13 +204,17 @@ plot.bias <- function(graphs){
     })
     percent.exp <- length(which(exp == 0)) / length(exp)
     percent.hidden <- length(which(hidden == 0)) / length(hidden)
-    return(percent.exp - percent.hidden)
+    return((percent.exp - percent.hidden)*100)
   })
   time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
-  plot(time.pts, bias, type="l", lwd=2, main="Poll Bias Over Time", xlab="time (iteration)", ylab = "Difference between % expressed and % hidden")
+  plot(time.pts, bias, type="l", lwd=2, main="Poll Bias Over Time", xlab="time (iteration)", ylab = "% expressed blue - % hidden blue", 
+    ylim=c(min(bias),max(c(bias,SOFT.MAX))))
   
   if(any(bias < 0)){
     lines(time.pts, rep(0, length(time.pts)), type="l", col="red", lty=2)
+  }
+  if(any(bias> SOFT.MAX)){
+    lines(time.pts, rep(SOFT.MAX, length(time.pts)), type="l", col="red", lwd=2)
   }
   
 }
