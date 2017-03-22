@@ -836,35 +836,58 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
     return(g)
 }
 
-param.sweep <- function(init.graph) {
-
-    library(doParallel)
-    registerDoParallel(50)
-
-    encs.per.iter <- 1
-
-    invisible(foreach (migration.factor=seq(0.2,1,.2)) %dopar% {
-      for (bc.thresh in seq(0.2,1,.2)) {
-        graphs <- sim.opinion.dynamics(init.graph,
-            num.encounters=50*vcount(init.graph),
-            encounter.func=get.graph.neighbors.encounter.func(encs.per.iter),
-            victim.update.function=
-                get.bounded.confidence.update.victim.function(bc.thresh,
-                    migration.factor=migration.factor),
-            interactive=FALSE,
-            subtitle=paste0("encounter: ",encs.per.iter,
-                                            " graph neighbor per iteration\n",
-                "update: bounded confidence threshold ",bc.thresh,",\n",
-                "migration factor ",migration.factor),
-            animation.filename=paste0("barelyBC",bc.thresh,"MigFac",
-                migration.factor,".gif"),
-            overwrite.animation.file=TRUE
-        )
-      }
-    })
-}
 
                 
+#default number of seeds is 50 
+param.sweep <- function(seeds=seq(10,500,10), peer.pressure=seq(0,1,0.1)) {
+
+  library(doParallel)
+  registerDoParallel(60)
+  
+  bias.list <- list()
+  firstRun <- TRUE
+  # for each value of peer pressure probability, compute poll bias
+  for(i in 1:length(peer.pressure)){
+    peer.pressure.prob <- peer.pressure[i]
+    # run the same seeds for each probability
+    bias.data <- foreach(num=1:length(seeds), .combine = 'cbind') %dopar% {
+        set.seed(seeds[num])
+        initial.graph <- get.expressed.latent.graph(num.agents = 16, prob.connected = 0.4, dir = FALSE)
+        graphs <- sim.opinion.dynamics(initial.graph, num.encounters=20*vcount(initial.graph),
+                                     encounter.func=list(get.mean.field.encounter.func(1),
+                                       get.graph.neighbors.encounter.func(1)),
+                                     victim.update.function=list(get.automatically.update.victim.function(A.is.victim=TRUE,
+                                        prob.update=1, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
+                                        prob.knuckle.under.pressure=peer.pressure.prob, prob.internalize.expressed.opinion=1, trumpEffect=TRUE)),
+                                     generate.graph.per.encounter=TRUE, verbose = TRUE,
+                                     termination.function=get.unanimity.termination.function(attribute1 = "both"),
+                                     choose.randomly.each.encounter=TRUE)
+        # compute poll bias over time
+        bias <- sapply(graphs, function(graph){
+            exp <- sapply(1:length(V(graph)), function(v){
+              get.vertex.attribute(graph, "expressed", index=v)
+            })
+            hidden <- sapply(1:length(V(graph)), function(v){
+              get.vertex.attribute(graph, "hidden", index=v)
+            })
+            percent.exp <- length(which(exp == 0)) / length(exp)
+            percent.hidden <- length(which(hidden == 0)) / length(hidden)
+            return(percent.exp - percent.hidden)
+        })
+        return(bias)
+    }
+    colnames(bias.data) <- seeds
+    x <- list(probability=peer.pressure.prob, biasVector=bias.data)
+    if(firstRun){
+        bias.list <- x
+        firstRun <- FALSE
+    } else{
+        bias.list <- list(bias.list, x)
+    }
+  }
+  return(bias.list)
+}
+
 
 
 

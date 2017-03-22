@@ -210,30 +210,6 @@ plot.bias <- function(graphs){
 }
 
 
-plot.genuine <- function(graphs){
-  
-  expressed <- sapply(graphs, function(graph) {
-    y <- sapply(1:length(V(graph)), function(v){
-      get.vertex.attribute(graph, "expressed", index=v)
-    })
-    sum(y == 0)
-  })
-  hidden <- sapply(graphs, function(graph) {
-    x <- sapply(1:length(V(graph)), function(v){
-      get.vertex.attribute(graph, "hidden", index=v)
-    })
-    sum(x == 0)
-  })
-  totals <- expressed - hidden
-  time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
-  
-  plot(time.pts, totals, type="l", lwd=2, main="Poll % Genuinenss Over Time", xlab="time (iteration)", ylab = "Difference between expressed and hidden")
-
-  if(any(totals < 0)){
-    lines(time.pts, rep(0, length(time.pts)), type="l", col="red", lty=2)
-  }
-}
-
 
 
 # Given a list of graphs, plot them, (possibly) ensuring that vertices are
