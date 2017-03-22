@@ -63,7 +63,6 @@ shinyUI(fluidPage(
       plotOutput("biasPlot"),
       plotOutput("binaryPlot"),
       plotOutput("polarPlot"),
-      plotOutput("genuinePlot"),
       plotOutput("hiddenPlot"),
       plotOutput("expPlot"),
       plotOutput("effectiveHiddenPlot"),

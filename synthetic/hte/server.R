@@ -62,15 +62,6 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  output$genuinePlot <- renderPlot({
-    if (input$runsim < 1) return(NULL)
-    cat("Drawing % genuineness\n")
-    isolate({
-      plot.genuine(get.graphs())
-    })
-  })
-  
-  
   output$hiddenPlot <- renderPlot({
     if (input$runsim < 1) return(NULL)
     cat("Drawing hidden true believers\n")
