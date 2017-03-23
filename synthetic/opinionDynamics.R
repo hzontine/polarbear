@@ -839,7 +839,7 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
 
                 
 #default number of seeds is 50 
-param.sweep <- function(seeds=seq(10,500,10), peer.pressure=seq(0,1,0.1)) {
+param.sweep <- function(seeds=seq(10,500,10), peer.pressure=seq(0,1,0.05)) {
 
   library(doParallel)
   registerDoParallel(60)
@@ -852,16 +852,17 @@ param.sweep <- function(seeds=seq(10,500,10), peer.pressure=seq(0,1,0.1)) {
     # run the same seeds for each probability
     bias.data <- foreach(num=1:length(seeds), .combine = 'cbind') %dopar% {
         set.seed(seeds[num])
-        initial.graph <- get.expressed.latent.graph(num.agents = 16, prob.connected = 0.4, dir = FALSE)
-        graphs <- sim.opinion.dynamics(initial.graph, num.encounters=20*vcount(initial.graph),
+        initial.graph <- get.expressed.latent.graph(num.agents = 64, prob.connected = 0.25, dir = FALSE)
+        graphs <- sim.opinion.dynamics(initial.graph, num.encounters=200*vcount(initial.graph),
                                      encounter.func=list(get.mean.field.encounter.func(1),
                                        get.graph.neighbors.encounter.func(1)),
                                      victim.update.function=list(get.automatically.update.victim.function(A.is.victim=TRUE,
-                                        prob.update=1, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
-                                        prob.knuckle.under.pressure=peer.pressure.prob, prob.internalize.expressed.opinion=1, trumpEffect=TRUE)),
+                                        prob.update=0.5, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
+                                        prob.knuckle.under.pressure=peer.pressure.prob, prob.internalize.expressed.opinion=0.5, trumpEffect=TRUE)),
                                      generate.graph.per.encounter=TRUE, verbose = TRUE,
-                                     termination.function=get.unanimity.termination.function(attribute1 = "both"),
+                                     termination.function=get.never.terminate.function(),
                                      choose.randomly.each.encounter=TRUE)
+        
         # compute poll bias over time
         bias <- sapply(graphs, function(graph){
             exp <- sapply(1:length(V(graph)), function(v){
