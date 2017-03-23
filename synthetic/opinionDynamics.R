@@ -889,7 +889,8 @@ param.sweep <- function(seeds=seq(10,500,10), prob.internalize=seq(0,1,0.05)) {
   return(bias.list)
 }
 
-
+data <- param.sweep()
+save(data, file="internalProbData.RData")
 
 
 main <- function() {
