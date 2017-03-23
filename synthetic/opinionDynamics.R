@@ -839,7 +839,7 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
 
                 
 #default number of seeds is 50 
-param.sweep <- function(seeds=seq(10,500,10), prob.internalize=seq(0,1,0.05)) {
+param.sweep <- function(seeds=seq(10,500,10), prob.connected=seq(0.2,1,0.05)) {
 
   library(doParallel)
   registerDoParallel(60)
@@ -847,18 +847,18 @@ param.sweep <- function(seeds=seq(10,500,10), prob.internalize=seq(0,1,0.05)) {
   bias.list <- list()
   firstRun <- TRUE
   # for each value of peer pressure probability, compute poll bias
-  for(i in 1:length(prob.internalize)){
-    internal.prob <- prob.internalize[i]
+  for(i in 1:length(prob.connected)){
+    prob <- prob.connected[i]
     # run the same seeds for each probability
     bias.data <- foreach(num=1:length(seeds), .combine = 'cbind') %dopar% {
         set.seed(seeds[num])
-        initial.graph <- get.expressed.latent.graph(num.agents = 64, prob.connected = 0.25, dir = FALSE)
+        initial.graph <- get.expressed.latent.graph(num.agents = 64, prob.connected = prob, dir = FALSE)
         graphs <- sim.opinion.dynamics(initial.graph, num.encounters=200*vcount(initial.graph),
                                      encounter.func=list(get.mean.field.encounter.func(1),
                                        get.graph.neighbors.encounter.func(1)),
                                      victim.update.function=list(get.automatically.update.victim.function(A.is.victim=TRUE,
                                         prob.update=0.5, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
-                                        prob.knuckle.under.pressure=0.5, prob.internalize.expressed.opinion=internal.prob, trumpEffect=TRUE)),
+                                        prob.knuckle.under.pressure=0.5, prob.internalize.expressed.opinion=0.5, trumpEffect=TRUE)),
                                      generate.graph.per.encounter=TRUE, verbose = TRUE,
                                      termination.function=get.never.terminate.function(),
                                      choose.randomly.each.encounter=TRUE)
@@ -878,19 +878,19 @@ param.sweep <- function(seeds=seq(10,500,10), prob.internalize=seq(0,1,0.05)) {
         return(bias)
     }
     colnames(bias.data) <- seeds
-    x <- list(probability=internal.prob, biasVector=bias.data)
+    x <- list(probability=prob, biasVector=bias.data)
     if(firstRun){
         bias.list <- x
         firstRun <- FALSE
     } else{
-        bias.list <- list(bias.list, x)
+        bias.list <- c(bias.list, x)
     }
   }
   return(bias.list)
 }
 
 data <- param.sweep()
-save(data, file="internalProbData.RData")
+save(data, file="connectedProbData.RData")
 
 
 main <- function() {
