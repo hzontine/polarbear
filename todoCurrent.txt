@@ -1,42 +1,28 @@
 
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
-       HZ    Sanity check -- play with prob connected between agents. More connected, the slower
-                it should take to reach uniformity.
-                * look into the literature
+3/24   HZ    Param sweeps:
+                For all sweeps, do 20 values instead of 10. (0, 0.05, 0.1, 0.15, etc.)
+                For all sweeps, hold two other interacting probs at 0.5 and prob connection at 0.25.
+                * Prob connected between agents. (More connected, the slower
+                it should take to reach uniformity.)  *see also lit lookup action item
+                * Peer pressure (plot vs. poll bias; see Stephen's checkin)
+                * Prob internalize
+                * Prob update
 
-       HZ    Param sweep plot---- 
-             Graph the prob internalize vs. the max it gets away from 50/50. When it is at 0,
-                graph can reach uniformity, but if it is at 1, will not converge.
-
-       HZ    Write 'The Model At Its Extremes' section
+            * look into the literature for prob connected between agents and its effect on convergence rate
 
              Send email to CSSSA/WSC people.
     
-       HZ    Finish implementation of effective encounter plots.
+             Take a look at assortativity. Why isn't it changing much? Is this a bug? A graph scale problem? A finding?
 
 2/24   HZ    Read Claudio paper.
 
        HZ    Read Moscovici paper.
 
-       HZ    Determine whether model reaches equilibrium (reaches a steady state) with regards to: (1)
-             assortativity (2) poll bias.
-                * specfically, when it does not converge (gets more polarized)
-                * what does the poll bias look like when the model refuses to converge
 
+The deep future:
+3/??   HZ    Implement different starting graph types (ER, Barabasi, Watts-Strogatz)
 3/??   HZ    Implement stubborn vs. not, and % of stubborn agents (Note to
              self: should this be two %'s, one for Pop and one for Unpop?)
-
-3/??   HZ    Implement different starting graph types (ER, Barabasi, Watts-Strogatz)
-
-       SD    How is original BVM impacted by density of starting graph? (Does
-             it converge more or less quickly if more edges?)
-
-
-Meetings:
-Mon 2/20 -- Talk about who we need to email. Check out true believer graphs.
-Wed 2/22 -- Go over sections 2. ("OD models") and 2.1 ("BMV" and its main results)
-Fri 2/24 -- Go over section 3. (the "Hidden Trump Model")
-Mon 2/?? -- Go over section 4. (the "model at its extremes")
-
 
