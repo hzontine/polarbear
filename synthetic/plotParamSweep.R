@@ -5,11 +5,11 @@ load("hteParamSweep.RData")
 clean.data <- peer.pressure
 
 the.data <- data.frame(prob=list(),poll.bias=list())
-for (prob.num in 1:(length(clean.data)-1)) {
+for (prob.num in 1:length(clean.data)) {
     caveman <- vector()
     for (seed in 1:ncol(clean.data[[prob.num]]$biasVector)) {
         the.data <- rbind(the.data,
-            data.frame(prob=(.1*(prob.num-1)),
+            data.frame(prob=(.05*(prob.num-1)),
                 poll.bias=clean.data[[prob.num]]$biasVector
                     [nrow(clean.data[[prob.num]]$biasVector),seed]))
     }
@@ -17,4 +17,5 @@ for (prob.num in 1:(length(clean.data)-1)) {
 
 g <- ggplot(the.data, aes(x=prob, y=poll.bias)) + geom_point(alpha=.1) +
     ylim(-1,1) + geom_smooth(method="loess")
-print(g)
+
+ggsave(filename="peerPressurePlot.pdf", plot=g)
