@@ -2,7 +2,7 @@
 require(ggplot2)
 load("hteParamSweep.RData")
 
-clean.data <- peer.pressure
+clean.data <- update
 
 the.data <- data.frame(prob=list(),poll.bias=list())
 for (prob.num in 1:length(clean.data)) {
@@ -17,5 +17,6 @@ for (prob.num in 1:length(clean.data)) {
 
 g <- ggplot(the.data, aes(x=prob, y=poll.bias)) + geom_point(alpha=.1) +
     ylim(-1,1) + geom_smooth(method="loess")
+g <- g + ggtitle("Update Probability") + xlab("Probability") + ylab("Poll Bias")
 
-ggsave(filename="peerPressurePlot.pdf", plot=g)
+ggsave(filename="updatePlot.pdf", plot=g)
