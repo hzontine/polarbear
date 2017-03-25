@@ -816,6 +816,14 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
     } else {
         g <- erdos.renyi.game(num.agents, prob.connected)
     }
+    while (!is.connected(g)) {
+        if(dir){
+            g <- erdos.renyi.game(num.agents, prob.connected, directed=TRUE)
+        } else {
+            g <- erdos.renyi.game(num.agents, prob.connected)
+        }   
+    }
+
     if(num.agents %% 4 == 0){
         # Note: "0" means B(B), "1" means B(R), "2" means R(B), "3" means
         # R(R). We are doing this to ensure we start with a population evenly
@@ -830,16 +838,14 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
         ifelse(shuffled.agent.opinions==0 | shuffled.agent.opinions==1, 0, 1)
     V(g)$hidden <- 
         ifelse(shuffled.agent.opinions==0 | shuffled.agent.opinions==2, 0, 1)
-    if (!is.connected(g)) {
-        stop("WHOA!!")
-    }
+    
     return(g)
 }
 
 
                 
 #default number of seeds is 50 
-param.sweep <- function(seeds=seq(10,500,10), prob.connected=seq(0.2,1,0.05)) {
+param.sweep <- function(seeds=seq(10,500,10), prob.update.online=seq(0,1,0.05)) {
 
   library(doParallel)
   registerDoParallel(60)
@@ -847,17 +853,18 @@ param.sweep <- function(seeds=seq(10,500,10), prob.connected=seq(0.2,1,0.05)) {
   bias.list <- list()
   firstRun <- TRUE
   # for each value of peer pressure probability, compute poll bias
-  for(i in 1:length(prob.connected)){
-    prob <- prob.connected[i]
-    # run the same seeds for each probability
+  for(i in 1:length(prob.update.online)){
+    prob <- prob.update.online[i]
+    
     bias.data <- foreach(num=1:length(seeds), .combine = 'cbind') %dopar% {
+        # run the same seeds for each probability
         set.seed(seeds[num])
-        initial.graph <- get.expressed.latent.graph(num.agents = 64, prob.connected = prob, dir = FALSE)
+        initial.graph <- get.expressed.latent.graph(num.agents = 64, prob.connected = 0.25, dir = FALSE)
         graphs <- sim.opinion.dynamics(initial.graph, num.encounters=200*vcount(initial.graph),
                                      encounter.func=list(get.mean.field.encounter.func(1),
                                        get.graph.neighbors.encounter.func(1)),
                                      victim.update.function=list(get.automatically.update.victim.function(A.is.victim=TRUE,
-                                        prob.update=0.5, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
+                                        prob.update=prob, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
                                         prob.knuckle.under.pressure=0.5, prob.internalize.expressed.opinion=0.5, trumpEffect=TRUE)),
                                      generate.graph.per.encounter=TRUE, verbose = TRUE,
                                      termination.function=get.never.terminate.function(),
@@ -890,7 +897,7 @@ param.sweep <- function(seeds=seq(10,500,10), prob.connected=seq(0.2,1,0.05)) {
 }
 
 data <- param.sweep()
-save(data, file="connectedProbData.RData")
+save(data, file="updateProbData.RData")
 
 
 main <- function() {
