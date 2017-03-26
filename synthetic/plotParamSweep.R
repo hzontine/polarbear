@@ -11,12 +11,12 @@ for (prob.num in 1:length(clean.data)) {
         the.data <- rbind(the.data,
             data.frame(prob=(.05*(prob.num-1)),
                 poll.bias=clean.data[[prob.num]]$biasVector
-                    [nrow(clean.data[[prob.num]]$biasVector),seed]))
+                    [max(clean.data[[prob.num]]$biasVector),seed]))
     }
 }
 
 g <- ggplot(the.data, aes(x=prob, y=poll.bias)) + geom_point(alpha=.1) +
     ylim(-1,1) + geom_smooth(method="loess")
-g <- g + ggtitle("Update Probability") + xlab("Probability") + ylab("Poll Bias")
+g <- g + ggtitle("Update Probability") + xlab("Probability") + ylab("Maximum Poll Bias")
 
 ggsave(filename="updatePlot.pdf", plot=g)
