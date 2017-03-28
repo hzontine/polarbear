@@ -1,14 +1,12 @@
 
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
-3/24   HZ    Param sweeps:
-                For all sweeps, do 20 values instead of 10. (0, 0.05, 0.1, 0.15, etc.)
-                For all sweeps, hold two other interacting probs at 0.5 and prob connection at 0.25.
-                * Prob connected between agents. (More connected, the slower
-                it should take to reach uniformity.)  *see also lit lookup action item
-                * Peer pressure (plot vs. poll bias; see Stephen's checkin)
-                * Prob internalize
-                * Prob update
+3/     HZ    Cor.test()
+                - x as probabilities, y as bias vectors 
+
+           
+            10 plots(10%-100%) = For a given ending point (80/90), for each probability (x-axis) plot each of 50 seeds current value
+                * 10% = At iteration 1000
 
             * look into the literature for prob connected between agents and its effect on convergence rate
 
