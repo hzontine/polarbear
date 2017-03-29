@@ -1,14 +1,11 @@
 
 Date  Owner  Item
 -----------------------------------------------------------------------------------------------
-3/     HZ    Cor.test()
-                - x as probabilities, y as bias vectors 
 
-           
-            10 plots(10%-100%) = For a given ending point (80/90), for each probability (x-axis) plot each of 50 seeds current value
-                * 10% = At iteration 1000
 
-            * look into the literature for prob connected between agents and its effect on convergence rate
+
+
+
 
              Send email to CSSSA/WSC people.
     
