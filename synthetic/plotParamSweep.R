@@ -1,7 +1,7 @@
 
 require(ggplot2)
 load("hteParamSweep.RData")
-load("internProbData.RData", verbose=TRUE)
+load("connectedProbData.RData", verbose=TRUE)
 
 get.max.bias.Plot <- function(){
     clean.data <- data
@@ -39,12 +39,12 @@ get.tenth.bias <- function(){
             the.data <- rbind(the.data, data.frame(prob=data[[prob]]$probability, bias=values))
         }
         a <- ggplot(the.data, aes(x=prob, y=bias)) + geom_point(alpha=.1) + ylim(-1,1) 
-        a <- a + ggtitle(paste0("Internalize Probability:\n",cur.time," encounters  (",tenths[i]*10,"%)")) + xlab("Probability") + ylab("Poll Bias")
+        a <- a + ggtitle(paste0("Probability of Connection between agents:\n",cur.time," encounters  (",tenths[i]*10,"%)")) + xlab("Probability") + ylab("Poll Bias")
         
-        switch(tenths[i], "1"=ggsave(filename="1INT.pdf",plot=a), "2"=ggsave(filename="2INT.pdf", plot=a),
-            "3"=ggsave("3INT.pdf", plot=a), "4"=ggsave("4INT.pdf", plot=a), "5"=ggsave("5INT.pdf", plot=a),
-            "6"=ggsave("6INT.pdf", plot=a), "7"=ggsave("7INT.pdf", plot=a), "8"=ggsave("8INT.pdf", plot=a),
-            "9"=ggsave("9INT.pdf", plot=a), "10"=ggsave("10INT.pdf", plot=a), ggsave("error.pdf", plot=a))
+        switch(tenths[i], "1"=ggsave(filename="1CON.pdf",plot=a), "2"=ggsave(filename="2CON.pdf", plot=a),
+            "3"=ggsave("3CON.pdf", plot=a), "4"=ggsave("4CON.pdf", plot=a), "5"=ggsave("5CON.pdf", plot=a),
+            "6"=ggsave("6CON.pdf", plot=a), "7"=ggsave("7CON.pdf", plot=a), "8"=ggsave("8CON.pdf", plot=a),
+            "9"=ggsave("9CON.pdf", plot=a), "10"=ggsave("10CON.pdf", plot=a), ggsave("error.pdf", plot=a))
    }
 
 }
