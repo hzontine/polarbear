@@ -845,7 +845,7 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
 
                 
 #default number of seeds is 50 
-param.sweep <- function(seeds=seq(10,500,10), prob.update.online=seq(0,1,0.05)) {
+param.sweep <- function(seeds=seq(10,500,10), prob.intern=seq(0,1,0.05)) {
 
   library(doParallel)
   registerDoParallel(60)
@@ -853,19 +853,19 @@ param.sweep <- function(seeds=seq(10,500,10), prob.update.online=seq(0,1,0.05)) 
   bias.list <- list()
   firstRun <- TRUE
   # for each value of peer pressure probability, compute poll bias
-  for(i in 1:length(prob.update.online)){
-    prob <- prob.update.online[i]
+  for(i in 1:length(prob.intern)){
+    prob <- prob.intern[i]
     
     bias.data <- foreach(num=1:length(seeds), .combine = 'cbind') %dopar% {
         # run the same seeds for each probability
         set.seed(seeds[num])
         initial.graph <- get.expressed.latent.graph(num.agents = 64, prob.connected = 0.25, dir = FALSE)
-        graphs <- sim.opinion.dynamics(initial.graph, num.encounters=200*vcount(initial.graph),
+        graphs <- sim.opinion.dynamics(initial.graph, num.encounters=50*vcount(initial.graph),
                                      encounter.func=list(get.mean.field.encounter.func(1),
                                        get.graph.neighbors.encounter.func(1)),
                                      victim.update.function=list(get.automatically.update.victim.function(A.is.victim=TRUE,
-                                        prob.update=prob, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
-                                        prob.knuckle.under.pressure=0.5, prob.internalize.expressed.opinion=0.5, trumpEffect=TRUE)),
+                                        prob.update=0.5, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
+                                        prob.knuckle.under.pressure=0.5, prob.internalize.expressed.opinion=prob, trumpEffect=TRUE)),
                                      generate.graph.per.encounter=TRUE, verbose = TRUE,
                                      termination.function=get.never.terminate.function(),
                                      choose.randomly.each.encounter=TRUE)
@@ -897,7 +897,7 @@ param.sweep <- function(seeds=seq(10,500,10), prob.update.online=seq(0,1,0.05)) 
 }
 
 data <- param.sweep()
-save(data, file="updateProbData.RData")
+save(data, file="internProbData.RData")
 
 
 main <- function() {
