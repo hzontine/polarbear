@@ -868,6 +868,7 @@ param.sweep <- function(seeds=seq(10,500,10), prob.update.online=seq(0,1,0.05)) 
                                         prob.knuckle.under.pressure=0.5, prob.internalize.expressed.opinion=0.5, trumpEffect=TRUE)),
                                      generate.graph.per.encounter=TRUE, verbose = TRUE,
                                      termination.function=get.never.terminate.function(),
+                                    terminate.after.max.num.encounters=TRUE,
                                      choose.randomly.each.encounter=TRUE)
         
         # compute poll bias over time
@@ -896,8 +897,8 @@ param.sweep <- function(seeds=seq(10,500,10), prob.update.online=seq(0,1,0.05)) 
   return(bias.list)
 }
 
-data <- param.sweep()
-save(data, file="updateProbData.RData")
+#data <- param.sweep()
+#save(data, file="updateProbData.RData")
 
 
 main <- function() {

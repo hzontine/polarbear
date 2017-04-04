@@ -37,7 +37,7 @@ get.tenth.bias <- function(){
             }
             the.data <- rbind(the.data, data.frame(prob=data[[prob]]$probability, bias=values))
         }
-        a <- ggplot(the.data, aes(x=prob, y=bias)) + geom_point(alpha=.1) + ylim(-1,1) + geom_smooth(method="loess")
+        a <- ggplot(the.data, aes(x=prob, y=bias)) + geom_point(alpha=.1) + ylim(-1,1)# + geom_smooth(method="loess")
         a <- a + ggtitle(paste0("Update Probability:\n",cur.time," encounters")) + xlab("Probability") + ylab("Poll Bias")
         
         switch(i, "1"=ggsave(filename="oneTenth.pdf",plot=a), "2"=ggsave(filename="twoTenth.pdf", plot=a),
