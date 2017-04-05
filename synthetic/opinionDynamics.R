@@ -124,10 +124,6 @@ sim.opinion.dynamics <- function(init.graph,
                                         encounter.num < num.encounters)  &&
         !termination.function(graphs[[graph.num]])) {
 
-        if (verbose) {
-            cat("Encounter #",encounter.num,"...\n")
-        }
-
         current.hidden.encounters <- 0
         current.exp.encounters <- 0
         blue.hidden.encounters <- 0
@@ -155,6 +151,7 @@ sim.opinion.dynamics <- function(init.graph,
 
                 # (R passes by value, so this part is harder.)
                 for (id in list.of.vertex.IDs) {
+
                     update.info <- 
                         victim.update.function[[i]](graphs[[graph.num]],v,id)
                     
@@ -200,45 +197,50 @@ sim.opinion.dynamics <- function(init.graph,
                     }
                     graphs[[graph.num]] <- append.message(graphs[[graph.num]],
                         update.info$message)
+
+                    if (generate.graph.per.encounter) {
+                        if (verbose) {
+                            cat("Encounter #",encounter.num,"...\n")
+                        }
+
+                        # Create a new igraph object to represent this point in time. 
+                        graphs[[graph.num+1]] <- 
+                            set.graph.attribute(graphs[[graph.num]],"message",NULL)
+                        graph.num <- graph.num + 1
+
+                        # Annotate the graph object with a graph attribute indicating
+                        # the number of encounters that had taken place at the time
+                        # this snapshot was taken.
+
+                        # (This is hardcoded to assume exactly two encounter/vupdate
+                        # functions, the first of which updates hidden and the second
+                        # of which updates expressed.)
+                        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                            "num.encounters", encounter.num)
+                        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                            "num.effective.encounters", num.effective.encounters)
+                        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                            "num.current.hidden.encounters", current.hidden.encounters)
+                        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                            "num.current.exp.encounters", current.exp.encounters)
+                        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                            "blue.hidden.effective.encounters", blue.hidden.encounters)
+                        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                            "red.hidden.effective.encounters", red.hidden.encounters)
+                        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
+                            "blue.exp.effective.encounters", blue.exp.encounters)
+                        graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
+                            "red.exp.effective.encounters", red.exp.encounters)
+                    }
                 }
-            }
-
-
-            if (generate.graph.per.encounter) {
-                # Create a new igraph object to represent this point in time. 
-                graphs[[graph.num+1]] <- 
-                    set.graph.attribute(graphs[[graph.num]],"message",NULL)
-                graph.num <- graph.num + 1
-
-                # Annotate the graph object with a graph attribute indicating
-                # the number of encounters that had taken place at the time
-                # this snapshot was taken.
-
-                # (This is hardcoded to assume exactly two encounter/vupdate
-                # functions, the first of which updates hidden and the second
-                # of which updates expressed.)
-                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                    "num.encounters", encounter.num)
-                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                    "num.effective.encounters", num.effective.encounters)
-                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
-                    "num.current.hidden.encounters", current.hidden.encounters)
-                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
-                    "num.current.exp.encounters", current.exp.encounters)
-                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                    "blue.hidden.effective.encounters", blue.hidden.encounters)
-                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
-                    "red.hidden.effective.encounters", red.hidden.encounters)
-                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]],
-                    "blue.exp.effective.encounters", blue.exp.encounters)
-                graphs[[graph.num]] <- set.graph.attribute(graphs[[graph.num]], 
-                    "red.exp.effective.encounters", red.exp.encounters)
-                
             }
         }
 
         if (!termination.function(graphs[[graph.num]])  &&
                 !generate.graph.per.encounter) {
+                if (verbose) {
+                    cat("Encounter #",encounter.num,"...\n")
+                }
             # Create a new igraph object to represent this point in time. 
             graphs[[graph.num+1]] <- 
                 set.graph.attribute(graphs[[graph.num]],"message",NULL)
@@ -845,7 +847,7 @@ get.expressed.latent.graph <- function(num.agents=100, prob.connected=0.2, dir=F
 
                 
 #default number of seeds is 50 
-param.sweep <- function(seeds=seq(10,500,10), prob.connected=seq(.1,1,0.05)) {
+param.sweep <- function(seeds=seq(10,500,10), update=seq(.1,1,0.05)) {
 
   library(doParallel)
   registerDoParallel(60)
@@ -853,18 +855,18 @@ param.sweep <- function(seeds=seq(10,500,10), prob.connected=seq(.1,1,0.05)) {
   bias.list <- list()
   firstRun <- TRUE
   # for each value of peer pressure probability, compute poll bias
-  for(i in 1:length(prob.connected)){
-    prob <- prob.connected[i]
+  for(i in 1:length(update)){
+    prob <- update[i]
     
     bias.data <- foreach(num=1:length(seeds), .combine = 'cbind') %dopar% {
         # run the same seeds for each probability
         set.seed(seeds[num])
-        initial.graph <- get.expressed.latent.graph(num.agents = 64, prob.connected = prob, dir = FALSE)
+        initial.graph <- get.expressed.latent.graph(num.agents = 64, prob.connected = .25, dir = FALSE)
         graphs <- sim.opinion.dynamics(initial.graph, num.encounters=50*vcount(initial.graph),
                                      encounter.func=list(get.mean.field.encounter.func(1),
                                        get.graph.neighbors.encounter.func(1)),
                                      victim.update.function=list(get.automatically.update.victim.function(A.is.victim=TRUE,
-                                        prob.update=0.5, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
+                                        prob.update=prob, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
                                         prob.knuckle.under.pressure=0.5, prob.internalize.expressed.opinion=0.5, trumpEffect=TRUE)),
                                      generate.graph.per.encounter=TRUE, verbose = TRUE,
                                      termination.function=get.never.terminate.function(),
