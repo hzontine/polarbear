@@ -855,9 +855,8 @@ param.sweep <- function(seeds=seq(10,500,10), pp=0.5, update=0.5, intern=0.5, co
   bias.list <- list()
   firstRun <- TRUE
   # for each value of peer pressure probability, compute poll bias
-  for(i in 1:length(intern)){
-    prob <- intern[i]
-    
+  for(i in 1:length(pp)){
+    prob <- pp[i]
     bias.data <- foreach(num=1:length(seeds), .combine = 'cbind') %dopar% {
         # run the same seeds for each probability
         set.seed(seeds[num])
@@ -867,7 +866,7 @@ param.sweep <- function(seeds=seq(10,500,10), pp=0.5, update=0.5, intern=0.5, co
                                        get.graph.neighbors.encounter.func(1)),
                                      victim.update.function=list(get.automatically.update.victim.function(A.is.victim=TRUE,
                                         prob.update=update, opinion.type="hidden"), get.peer.pressure.update.function(A.is.victim=TRUE,
-                                        prob.knuckle.under.pressure=pp, prob.internalize.expressed.opinion=prob, trumpEffect=TRUE)),
+                                        prob.knuckle.under.pressure=prob, prob.internalize.expressed.opinion=intern, trumpEffect=TRUE)),
                                      generate.graph.per.encounter=TRUE, verbose = TRUE,
                                      termination.function=get.never.terminate.function(),
                                     terminate.after.max.num.encounters=TRUE,
@@ -899,8 +898,8 @@ param.sweep <- function(seeds=seq(10,500,10), pp=0.5, update=0.5, intern=0.5, co
   return(bias.list)
 }
 
-data <- param.sweep(intern=seq(0,1,0.05))
-save(data, file="internProbData.RData")
+data <- param.sweep(pp=seq(0,1,0.05))
+save(data, file="peerpressureProbData.RData")
 
 
 main <- function() {
