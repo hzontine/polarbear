@@ -63,6 +63,7 @@ get.cumsum.of.bias <- function(file, prob){
     probs <- seq(0,1,0.05)
     poll.bias <- data[[prob]]$biasVector[,1]
     sum <- cumsum(poll.bias)              
+    sum <- sum / (seq(1,length(sum)))  
     values <- data.frame(bias=sum)
     for (seed in 2:ncol(data[[prob]]$biasVector)){ 
         poll.bias <- data[[prob]]$biasVector[,seed]
@@ -70,8 +71,8 @@ get.cumsum.of.bias <- function(file, prob){
         sum <- sum / (seq(1,length(sum)))            
         values <- cbind(values, data.frame(bias=sum))
     }
-    png(paste0("PP",prob,".png"))
-    plot(values[,1], type="l", main=paste0("Probability of being Peer Pressured: ",probs[prob]), xlab="Encounters", ylab="Average Cumulative Sum")
+    png(paste0("INT",prob,".png"))
+    plot(values[,1], type="l", main=paste0("Probability of Internalizing: ",probs[prob]), xlab="Encounters", ylab="Average Cumulative Sum")
     for(i in 2:ncol(values)){
         lines(values[,i])
     } 
