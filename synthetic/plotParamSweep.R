@@ -70,8 +70,8 @@ get.cumsum.of.bias <- function(file, prob){
         sum <- sum / (seq(1,length(sum)))            
         values <- cbind(values, data.frame(bias=sum))
     }
-    png("PP1.png")
-    plot(values[,1], type="l", main=paste0("Probability of being Peer Pressured:",probs[prob]), xlab="Encounters", ylab="Average Cumulative Sum")
+    png(paste0("PP",prob,".png"))
+    plot(values[,1], type="l", main=paste0("Probability of being Peer Pressured: ",probs[prob]), xlab="Encounters", ylab="Average Cumulative Sum")
     for(i in 2:ncol(values)){
         lines(values[,i])
     } 
