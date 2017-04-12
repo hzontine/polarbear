@@ -55,3 +55,26 @@ get.tenth.bias <- function(file){
    }
 
 }
+
+get.cumsum.of.bias <- function(file, prob){
+    load(file, verbose=TRUE)
+    data <- clean.data
+    seeds <- c(10,500,10)
+    probs <- seq(0,1,0.05)
+    poll.bias <- data[[prob]]$biasVector[,1]
+    sum <- cumsum(poll.bias)              
+    sum <- sum / (seq(1,length(sum)))  
+    values <- data.frame(bias=sum)
+    for (seed in 2:ncol(data[[prob]]$biasVector)){ 
+        poll.bias <- data[[prob]]$biasVector[,seed]
+        sum <- cumsum(poll.bias)
+        sum <- sum / (seq(1,length(sum)))            
+        values <- cbind(values, data.frame(bias=sum))
+    }
+    png(paste0("UPD",prob,".png"))
+    plot(values[,1], type="l", main=paste0("Probability of Updating: ",probs[prob]), xlab="Encounters", ylab="Average Cumulative Sum")
+    for(i in 2:ncol(values)){
+        lines(values[,i])
+    } 
+    dev.off()
+}
