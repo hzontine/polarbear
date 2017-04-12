@@ -71,8 +71,8 @@ get.cumsum.of.bias <- function(file, prob){
         sum <- sum / (seq(1,length(sum)))            
         values <- cbind(values, data.frame(bias=sum))
     }
-    png(paste0("INT",prob,".png"))
-    plot(values[,1], type="l", main=paste0("Probability of Internalizing: ",probs[prob]), xlab="Encounters", ylab="Average Cumulative Sum")
+    png(paste0("UPD",prob,".png"))
+    plot(values[,1], type="l", main=paste0("Probability of Updating: ",probs[prob]), xlab="Encounters", ylab="Average Cumulative Sum")
     for(i in 2:ncol(values)){
         lines(values[,i])
     } 
