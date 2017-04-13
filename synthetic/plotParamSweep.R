@@ -56,25 +56,24 @@ get.tenth.bias <- function(file){
 
 }
 
-get.cumsum.of.bias <- function(file, prob){
+get.cumsum.of.bias <- function(file){
     load(file, verbose=TRUE)
     data <- clean.data
     seeds <- c(10,500,10)
-    probs <- seq(0,1,0.05)
-    poll.bias <- data[[prob]]$biasVector[,1]
-    sum <- cumsum(poll.bias)              
-    sum <- sum / (seq(1,length(sum)))  
-    values <- data.frame(bias=sum)
-    for (seed in 2:ncol(data[[prob]]$biasVector)){ 
-        poll.bias <- data[[prob]]$biasVector[,seed]
-        sum <- cumsum(poll.bias)
-        sum <- sum / (seq(1,length(sum)))            
-        values <- cbind(values, data.frame(bias=sum))
+    #probs <- seq(0,1,0.05)
+    probs <- seq(0.1,1,0.05)
+    the.data <- data.frame(prob=list(), max=list())
+    for (prob in 1:length(data)){
+        values <- c()
+        for (seed in 1:ncol(data[[prob]]$biasVector)){ 
+            poll.bias <- data[[prob]]$biasVector[,seed]
+            poll.bias <- cumsum(poll.bias) / seq(1,length(poll.bias))
+            values <- c(values, max(poll.bias))
+        }
+        the.data <- rbind(the.data, data.frame(prob=probs[prob], max=values))
     }
-    png(paste0("UPD",prob,".png"))
-    plot(values[,1], type="l", main=paste0("Probability of Updating: ",probs[prob]), xlab="Encounters", ylab="Average Cumulative Sum")
-    for(i in 2:ncol(values)){
-        lines(values[,i])
-    } 
-    dev.off()
+    a <- ggplot(the.data, aes(x=prob, y=max)) + geom_smooth(method="loess") + geom_point(alpha=.1) + ylim(-0.1,0.4) + xlim(0,1)
+    a <- a + ggtitle("Probability of Connection between Agents") + xlab("Probability") + ylab("Poll Bias")
+        
+    ggsave("connected.pdf", plot=a)
 }
