@@ -1,0 +1,99 @@
+
+get first sentences together
+more talky, less read-y. don't spell out complex sentences. "A high poll bias
+    can occur..."  "In conclusion, this model suggests..."
+think it through lots.
+you're a better speaker than this
+
+1 - 11:25  mention CPSC a little more (and on slide)
+
+2 - 11:25  stumbly   a little fast for this slide
+
+3 - 11:26  define "agent".  don't mention the pubs verbally
+
+4 - 11:27  examples of opinions -- good  ("like dogs" lol)
+            "consider your own opinions, and how others have influenced you"
+
+5 - 11:28  too read-y
+
+6 - 11:28  relate to them. "consider...do you sometimes conceal your true
+            opinion?"
+            use words "conceal" and "reveal"
+            "want to be liked" -- reword. 
+            "asymmetrical" -- streamline.
+
+7 - 11:30  D'Aprile -- say "minority" instead of black
+
+8 - 11:31  
+
+9 - 11:32
+
+10 - 11:32
+
+11 - 11:33++  work on this one a LOT
+
+12 - 11:33  define "binary"
+            "has been proven to always converge"
+            better explain "uniformity"
+
+13 - 11:34  "My extension of the BVM is..."
+            make sure to point to inside and outside
+            maybe skip the "BVM has no edges" thing.
+
+14 - 11:35  "we have an erdos-renyi graph"
+
+15, 16 -- 11:36  "one parameter we'll tweak is..."
+
+17 - 11:36++  "two processes, or ways in which agents interact"
+            first bullet needs more explanation
+            process -> interactions?
+
+18 - 11:37  explain why "only share their latent opinion"
+
+19 - 11:38  "note the external doesn't come into play here"
+
+20 - 11:38  explain why only graph neighbors
+
+21 - 11:39  mention "assume social stigma goes in the pro-blue direction"
+
+22 - 11:39  
+
+23 - 11:39  a common technique in simulation is to set parameters to their
+            extremes and validate behavior
+
+24 - 11:41++
+
+25 - 11:41  "I'm defining 'poll bias' as..."
+            "Suppose this were the situation running up to the election."
+26 - 11:41  
+
+27 - 11:42  
+
+28 - 11:43
+
+more time on all these
+30/31 - 11:43  Need "results" signal loudly.
+            Explain more about what you're looking at. "Each dot is one
+            simulation run..."
+            More deliberately stress the result.
+
+32/33 - 11:44
+
+34/35 - 11:45  "it doesn't help..." good start, but reword
+
+36/37 - 11:46  don't explain the ".1 to 1" thing.  "larger social circles"
+
+38 - 11:47   way less read-y
+
+39 - 11:48  future directions
+
+
+slides
+------
+1st slide - CPSC thesis
+full citations
+Bradley effect -- add images
+"Undercover" -- images of Kellyanne
+
+mention "you wrote this in R, using igraph"
+17 - parameters...move later?
