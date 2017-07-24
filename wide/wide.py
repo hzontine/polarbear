@@ -20,6 +20,9 @@ for i in range(NUM_ITER):
     if vertex.neighbors():
         neighbor = random.choice(vertex.neighbors())
         vertex['color'] = neighbor['color']
+    if len(set(graph.vs['color'])) == 1:
+        logging.info('Converged (at iteration {})!'.format(i))
+        break
     igraph.plot(graph, inline=False, layout=layout,
         target='plot{:03d}.png'.format(i))
 
