@@ -13,13 +13,17 @@ MIN_FRIENDS_PER_NEIGHBOR = 3
 NUM_IDEOLOGIES = 3
 
 
-def generate_friends_graph(associates_graph, env_openness=1, tolerance=.5):
+def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3):
     '''
     Given a graph of associations (i.e., whose edges represent the random
     starting material that people get as far as who they encounter), produce a
     graph of friendships, where each of a node's friendships are either chosen
     from their associates, or from the graph at large, depending on the
     env_openness parameter passed.
+    The tolerance parameter is used to control how likely a vertex is to form
+    friendships with others of its own color. If 0, it will strongly prefer
+    this. If 0, it will strongly prefer not to. If .5, it is indifferent to
+    other vertex's colors.
     '''
     friends_graph = associates_graph.copy()
     friends_graph.delete_edges(None)
@@ -62,6 +66,12 @@ def generate_friends_graph(associates_graph, env_openness=1, tolerance=.5):
     logging.info('{}/{} ({:.1f}%) of associates are still friends.'.format(
         still_friends, len(associates_graph.es), 
         still_friends / len(associates_graph.es) * 100)) 
+    def compute_assortativity(g):
+        return g.assortativity_nominal(
+            [ colors.index(c) for c in g.vs['color']], directed=False)
+    logging.info('Assortativity: associates {:.3f}, friends {:.3f}'.format(
+        compute_assortativity(associates_graph),
+        compute_assortativity(friends_graph)))
 
     PLOT_AND_QUIT = True
     if PLOT_AND_QUIT:
@@ -85,11 +95,26 @@ def choose_friend(graph, vid, candidate_f_ids, tolerance):
     possible). If 0, it always won't (if possible). If 0.5, it is agnostic
     with respect to color.
     '''
-    # For now, don't implement tolerance.
+    # https://stackoverflow.com/questions/3679694
+    def weighted_choice(choices):
+       total = sum(w for c, w in choices.items())
+       r = random.uniform(0, total)
+       upto = 0
+       for c, w in choices.items():
+          if upto + w >= r:
+             return c
+          upto += w
+       assert False, "Shouldn't get here"
+
     if (len(candidate_f_ids)) == 0:
         return None
+    my_color = graph.vs[vid]['color']
+    weighted_ids = { v : 
+            (1-tolerance if graph.vs[v]['color'] == my_color else tolerance)
+            for v in list(candidate_f_ids) }
+    logging.debug("It's: {}.".format(weighted_ids))
     logging.debug('({}): Choosing from {}...'.format(vid, candidate_f_ids))
-    return random.choice(list(candidate_f_ids))
+    return weighted_choice(weighted_ids)
 
 
 POSSIBLE_COLORS = ['red','lightblue','green','brown','purple']
