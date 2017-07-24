@@ -449,12 +449,12 @@ plot.animation <- function(graphs, attribute.name="ideology",
 #
 plot.polarization <- function(graphs, attribute1="hidden", attribute2="expressed") {
     assortativities1 <- sapply(graphs, function(graph) {
-        assortativity(graph,
-            types1=get.vertex.attribute(graph,attribute1))
+        assortativity_nominal(graph,directed=FALSE,
+            types=get.vertex.attribute(graph,attribute1)+1)
     })
     assortativities2 <- sapply(graphs, function(graph) {
-      assortativity(graph,
-                    types1=get.vertex.attribute(graph,attribute2))
+      assortativity_nominal(graph,directed=FALSE,
+                    types=get.vertex.attribute(graph,attribute2)+1)
     })
     
     time.pts <- sapply(graphs, function(g) get.graph.attribute(g, "num.encounters"))
