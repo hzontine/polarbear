@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 import igraph
 import random
@@ -7,59 +6,8 @@ import sys
 import logging
 
 
-if len(sys.argv) > 5:
-    print('Usage: wide.py [env_openness] [tolerance] [seed] [logLevel|NONE].')
-    sys.exit(1)
-
-if len(sys.argv) > 4:
-    if sys.argv[4] == 'NONE':
-        logging.getLogger().setLevel(logging.CRITICAL + 1)
-    else:
-        logging.getLogger().setLevel(sys.argv[4])
-else:
-    logging.getLogger().setLevel('INFO')
-
-if len(sys.argv) > 3:
-    try:
-        seed = int(sys.argv[3])
-        if seed == 0:
-            seed = random.randrange(10000)
-    except:
-        print_usage()
-        print("('seed' must be numeric.)")
-        sys.exit(3)
-else:
-    seed = random.randrange(10000)
-
-params = [('TOLERANCE',.5),('ENV_OPENNESS',.5)]
-this_module = sys.modules[__name__]
-for i,(param,default) in enumerate(params):
-    if len(sys.argv) > i+1:
-        try:
-            setattr(this_module, param, float(sys.argv[i+1]))
-            if not 0 <= float(sys.argv[i+1]) <= 1:
-                raise exception
-        except:
-            print("{} '{}' must be float in (0,1).".format(param.title(),
-                                                            sys.argv[i+1]))
-            sys.exit(10+i)
-    else:
-        setattr(this_module, param, default)
-
-
-# Other configuration parameters.
-N = 50
-MIN_FRIENDS_PER_NEIGHBOR = 3
-NUM_IDEOLOGIES = 3
-NUM_ITER = 100
-
-print('=== Using seed {}.'.format(seed))
-print("=== TOLERANCE={}, ENV_OPENNESS={}, N={}, MIN_FRIENDS={}.".format(
-    TOLERANCE, ENV_OPENNESS, N, MIN_FRIENDS_PER_NEIGHBOR))
-print("=== NUM_ITER={}, NUM_IDEOLOGIES={}".format(NUM_ITER, NUM_IDEOLOGIES))
-random.seed(seed)
-
-def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3):
+def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3,
+    min_friends_per_neighbor=3):
     '''
     Given a graph of associations (i.e., whose edges represent the random
     starting material that people get as far as who they encounter), produce a
@@ -71,6 +19,7 @@ def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3):
     this. If 0, it will strongly prefer not to. If .5, it is indifferent to
     other vertex's colors.
     '''
+    colors = list(set(associates_graph.vs['color']))
     friends_graph = associates_graph.copy()
     friends_graph.delete_edges(None)
     for vid in range(associates_graph.vcount()):
@@ -78,10 +27,10 @@ def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3):
         f_ids = [ n.index for n in friends_graph.vs[vid].neighbors() ]
         logging.debug('Vertex {} (associates {})...'.format(vid, a_ids))
         # Hack. Add friends to this vertex until they have at least 
-        # MIN_FRIENDS_PER_NEIGHBOR. (They may start out with more because
+        # min_friends_per_neighbor. (They may start out with more because
         # lower-id vertices may well have already made friends with them
         # before we got to 'their' iteration.)
-        num_additional_edges = max(0, MIN_FRIENDS_PER_NEIGHBOR - len(f_ids))
+        num_additional_edges = max(0, min_friends_per_neighbor - len(f_ids))
         logging.debug(('{} already has {} edges, and should have 3.' + 
             ' Adding {} more.').format(vid, len(f_ids), num_additional_edges))
         for edge_num in range(num_additional_edges):
@@ -128,6 +77,8 @@ def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3):
             target='as.png')
         igraph.plot(friends_graph, layout=layout, inline=False,
             target='fr.png')
+        os.system('eog as.png fr.png')
+        os.system('rm as.png fr.png')
         import sys ; sys.exit(1)
 
     return friends_graph
@@ -162,29 +113,3 @@ def choose_friend(graph, vid, candidate_f_ids, tolerance):
     logging.debug('({}): Choosing from {}...'.format(vid, candidate_f_ids))
     return weighted_choice(weighted_ids)
 
-
-POSSIBLE_COLORS = ['red','lightblue','green','brown','purple']
-colors = POSSIBLE_COLORS[:NUM_IDEOLOGIES]
-
-associates_graph = igraph.Graph.Erdos_Renyi(N, MIN_FRIENDS_PER_NEIGHBOR/N)
-associates_graph['name'] = 'associates graph'
-associates_graph.vs['color'] = [ random.choice(colors) for _ in range(N) ]
-graph = generate_friends_graph(associates_graph)
-
-
-# Static layout: compute once and use, since graph structure doesn't change.
-layout = graph.layout_kamada_kawai(seed=None)
-for i in range(NUM_ITER):
-    logging.warning('Iteration {}...'.format(i))
-    vertex = random.choice(graph.vs)
-    if vertex.neighbors():
-        neighbor = random.choice(vertex.neighbors())
-        vertex['color'] = neighbor['color']
-    if len(set(graph.vs['color'])) == 1:
-        logging.warning('Converged (at iteration {})!'.format(i))
-        break
-    igraph.plot(graph, inline=False, layout=layout,
-        target='plot{:03d}.png'.format(i))
-
-os.system('eog plot*.png')
-os.system('rm plot*.png')
