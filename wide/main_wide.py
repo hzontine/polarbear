@@ -7,6 +7,7 @@ import sys
 import logging
 
 from wide import *
+from wide_sim import *
 
 
 if len(sys.argv) > 5:
@@ -68,36 +69,24 @@ MIN_FRIENDS_PER_NEIGHBOR = 3
 NUM_IDEOLOGIES = 3
 NUM_ITER = 100
 
-print('=== Using seed {}.'.format(seed))
-print("=== TOLERANCE={}, ENV_OPENNESS={}, N={}, MIN_FRIENDS={}.".format(
-    TOLERANCE, ENV_OPENNESS, N, MIN_FRIENDS_PER_NEIGHBOR))
-print("=== NUM_ITER={}, NUM_IDEOLOGIES={}.".format(NUM_ITER, NUM_IDEOLOGIES))
-random.seed(seed)
 
+if do_sweep:
+    pass
+else:
+    print('=== Using seed {}.'.format(seed))
+    print("=== TOLERANCE={}, ENV_OPENNESS={}, N={}, MIN_FRIENDS={}.".format(
+        TOLERANCE, ENV_OPENNESS, N, MIN_FRIENDS_PER_NEIGHBOR))
+    print("=== NUM_ITER={}, NUM_IDEOLOGIES={}.".format(NUM_ITER, 
+                                                            NUM_IDEOLOGIES))
+    random.seed(seed)
 
-POSSIBLE_COLORS = ['red','lightblue','green','brown','purple']
-colors = POSSIBLE_COLORS[:NUM_IDEOLOGIES]
+    associates_graph = generate_associates_graph(N, MIN_FRIENDS_PER_NEIGHBOR,
+        NUM_IDEOLOGIES)
+    graph = generate_friends_graph(associates_graph, ENV_OPENNESS, TOLERANCE,
+        MIN_FRIENDS_PER_NEIGHBOR)
+    results = run_bvm(graph, NUM_ITER, True)
+    with open('/tmp/results.csv','w') as f:
+        results.to_csv(f)
+    print('results at /tmp/results.csv.')
+    os.system('./plotSingle.R --args /tmp/results.csv')
 
-associates_graph = igraph.Graph.Erdos_Renyi(N, MIN_FRIENDS_PER_NEIGHBOR/N)
-associates_graph['name'] = 'associates graph'
-associates_graph.vs['color'] = [ random.choice(colors) for _ in range(N) ]
-graph = generate_friends_graph(associates_graph, ENV_OPENNESS, TOLERANCE,
-    MIN_FRIENDS_PER_NEIGHBOR)
-
-
-# Static layout: compute once and use, since graph structure doesn't change.
-layout = graph.layout_kamada_kawai(seed=None)
-for i in range(NUM_ITER):
-    logging.warning('Iteration {}...'.format(i))
-    vertex = random.choice(graph.vs)
-    if vertex.neighbors():
-        neighbor = random.choice(vertex.neighbors())
-        vertex['color'] = neighbor['color']
-    if len(set(graph.vs['color'])) == 1:
-        logging.warning('Converged (at iteration {})!'.format(i))
-        break
-    igraph.plot(graph, inline=False, layout=layout,
-        target='plot{:03d}.png'.format(i))
-
-os.system('eog plot*.png')
-os.system('rm plot*.png')

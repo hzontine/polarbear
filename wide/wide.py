@@ -6,6 +6,17 @@ import sys
 import logging
 
 
+def generate_associates_graph(N, avg_deg, num_ideologies=2):
+
+    possible_colors = ['red','lightblue','green','brown','purple']
+    colors = possible_colors[:num_ideologies]
+
+    associates_graph = igraph.Graph.Erdos_Renyi(N, avg_deg/N)
+    associates_graph['name'] = 'associates graph'
+    associates_graph.vs['color'] = [ random.choice(colors) for _ in range(N) ]
+    return associates_graph
+
+
 def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3,
     min_friends_per_neighbor=3):
     '''
@@ -61,14 +72,11 @@ def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3,
     logging.info('{}/{} ({:.1f}%) of associates are still friends.'.format(
         still_friends, len(associates_graph.es), 
         still_friends / len(associates_graph.es) * 100)) 
-    def compute_assortativity(g):
-        return g.assortativity_nominal(
-            [ colors.index(c) for c in g.vs['color']], directed=False)
     logging.info('Assortativity: associates {:.3f}, friends {:.3f}'.format(
         compute_assortativity(associates_graph),
         compute_assortativity(friends_graph)))
 
-    PLOT_AND_QUIT = True
+    PLOT_AND_QUIT = False
     if PLOT_AND_QUIT:
         layout = associates_graph.layout_kamada_kawai(seed=None)
         associates_graph.vs['label'] = list(range(associates_graph.vcount()))
@@ -79,6 +87,7 @@ def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3,
             target='fr.png')
         os.system('eog as.png fr.png')
         os.system('rm as.png fr.png')
+        print('Plotting and quitting.')
         import sys ; sys.exit(1)
 
     return friends_graph
@@ -113,3 +122,8 @@ def choose_friend(graph, vid, candidate_f_ids, tolerance):
     logging.debug('({}): Choosing from {}...'.format(vid, candidate_f_ids))
     return weighted_choice(weighted_ids)
 
+
+def compute_assortativity(g):
+    colors = list(set(g.vs['color']))  # make global - faster?
+    return g.assortativity_nominal(
+        [ colors.index(c) for c in g.vs['color']], directed=False)
