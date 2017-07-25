@@ -1,17 +1,63 @@
+#!/usr/bin/env python3
 
 import igraph
 import random
 import os
+import sys
 import logging
 
-logging.getLogger().setLevel('INFO')
 
-# Configuration parameters.
+if len(sys.argv) > 5:
+    print('Usage: wide.py [env_openness] [tolerance] [seed] [logLevel|NONE].')
+    sys.exit(1)
+
+if len(sys.argv) > 4:
+    if sys.argv[4] == 'NONE':
+        logging.getLogger().setLevel(logging.CRITICAL + 1)
+    else:
+        logging.getLogger().setLevel(sys.argv[4])
+else:
+    logging.getLogger().setLevel('INFO')
+
+if len(sys.argv) > 3:
+    try:
+        seed = int(sys.argv[3])
+        if seed == 0:
+            seed = random.randrange(10000)
+    except:
+        print_usage()
+        print("('seed' must be numeric.)")
+        sys.exit(3)
+else:
+    seed = random.randrange(10000)
+
+params = [('TOLERANCE',.5),('ENV_OPENNESS',.5)]
+this_module = sys.modules[__name__]
+for i,(param,default) in enumerate(params):
+    if len(sys.argv) > i+1:
+        try:
+            setattr(this_module, param, float(sys.argv[i+1]))
+            if not 0 <= float(sys.argv[i+1]) <= 1:
+                raise exception
+        except:
+            print("{} '{}' must be float in (0,1).".format(param.title(),
+                                                            sys.argv[i+1]))
+            sys.exit(10+i)
+    else:
+        setattr(this_module, param, default)
+
+
+# Other configuration parameters.
 N = 50
-NUM_ITER = 100
 MIN_FRIENDS_PER_NEIGHBOR = 3
 NUM_IDEOLOGIES = 3
+NUM_ITER = 100
 
+print('=== Using seed {}.'.format(seed))
+print("=== TOLERANCE={}, ENV_OPENNESS={}, N={}, MIN_FRIENDS={}.".format(
+    TOLERANCE, ENV_OPENNESS, N, MIN_FRIENDS_PER_NEIGHBOR))
+print("=== NUM_ITER={}, NUM_IDEOLOGIES={}".format(NUM_ITER, NUM_IDEOLOGIES))
+random.seed(seed)
 
 def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3):
     '''
@@ -79,9 +125,9 @@ def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3):
         associates_graph.vs['label'] = list(range(associates_graph.vcount()))
         friends_graph.vs['label'] = list(range(friends_graph.vcount()))
         igraph.plot(associates_graph, layout=layout, inline=False,
-            target="as.png")
+            target='as.png')
         igraph.plot(friends_graph, layout=layout, inline=False,
-            target="fr.png")
+            target='fr.png')
         import sys ; sys.exit(1)
 
     return friends_graph
