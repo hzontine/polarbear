@@ -3,7 +3,7 @@ import igraph
 import logging
 import random
 import os
-import pandas as pd
+#import pandas as pd
 
 import wide
 
@@ -15,9 +15,10 @@ def run_bvm(graph, num_iter, plot_graphs=False):
     row per simulation iteration.
     If plot_graphs is True, display an animation of the evolving graph itself.
     '''
-    iters = pd.Series(range(num_iter), name='iteration')
-    columns = ['assortativity']
-    results = pd.DataFrame(index=iters, columns=columns)
+    #iters = pd.Series(range(num_iter), name='iteration')
+    #columns = ['assortativity']
+    #results = pd.DataFrame(index=iters, columns=columns)
+    results = [None] * num_iter
     if plot_graphs:
         # Static layout: compute once and use, since graph structure doesn't
         # change.
@@ -29,7 +30,7 @@ def run_bvm(graph, num_iter, plot_graphs=False):
         if vertex.neighbors():
             neighbor = random.choice(vertex.neighbors())
             vertex['color'] = neighbor['color']
-        results.iloc[i]['assortativity'] = wide.compute_assortativity(graph)
+        results[i] = wide.compute_assortativity(graph)
         if len(set(graph.vs['color'])) == 1:
             logging.warning('Converged (at iteration {})!'.format(i))
             break

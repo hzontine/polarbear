@@ -79,7 +79,9 @@ else:
         MIN_FRIENDS_PER_NEIGHBOR)
     results = run_bvm(graph, num_iter, True if plot_graphs=='True' else False)
     with open('/tmp/results.csv','w') as f:
-        results.to_csv(f)
+        print('iteration,assortativity',file=f)
+        for i,r in enumerate(results):
+            print('{},{:.4f}'.format(i,r),file=f)
     print('results at /tmp/results.csv.')
     os.system('./plotSingle.R --args /tmp/results.csv')
 
