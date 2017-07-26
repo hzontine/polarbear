@@ -5,6 +5,7 @@ import random
 import os
 import sys
 import logging
+import tempfile
 
 from wide import *
 from wide_sim import *
@@ -69,15 +70,16 @@ param_dict['MIN_FRIENDS_PER_NEIGHBOR'] = MIN_FRIENDS_PER_NEIGHBOR
 param_dict['NUM_IDEOLOGIES'] = NUM_IDEOLOGIES
 
 
+_,filename = tempfile.mkstemp(suffix=".csv",dir="/tmp")
 if suite:
     suite_results = Suite(range(seed,seed+suite)).run(param_dict)
-    with open('/tmp/results.csv','w') as f:
+    with open(filename,'w') as f:
         print('seed,iteration,assortativity',file=f)
         for seed,results in suite_results.items():
             for i,r in enumerate(results):
                 print('{},{},{:.4f}'.format(seed,i,r),file=f)
-    print('results at /tmp/results.csv.')
-    os.system('./plotSuite.R --args /tmp/results.csv')
+    print('results at {}.'.format(filename))
+    os.system('./plotSuite.R --args {}'.format(filename))
 else:
     print('=== Using seed {}.'.format(seed))
     print("=== tolerance={}, env_openness={}, N={}, MIN_FRIENDS={}.".format(
@@ -91,10 +93,10 @@ else:
     graph = generate_friends_graph(associates_graph, env_openness, tolerance,
         MIN_FRIENDS_PER_NEIGHBOR)
     results = run_bvm(graph, num_iter, True if plot_graphs=='True' else False)
-    with open('/tmp/results.csv','w') as f:
+    with open(filename,'w') as f:
         print('iteration,assortativity',file=f)
         for i,r in enumerate(results):
             print('{},{:.4f}'.format(i,r),file=f)
-    print('results at /tmp/results.csv.')
-    os.system('./plotSingle.R --args /tmp/results.csv')
+    print('results at {}.'.format(filename))
+    os.system('./plotSingle.R --args {}'.format(filename))
 
