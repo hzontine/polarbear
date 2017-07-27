@@ -6,10 +6,12 @@ import os
 import sys
 import logging
 import tempfile
+import numpy as np
 
 from wide import *
 from wide_sim import *
 from suite import *
+from sweep import *
 
 
 def print_usage():
@@ -20,6 +22,9 @@ def print_usage():
         '                    [plot_graphs=True|False]\n' +
         '                    [plot_suite=True|False]\n' +
         '                    [seed=#]\n' +
+        '                    [N=#]\n' +
+        '                    [MIN_FRIENDS_PER_NEIGHBOR=#]\n' +
+        '                    [NUM_IDEOLOGIES=#]\n' +
         '                    [log_level=level|NONE].\n' +
         '(where "range" is #-#-#, for start-stop-step.)')
 
@@ -42,25 +47,11 @@ def smart_open(filename=None):
 ##############################################################################
 
 
-if len(sys.argv) > 8:
+if sys.argv[1].startswith('usage') or sys.argv[1].startswith('-usage'):
     print_usage()
     sys.exit(1)
 
 this_module = sys.modules[__name__]
-
-for arg in sys.argv[1:]:
-    if not '=' in arg:
-        print("Malformed argument '{}'.".format(arg))
-        print_usage()
-        sys.exit(2)
-    arg_name, arg_val = arg.split('=')
-    try:
-        setattr(this_module, arg_name, int(arg_val))
-    except:
-        try:
-            setattr(this_module, arg_name, float(arg_val))
-        except:
-            setattr(this_module, arg_name, arg_val)
 
 sweepable_params = [ 'env_openness', 'tolerance' ]
 params = [
@@ -71,7 +62,29 @@ params = [
     ('num_iter',200),
     ('plot_graphs',True),
     ('plot_suite',True),
+    ('N',50),
+    ('MIN_FRIENDS_PER_NEIGHBOR',3),
+    ('NUM_IDEOLOGIES',3),
     ('log_level','INFO')]
+
+for arg in sys.argv[1:]:
+    if not '=' in arg:
+        print("Malformed argument '{}'.".format(arg))
+        print_usage()
+        sys.exit(2)
+    arg_name, arg_val = arg.split('=')
+    if arg_name not in [ x for x,_ in params ]:
+        print("Unknown argument '{}'.".format(arg_name))
+        print_usage()
+        sys.exit(3)
+    try:
+        setattr(this_module, arg_name, int(arg_val))
+    except:
+        try:
+            setattr(this_module, arg_name, float(arg_val))
+        except:
+            setattr(this_module, arg_name, arg_val)
+
 param_dict = {}
 for (param,default) in params:
     if not hasattr(this_module, param):
@@ -88,19 +101,17 @@ if seed in (0,None):
 
 
 
-# Other configuration parameters.
-N = 50
-MIN_FRIENDS_PER_NEIGHBOR = 3
-NUM_IDEOLOGIES = 3
-param_dict['N'] = N
-param_dict['MIN_FRIENDS_PER_NEIGHBOR'] = MIN_FRIENDS_PER_NEIGHBOR
-param_dict['NUM_IDEOLOGIES'] = NUM_IDEOLOGIES
-
-
 if any([ type(param_dict[x]) == str for x in sweepable_params ]):
     # Parameter sweep (over different parameter values).
-    print("sweep.")
-    pass
+    to_sweep = [ (x, param_dict[x]) for x in sweepable_params 
+                                        if type(param_dict[x]) == str ]
+    sweep_params = {}
+    for s_p, s_vals in to_sweep:
+        start, stop, step = [ float(x) for x in s_vals.split('-') ]
+        sweep_params[s_p] = list(np.arange(start, stop, step))
+    param_dict['plot_suite'] = False
+    param_dict['plot_graphs'] = False
+    Sweep(sweep_params, param_dict).run()
 elif suite:
     # Suite of runs (with all the same parameters).
     if plot_suite in [True,'True']:
@@ -111,10 +122,15 @@ elif suite:
         logging.getLogger().setLevel(logging.CRITICAL + 1)
     suite_results = Suite(range(seed,seed+suite)).run(param_dict)
     with smart_open(filename) as f:
-        print('seed,iteration,assortativity', file=f)
+        print('seed,iteration,' + ','.join(sweepable_params) + 
+            ',assortativity', file=f)
         for seed,results in suite_results.items():
             for i,r in enumerate(results):
-                print('{},{},{:.4f}'.format(seed,i,r),file=f)
+                print(('{},{},' + 
+                        '{},'*len(sweepable_params) + 
+                        '{:.4f}').format(seed,i,
+                            *[ param_dict[x] for x in sweepable_params ],r),
+                file=f)
     if plot_suite in [True,'True']:
         os.system('./plotSuite.R --args {}'.format(filename))
 else:
