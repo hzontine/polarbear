@@ -49,7 +49,7 @@ param_dict = {}
 for (param,default) in params:
     if not hasattr(this_module, param):
         setattr(this_module, param, default)
-    param_dict[param] = default
+    param_dict[param] = getattr(this_module, param)
 
 if log_level == 'NONE':
     logging.getLogger().setLevel(logging.CRITICAL + 1)
