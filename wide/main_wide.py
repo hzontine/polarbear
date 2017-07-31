@@ -47,7 +47,8 @@ def smart_open(filename=None):
 ##############################################################################
 
 
-if sys.argv[1].startswith('usage') or sys.argv[1].startswith('-usage'):
+if (len(sys.argv) < 2 or sys.argv[1].startswith('usage') 
+        or sys.argv[1].startswith('-usage')):
     print_usage()
     sys.exit(1)
 
