@@ -109,7 +109,7 @@ if any([ type(param_dict[x]) == str for x in sweepable_params ]):
     sweep_params = {}
     for s_p, s_vals in to_sweep:
         start, stop, step = [ float(x) for x in s_vals.split('-') ]
-        sweep_params[s_p] = list(np.arange(start, stop, step))
+        sweep_params[s_p] = list(np.arange(start, stop+step, step))
     param_dict['plot_suite'] = False
     param_dict['plot_graphs'] = False
     Sweep(sweep_params, param_dict).run()
