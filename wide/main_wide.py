@@ -112,6 +112,10 @@ if any([ type(param_dict[x]) == str for x in sweepable_params ]):
         sweep_params[s_p] = list(np.arange(start, stop+step, step))
     param_dict['plot_suite'] = False
     param_dict['plot_graphs'] = False
+    if param_dict['suite'] == 0:
+        # If they want a sweep but didn't specify, use size-1 suites so that
+        # we get data output (instead of just a single-run plot).
+        param_dict['suite'] = 1
     Sweep(sweep_params, param_dict).run()
 elif suite:
     # Suite of runs (with all the same parameters).
