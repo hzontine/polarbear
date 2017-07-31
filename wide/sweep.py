@@ -5,6 +5,7 @@ import os
 import sys
 from functools import reduce
 import operator
+import itertools
 
 
 class Sweep():
@@ -34,19 +35,20 @@ class Sweep():
         output_files = []
         seed = start_seed
 
-        # For now, assume only one sweep parameter.
-        one_sweep_param = list(self.sweep_params.keys())[0]
-        one_sweep_values = self.sweep_params[one_sweep_param]
-        for val in one_sweep_values:
+        annotated_vals = []
+        for k,vals in self.sweep_params.items():
+            annotated_vals.append([ (k,v) for v in vals ])
+        to_sweep = itertools.product(*annotated_vals)
+        for param_set in to_sweep:
             output_file = '/tmp/output'+str(seed)+'.csv'
             output_files.append(output_file)
             self.param_dict['seed'] = seed
             with open(output_file, 'w') as f:
                 cmd_line = ['./main_wide.py']
-                cmd_line.append('{}={}'.format(one_sweep_param,val))
+                for param in param_set:
+                    cmd_line.append('{}={}'.format(*param))
                 for p,v in self.param_dict.items():
                     cmd_line.append('{}={}'.format(p,v))
-                #import ipdb; ipdb.set_trace()
                 print('going to run: {}'.format(' '.join(cmd_line)))
                 procs.append(subprocess.Popen(cmd_line, stdout=f))
             seed += self.param_dict['suite']
