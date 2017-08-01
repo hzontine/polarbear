@@ -49,7 +49,6 @@ class Sweep():
                     cmd_line.append('{}={}'.format(*param))
                 for p,v in self.param_dict.items():
                     cmd_line.append('{}={}'.format(p,v))
-                print('going to run: {}'.format(' '.join(cmd_line)))
                 procs.append(subprocess.Popen(cmd_line, stdout=f))
             seed += self.param_dict['suite']
 
