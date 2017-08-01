@@ -21,6 +21,7 @@ def print_usage():
         '                    [num_iter=#]\n' +
         '                    [plot_graphs=True|False]\n' +
         '                    [plot_suite=True|False]\n' +
+        '                    [plot_sweep=True|False]\n' +
         '                    [seed=#]\n' +
         '                    [N=#]\n' +
         '                    [MIN_FRIENDS_PER_NEIGHBOR=#]\n' +
@@ -63,6 +64,7 @@ params = [
     ('num_iter',200),
     ('plot_graphs',True),
     ('plot_suite',True),
+    ('plot_sweep',True),
     ('N',50),
     ('MIN_FRIENDS_PER_NEIGHBOR',3),
     ('NUM_IDEOLOGIES',3),
@@ -117,6 +119,8 @@ if any([ type(param_dict[x]) == str for x in sweepable_params ]):
         # we get data output (instead of just a single-run plot).
         param_dict['suite'] = 1
     Sweep(sweep_params, param_dict).run()
+    if plot_sweep in [True,'True']:
+        os.system('./plotSweep.R')
 elif suite:
     # Suite of runs (with all the same parameters).
     if plot_suite in [True,'True']:
@@ -131,11 +135,19 @@ elif suite:
             ',assortativity', file=f)
         for seed,results in suite_results.items():
             for i,r in enumerate(results):
-                print(('{},{},' + 
-                        '{},'*len(sweepable_params) + 
-                        '{:.4f}').format(seed,i,
-                            *[ param_dict[x] for x in sweepable_params ],r),
-                file=f)
+                if r == None:
+                    print(('{},{},' + 
+                            '{:.2f},'*len(sweepable_params) + 
+                            'NA').format(seed,i,
+                            *[ param_dict[x] for x in sweepable_params ]),
+                    file=f)
+                else:
+                    print(('{},{},' + 
+                            '{:.2f},'*len(sweepable_params) + 
+                            '{:.4f}').format(seed,i,
+                                *[ param_dict[x] for x in sweepable_params ],r),
+                    file=f)
+                    
     if plot_suite in [True,'True']:
         os.system('./plotSuite.R --args {}'.format(filename))
 else:
