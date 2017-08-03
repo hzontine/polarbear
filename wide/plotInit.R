@@ -41,6 +41,7 @@ g <- ggplot(sum.each.run.results,
     ggtitle(paste0('(n=',n,' sims for each param value)')) +
     xlab('Environmental openness') +
     ylab(expression('Assortativity of' ~ bold(initial) ~ 'graph')) +
+    ylim(c(-.2,1)) +
     geom_boxplot(show.legend=FALSE) +
     scale_x_continuous(breaks=unique(results$env_openness)) +
     theme(axis.text.x=element_text(size=9))

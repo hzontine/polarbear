@@ -40,6 +40,7 @@ g <- ggplot(sum.each.run.results,
     ylab(paste('Mean assortativity',
             ifelse(ITER.CUTOFF > 0,paste('\n(past',ITER.CUTOFF,'iterations)'),
                 ''))) +
+    ylim(c(-.2,1)) +
     geom_boxplot(show.legend=FALSE) +
     scale_x_continuous(breaks=unique(results$env_openness)) +
     theme(axis.text.x=element_text(size=9))
