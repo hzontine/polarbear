@@ -17,7 +17,7 @@ def generate_associates_graph(N, avg_deg, num_ideologies=2):
     return associates_graph
 
 
-def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3,
+def generate_friends_graph(associates_graph, env_openness=.5, homophily=.7,
     min_friends_per_neighbor=3):
     '''
     Given a graph of associations (i.e., whose edges represent the random
@@ -25,8 +25,8 @@ def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3,
     graph of friendships, where each of a node's friendships are either chosen
     from their associates, or from the graph at large, depending on the
     env_openness parameter passed.
-    The tolerance parameter is used to control how likely a vertex is to form
-    friendships with others of its own color. If 0, it will strongly prefer
+    The homophily parameter is used to control how likely a vertex is to form
+    friendships with others of its own color. If 1, it will strongly prefer
     this. If 0, it will strongly prefer not to. If .5, it is indifferent to
     other vertex's colors.
     '''
@@ -58,7 +58,7 @@ def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3,
                 logging.debug('Choosing from associates...')
                 candidate_ids = set(a_ids) - { vid } - set(f_ids)
             new_friend_id = choose_friend(associates_graph, vid, candidate_ids,
-                tolerance)
+                homophily)
             logging.debug('Adding edge {}.'.format((vid, new_friend_id)))
             if new_friend_id:
                 friends_graph.add_edge(vid, new_friend_id)
@@ -93,10 +93,10 @@ def generate_friends_graph(associates_graph, env_openness=.5, tolerance=.3,
     return friends_graph
 
 
-def choose_friend(graph, vid, candidate_f_ids, tolerance):
+def choose_friend(graph, vid, candidate_f_ids, homophily):
     '''
     Choose a friend for the vid passed randomly from the candidate ids
-    passed. The "tolerance" parameter controls how likely it is that the
+    passed. The "homophily" parameter controls how likely it is that the
     chosen friend will have the same color as vid. If 1, it always will (if
     possible). If 0, it always won't (if possible). If 0.5, it is agnostic
     with respect to color.
@@ -116,7 +116,7 @@ def choose_friend(graph, vid, candidate_f_ids, tolerance):
         return None
     my_color = graph.vs[vid]['color']
     weighted_ids = { v : 
-            (1-tolerance if graph.vs[v]['color'] == my_color else tolerance)
+            (homophily if graph.vs[v]['color'] == my_color else 1-homophily)
             for v in list(candidate_f_ids) }
     logging.debug("It's: {}.".format(weighted_ids))
     logging.debug('({}): Choosing from {}...'.format(vid, candidate_f_ids))

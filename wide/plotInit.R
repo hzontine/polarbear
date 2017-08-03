@@ -26,9 +26,9 @@ results <- results %>% dplyr::filter(iteration == 0)
 
 # Compute the number of sims per parameter value tuple, for display.
 first.env_openness <- as.numeric(results[1,'env_openness'])
-first.tolerance <- as.numeric(results[1,'tolerance'])
+first.homophily <- as.numeric(results[1,'homophily'])
 n <- nrow(results %>% dplyr::filter(env_openness==first.env_openness,
-                               tolerance==first.tolerance)) / 
+                               homophily==first.homophily)) / 
     (max(results$iteration) + 1)
 
 results %>% 
@@ -37,10 +37,10 @@ results %>%
 g <- ggplot(sum.each.run.results, 
     aes(x=env_openness, group=env_openness, fill=env_openness, 
         y=assortativity)) + 
-    facet_wrap(~tolerance, labeller="label_both") +
+    facet_wrap(~homophily, labeller="label_both") +
     ggtitle(paste0('(n=',n,' sims for each param value)')) +
     xlab('Environmental openness') +
-    ylab(expression('Mean assortativity of' ~ bold(initial) ~ 'graph')) +
+    ylab(expression('Assortativity of' ~ bold(initial) ~ 'graph')) +
     geom_boxplot(show.legend=FALSE) +
     scale_x_continuous(breaks=unique(results$env_openness)) +
     theme(axis.text.x=element_text(size=9))

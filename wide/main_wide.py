@@ -16,7 +16,7 @@ from sweep import *
 
 def print_usage():
     print('Usage: main_wide.py [env_openness=#|range]\n' +
-        '                    [tolerance=#|range]\n' +
+        '                    [homophily=#|range]\n' +
         '                    [suite=#]\n' +
         '                    [num_iter=#]\n' +
         '                    [plot_graphs=True|False]\n' +
@@ -55,10 +55,10 @@ if (len(sys.argv) < 2 or sys.argv[1].startswith('usage')
 
 this_module = sys.modules[__name__]
 
-sweepable_params = [ 'env_openness', 'tolerance' ]
+sweepable_params = [ 'env_openness', 'homophily' ]
 params = [
     ('env_openness',.5),
-    ('tolerance',.5),
+    ('homophily',.5),
     ('suite',0),
     ('seed',0),
     ('num_iter',200),
@@ -153,15 +153,15 @@ elif suite:
 else:
     # Single run.
     print('=== Using seed {}.'.format(seed))
-    print("=== tolerance={}, env_openness={}, N={}, MIN_FRIENDS={}.".format(
-        tolerance, env_openness, N, MIN_FRIENDS_PER_NEIGHBOR))
+    print("=== homophily={}, env_openness={}, N={}, MIN_FRIENDS={}.".format(
+        homophily, env_openness, N, MIN_FRIENDS_PER_NEIGHBOR))
     print("=== num_iter={}, NUM_IDEOLOGIES={}.".format(num_iter, 
                                                             NUM_IDEOLOGIES))
     random.seed(seed)
 
     associates_graph = generate_associates_graph(N, MIN_FRIENDS_PER_NEIGHBOR,
         NUM_IDEOLOGIES)
-    graph = generate_friends_graph(associates_graph, env_openness, tolerance,
+    graph = generate_friends_graph(associates_graph, env_openness, homophily,
         MIN_FRIENDS_PER_NEIGHBOR)
     results = run_bvm(graph, num_iter, True if plot_graphs=='True' else False)
     _,filename = tempfile.mkstemp(suffix=".csv",dir="/tmp")
