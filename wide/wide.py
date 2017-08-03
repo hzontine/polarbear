@@ -118,6 +118,10 @@ def choose_friend(graph, vid, candidate_f_ids, homophily):
     weighted_ids = { v : 
             (homophily if graph.vs[v]['color'] == my_color else 1-homophily)
             for v in list(candidate_f_ids) }
+    # If all weights are 0 (or negative), then choose equally among
+    # candidates (instead of throwing "Shouldn't get here" error.)
+    if all([ v <= 0 for v in weighted_ids.values() ]):
+        weighted_ids = { v : 1 for v in weighted_ids }
     logging.debug("It's: {}.".format(weighted_ids))
     logging.debug('({}): Choosing from {}...'.format(vid, candidate_f_ids))
     return weighted_choice(weighted_ids)
