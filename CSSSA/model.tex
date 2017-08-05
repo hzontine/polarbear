@@ -1,2 +1,161 @@
 
-The model.
+\label{sec:model}
+
+We present the model using an abbreviated version of the ODD protocol
+\cite{polhill_using_2008}.
+
+\subsection{Purpose}
+
+This abstract agent-based model simulates an evolving social network of agents
+that each possess an ``ideology" attribute representing some opinion. As it
+evolves, nodes are randomly chosen to influence their neighbors by propagating
+their ideologies to them. The ``polarization" of the network, measured as the
+tendency of nodes to be connected to others with the same ideology, will
+change as this process takes place. 
+
+The purpose of the model is to investigate the effects on polarization of two
+parameters that affect how the initial graph is constructed. One,
+``\textbf{accessibility}," controls the set of possible neighbors that a node
+chooses from each time it adds a friendship. When accessibility is low,
+neighbors will more often be chosen from a small (random) pool that is
+initially available to a node. When it is high, neighbors will more often be
+chosen from the entire network at large. Accessibility thus models the extent
+to which a society's citizens form local friendships (\textit{e.g.},
+geographical neighbors) versus global ones (\textit{e.g.}, over the Internet).
+
+The second parameter, ``\textbf{homophily}," controls the strength of each
+node's preference to attach to other nodes with the same ideology. When it is
+high, nodes will almost always form connections to nodes that have the same
+ideology, if possible. This is true regardless of whether they are formed
+locally or globally. When low, nodes prefer to attach to nodes with
+\textit{different} ideologies, and when medium, they are indifferent.
+
+With this model, we hope to gain general insight into how societies that
+provide different means of communication and discovery, and societies that
+encourage different levels of tolerance for opposing opinions, may differ in
+the prevalence of ``echo chambers" whereby dissenting views are rarely heard.
+
+\subsection{Entities, State Variables and Scales}
+
+The entities in the model are Agents, and have the following attributes:
+
+\begin{description}
+\itemsep.1em
+\item[ID] A unique ID number.
+
+\item[Ideology] One of a discrete set of possible ideologies, represented as
+integers $0, 1, \dots I$. The ideology of an Agent will change during the
+simulation, possibly many times, as it is influenced by its neighbors.
+
+\item[Friendships] A set of references to other Agent entities with whom this
+Agent has a social connection. The entire set of Agents and their Friendships
+form an \textit{undirected} graph: if Agent $X$ is friends with Agent $Y$,
+Agent $Y$ is also friends with Agent $X$.  Once the initial graph is built,
+each Agent's set of Friendships is fixed over the lifetime of the model
+(unless the \textbf{DynamicRebalancing} Policy is enabled; see below.)
+
+\item[LocalAssociates] A set of references to other Agent entities with whom
+this Agent \textit{may} form a friendship when it chooses locally (see below).
+Conceptually, these represent the (small, relative to the whole population)
+group of other people to whom an agent is geographically proximate. Some of
+these may actually become the agent's friends; perhaps many or all of them if
+the society has low accessibility. Importantly, once the initial graph is
+constructed, the LocalAssociates attribute is discarded and no longer used in
+the simulation.
+
+\end{description}
+
+
+
+\subsection{Process Overview and Scheduling}
+
+Once the initial graph is built (see ``Initialization," below), we carry out
+the standard Binary Voter Model process on it, using the \textbf{selection
+with replacement} and \textbf{neighbor influences node} variants (see
+\cite{davies_computational_2016}.) At each of $T$ iterations:
+
+\begin{enumerate}
+\itemsep.1em
+\item An agent $X$ is chosen at random from the entire graph.
+\item One of its friends $Y$ is chosen at random from its set of Friendships.
+(If the agent has no Friendships, skip this iteration.)
+\item If $Y$'s current ideology is different than $X$'s, copy $Y$'s to $X$'s.
+\item If the \textbf{DynamicRebalancing} Policy is enabled, and its rate $R$
+is such that it should take place now, carry out the
+\textbf{DynamicallyRebalance} on agent $X$ (see below).
+\item Compute and store the graph's nominal assortativity with respect to
+Ideology (using the \texttt{igraph} package's \texttt{assortativity\_nominal}
+function\cite{csardi_igraph_2006}).
+\end{enumerate}
+
+
+\subsection{Initialization}
+
+When the simulation begins, generate an undirected Erdos-Renyi random
+graph\cite{erdos_evolution_1960} with $N$ nodes and probability of edge
+connection $p$. Call this the \textbf{LocalAssociatesGraph}. Each node
+represents an Agent, and the edges of this graph constitute its
+\textbf{LocalAssociates}. With uniform probability, assign each node an
+initial Ideology from the set of $I$ ideologies.
+
+Then, generate the \textbf{Friendships} graph as follows:
+
+\begin{enumerate}
+\item Create an empty \textbf{Friendships} graph with $N$ nodes (agents).
+\item For each node $X$ (in ID order), generate $a_X$ friendship connections
+to other nodes, where $a_X$ is the degree of node $X$ in the
+\textbf{LocalAssociatesGraph}. Choose the node for each connection as follows:
+    \begin{itemize}
+    \item With probability $A$ (the accessibility parameter), select a node
+(without replacement) from $X$'s \textbf{LocalAssociates}, weighted by $H$
+(the homophily parameter, see below).
+    \item With probability $1-A$, select a node (without replacement) from all
+nodes, weighted by $H$ (the homophily parameter, see below).
+    \end{itemize}
+    In either case, if there are no nodes available with whom $X$ is not
+already friends, skip the step.
+\end{enumerate}
+
+``Weighted by $H$" means that candidate nodes whose ideologies are the same as
+node $X$'s are assigned an (unnormalized) probability of $H$ to be selected,
+and candidate nodes of different ideologies are assigned $1-H$. All
+probabilities are then normalized to sum to 1, and a node is chosen.\footnote{
+Therefore, if there are $c_X$ candidate nodes for $X$ to connect to, $s_X$ of
+whose ideologies match $X$, the probability that each same-ideology node will
+be chosen is $\alpha H$ and the probability for each different-ideology node
+is $\alpha (1-H)$, where $\alpha$ is the normalizing constant $\frac{1}{s_X H
++ (c_X-s_X)(1-H)}$.}
+
+
+
+\subsection{Submodels}
+
+\textit{\textbf{DynamicRebalancing}.} If this optional Policy is enabled, an
+``rebalance rate" parameter $R$ ($0 \leq R \leq 1$) controls how frequently
+the \textbf{DynamicallyRebalance} submodel is executed. $R=1$ means it will
+execute \textit{every} iteration of the main simulation loop (immediately
+after copying the neighbor's ideology.) $R=0$ means it will never execute, and
+any value in between means it will execute some fraction of the iterations.
+
+When it executes for a node $X$, the \textbf{DynamicallyRebalance} process is
+as follows:
+\begin{enumerate}
+\item Perform \textit{one} of the following:
+\itemsep.1em
+\begin{itemize}
+\item With probability .5, connect a new node to $X$, chosen (without
+replacement) from all other nodes, weighted by the homophily $H$ (exactly as
+above).\footnote{In the unlikely event that $X$ is already connected to all
+other nodes, skip this step.}
+\item With probability .5, \textit{dis}connect a node from $X$ (breaking the
+friendship), chosen from its current Friends, weighted by $1-H$. This means
+that for $H>.5$, nodes with the same ideology as $X$ are \textit{less} likely
+to be chosen than nodes with different ideologies.
+\end{itemize}
+\end{enumerate}
+
+
+
+All of the numerical parameters are configurable. The simulation's default
+values for them are $T=500, I=2, N=50, p=.06, A=.5, H=.7, R=0,$ and
+\textbf{DynamicRebalancing} disabled.
