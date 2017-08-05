@@ -59,11 +59,11 @@ this_module = sys.modules[__name__]
 sweepable_params = [ 'env_openness', 'homophily' ]
 params = [
     ('env_openness',.5),
-    ('homophily',.5),
+    ('homophily',.7),
     ('update_graph_rate',0),
     ('suite',0),
     ('seed',0),
-    ('num_iter',200),
+    ('num_iter',500),
     ('plot_graphs',True),
     ('plot_suite',True),
     ('plot_sweep',True),
