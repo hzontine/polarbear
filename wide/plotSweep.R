@@ -87,7 +87,8 @@ for (plot in plots) {
         xlab(capitalize(indep.var.name)) +
         ylim(c(-.4,1)) +
         geom_boxplot(show.legend=FALSE) +
-        theme(axis.text.x=element_text(size=8))
+        geom_hline(yintercept=0, color="darkgrey") +
+        theme(axis.text.x=element_text(size=8)) 
 
     image_name <- str_replace(filename, '.csv', '.png')
     image_name <- file.path(dirname(image_name),
