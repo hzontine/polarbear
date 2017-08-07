@@ -66,15 +66,15 @@ final.results %>%
 
 
 plots <- list(
-    list(dep.var='orig.a',dep.label='Assortativity of initial graph',
+    list(dep.var='orig.a',dep.label='Polarization of initial graph',
         prefix='orig_'),
     list(dep.var='mean.a',
-         dep.label=paste('Mean assortativity',
+         dep.label=paste('Mean polarization',
             ifelse(ITER.CUTOFF > 0,paste(' (>=',ITER.CUTOFF,'iterations)'),
                 '')),
          prefix=''),
     list(dep.var='normalized.mean.a',
-         dep.label=paste('Normalized mean assortativity',
+         dep.label=paste('Normalized mean polarization',
             ifelse(ITER.CUTOFF > 0,paste(' (>=',ITER.CUTOFF,'iterations)'),
                 '')),
         prefix='norm_')
@@ -86,7 +86,7 @@ for (plot in plots) {
         aes_string(x=indep.var.name, group=indep.var.name, fill=indep.var.name,
             y=plot$dep.var)) +
         scale_x_continuous(breaks=unique(results[[indep.var.name]])) +
-        ggtitle(paste0('(n=',n,' sims for each param value)')) +
+        #ggtitle(paste0('(n=',n,' sims for each param value)')) +
         ylab(plot$dep.label) +
         xlab(capitalize(indep.var.name)) +
         ylim(c(-.4,1)) +
