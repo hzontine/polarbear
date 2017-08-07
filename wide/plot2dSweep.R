@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 # Run as:
-# plotSweep.R --args csv_filename
+# plot2dSweep.R --args csv_filename
 
 require(ggplot2)
 require(dplyr)
@@ -22,13 +22,6 @@ n <- nrow(results %>% dplyr::filter(env_openness==first.env_openness,
                                homophily==first.homophily)) / 
     (max(results$iteration) + 1)
 
-n.eo <- length(unique(results$env_openness))
-n.h <- length(unique(results$homophily))
-cat("n.eo =", n.eo, ", n.h=", n.h, "\n", sep="")
-if (n.eo > 1 && n.h > 1) {
-    stop("Run plot2dSweep.R instead.")
-}
-
 results %>% 
     dplyr::filter(iteration >= ITER.CUTOFF) %>%
     group_by(seed) %>%
@@ -39,24 +32,17 @@ results %>%
         mean.a=mean(assortativity),
         max.a=max(assortativity)) -> sum.each.run.results
 
-if (n.eo > 1) {
-    g <- ggplot(sum.each.run.results, 
-        aes(x=env_openness, group=env_openness, fill=env_openness, y=mean.a)) +
+g <- ggplot(sum.each.run.results, 
+    aes(x=env_openness, group=env_openness, fill=env_openness, y=mean.a)) + 
+    facet_wrap(~homophily, labeller="label_both") +
+    ggtitle(paste0('(n=',n,' sims for each param value)')) +
     xlab('Environmental openness') +
-    scale_x_continuous(breaks=unique(results$env_openness))
-} else{
-    g <- ggplot(sum.each.run.results, 
-        aes(x=homophily, group=homophily, fill=homophily, y=mean.a)) +
-    xlab('Homophily') +
-    scale_x_continuous(breaks=unique(results$homophily))
-}
-
-g <- g + ggtitle(paste0('(n=',n,' sims for each param value)')) +
     ylab(paste('Mean assortativity',
             ifelse(ITER.CUTOFF > 0,paste('\n(past',ITER.CUTOFF,'iterations)'),
                 ''))) +
     ylim(c(-.2,1)) +
     geom_boxplot(show.legend=FALSE) +
+    scale_x_continuous(breaks=unique(results$env_openness)) +
     theme(axis.text.x=element_text(size=9))
 image_name <- str_replace(filename, '.csv', '.png')
 ggsave(image_name, g)

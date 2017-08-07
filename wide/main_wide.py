@@ -122,7 +122,12 @@ if any([ type(param_dict[x]) == str for x in sweepable_params ]):
         param_dict['suite'] = 1
     Sweep(sweep_params, param_dict).run()
     if plot_sweep in [True,'True']:
-        os.system('./plotSweep.R')
+        if len(to_sweep) == 1:
+            os.system('./plotSweep.R')
+        elif len(to_sweep) == 2:
+            os.system('./plot2dSweep.R')
+        else:
+            print("Don't know how to plot {} params.".format(len(to_sweep)))
 elif suite:
     # Suite of runs (with all the same parameters).
     if plot_suite in [True,'True']:
