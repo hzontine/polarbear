@@ -6,7 +6,8 @@
 require(ggplot2)
 require(dplyr)
 
-ITER.CUTOFF <- 0   # Iteration at which to start counting assortativity
+ITER.CUTOFF <- 50   # Iteration at which to start counting assortativity
+PLOT.RELATIVE <- TRUE   # Plot assortativity relative to initial (t=0) value
 
 if (length(commandArgs(TRUE)) == 0) {
     filename <- '/tmp/final_output.csv'
@@ -24,40 +25,67 @@ n <- nrow(results %>% dplyr::filter(env_openness==first.env_openness,
 
 n.eo <- length(unique(results$env_openness))
 n.h <- length(unique(results$homophily))
-cat("n.eo =", n.eo, ", n.h=", n.h, "\n", sep="")
 if (n.eo > 1 && n.h > 1) {
     stop("Run plot2dSweep.R instead.")
 }
-
-results %>% 
-    dplyr::filter(iteration >= ITER.CUTOFF) %>%
-    group_by(seed) %>%
-    # hack -- "min" for homophily and env_openness is just "the one value they
-    # all share" since these are all the same value for a given seed
-    summarize(homophily=min(homophily), env_openness=min(env_openness),
-        min.a=min(assortativity),
-        mean.a=mean(assortativity),
-        max.a=max(assortativity)) -> sum.each.run.results
-
 if (n.eo > 1) {
-    g <- ggplot(sum.each.run.results, 
-        aes(x=env_openness, group=env_openness, fill=env_openness, y=mean.a)) +
-    xlab('Environmental openness') +
-    scale_x_continuous(breaks=unique(results$env_openness))
-} else{
-    g <- ggplot(sum.each.run.results, 
-        aes(x=homophily, group=homophily, fill=homophily, y=mean.a)) +
-    xlab('Homophily') +
-    scale_x_continuous(breaks=unique(results$homophily))
+    indep.var.name='env_openness'
+    indep.var.label='Environmental openness'
+} else {
+    indep.var.name='homophily'
+    indep.var.label='Homophily'
 }
 
-g <- g + ggtitle(paste0('(n=',n,' sims for each param value)')) +
-    ylab(paste('Mean assortativity',
+
+results %>% 
+    group_by(seed) %>%
+    arrange(iteration) %>%
+    slice(1) %>% rename(orig.a=assortativity) %>% ungroup -> orig.results
+
+results %>% 
+    dplyr::filter(iteration >= ITER.CUTOFF) -> trunc.results
+
+final.results <- inner_join(trunc.results, orig.results, by=c("seed"))
+
+final.results %>%
+    select(seed, iteration=iteration.x, env_openness=env_openness.x,
+        homophily=homophily.x, assortativity, orig.a) %>%
+    group_by(seed) %>%
+    # hack -- "min" for homophily and env_openness is just "the one value
+    # they all share" since these are all the same value for a given seed
+    summarize(homophily=min(homophily), env_openness=min(env_openness),
+        mean.a=mean(assortativity),
+        orig.a=min(orig.a)) %>% ungroup %>%
+    mutate(normalized.mean.a=mean.a-orig.a) -> sum.each.run.results
+
+
+plots <- list(
+    list(dep.var='mean.a',dep.label='Mean assortativity',prefix=''),
+    list(dep.var='normalized.mean.a',dep.label='Normalized mean assortativity',
+        prefix='norm_'),
+    list(dep.var='orig.a',dep.label='Original assortativity',prefix='orig_')
+)
+
+eog.cmd <- "eog "
+for (plot in plots) {
+    g <- ggplot(sum.each.run.results, 
+        aes_string(x=indep.var.name, group=indep.var.name, fill=indep.var.name,
+        y=plot$dep.var)) +
+        scale_x_continuous(breaks=unique(results[[indep.var.name]])) +
+        ggtitle(paste0('(n=',n,' sims for each param value)')) +
+        ylab(paste(plot$dep.label,
             ifelse(ITER.CUTOFF > 0,paste('\n(past',ITER.CUTOFF,'iterations)'),
                 ''))) +
-    ylim(c(-.2,1)) +
-    geom_boxplot(show.legend=FALSE) +
-    theme(axis.text.x=element_text(size=9))
-image_name <- str_replace(filename, '.csv', '.png')
-ggsave(image_name, g)
-system(paste("eog",image_name))
+        xlab(indep.var.label) +
+        ylim(c(-.4,1)) +
+        geom_boxplot(show.legend=FALSE) +
+        theme(axis.text.x=element_text(size=9))
+
+    image_name <- str_replace(filename, '.csv', '.png')
+    image_name <- file.path(dirname(image_name),
+        paste0(plot$prefix,basename(image_name)))
+    ggsave(image_name, g)
+    eog.cmd <- paste(eog.cmd,image_name)
+}
+
+system(eog.cmd)
