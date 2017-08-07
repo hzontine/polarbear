@@ -15,7 +15,7 @@ from sweep import *
 
 
 def print_usage():
-    print('Usage: main_wide.py [env_openness=#|range]\n' +
+    print('Usage: main_wide.py [accessibility=#|range]\n' +
         '                    [homophily=#|range]\n' +
         '                    [update_graph_rate=#]\n' +
         '                    [suite=#]\n' +
@@ -56,9 +56,9 @@ if (len(sys.argv) < 2 or sys.argv[1].startswith('usage')
 
 this_module = sys.modules[__name__]
 
-sweepable_params = [ 'env_openness', 'homophily' ]
+sweepable_params = [ 'accessibility', 'homophily' ]
 params = [
-    ('env_openness',.5),
+    ('accessibility',.5),
     ('homophily',.7),
     ('update_graph_rate',0),
     ('suite',0),
@@ -160,8 +160,8 @@ elif suite:
 else:
     # Single run.
     print('=== Using seed {}.'.format(seed))
-    print(("=== homophily={}, env_openness={}, " +
-        "update_graph_rate={}").format(homophily, env_openness,
+    print(("=== homophily={}, accessibility={}, " +
+        "update_graph_rate={}").format(homophily, accessibility,
         update_graph_rate))
     print("=== N={}, MIN_FRIENDS={}, num_iter={}, NUM_IDEOLOGIES={}.".format(
         N, MIN_FRIENDS_PER_NEIGHBOR, num_iter, NUM_IDEOLOGIES))
@@ -169,7 +169,7 @@ else:
 
     associates_graph = generate_associates_graph(N, MIN_FRIENDS_PER_NEIGHBOR,
         NUM_IDEOLOGIES)
-    graph = generate_friends_graph(associates_graph, env_openness, homophily,
+    graph = generate_friends_graph(associates_graph, accessibility, homophily,
         MIN_FRIENDS_PER_NEIGHBOR)
     results = run_bvm(graph, num_iter, update_graph_rate, homophily, 
             True if plot_graphs=='True' else False)

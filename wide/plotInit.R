@@ -25,9 +25,9 @@ results <- tbl_df(read.csv(paste0(filename,".zero"),header=TRUE,
 results <- results %>% dplyr::filter(iteration == 0)
 
 # Compute the number of sims per parameter value tuple, for display.
-first.env_openness <- as.numeric(results[1,'env_openness'])
+first.accessibility <- as.numeric(results[1,'accessibility'])
 first.homophily <- as.numeric(results[1,'homophily'])
-n <- nrow(results %>% dplyr::filter(env_openness==first.env_openness,
+n <- nrow(results %>% dplyr::filter(accessibility==first.accessibility,
                                homophily==first.homophily)) / 
     (max(results$iteration) + 1)
 
@@ -35,15 +35,15 @@ results %>%
     group_by(seed) -> sum.each.run.results
 
 g <- ggplot(sum.each.run.results, 
-    aes(x=env_openness, group=env_openness, fill=env_openness, 
+    aes(x=accessibility, group=accessibility, fill=accessibility, 
         y=assortativity)) + 
     facet_wrap(~homophily, labeller="label_both") +
     ggtitle(paste0('(n=',n,' sims for each param value)')) +
-    xlab('Environmental openness') +
+    xlab('Accessibility') +
     ylab(expression('Assortativity of' ~ bold(initial) ~ 'graph')) +
     ylim(c(-.2,1)) +
     geom_boxplot(show.legend=FALSE) +
-    scale_x_continuous(breaks=unique(results$env_openness)) +
+    scale_x_continuous(breaks=unique(results$accessibility)) +
     theme(axis.text.x=element_text(size=9))
 image_name <- str_replace(paste0(filename,".zero"), '.csv.zero', '.zero.png')
 ggsave(image_name, g)

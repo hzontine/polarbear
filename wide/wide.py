@@ -17,14 +17,14 @@ def generate_associates_graph(N, avg_deg, num_ideologies=2):
     return associates_graph
 
 
-def generate_friends_graph(associates_graph, env_openness=.5, homophily=.7,
+def generate_friends_graph(associates_graph, accessibility=.5, homophily=.7,
     min_friends_per_neighbor=3):
     '''
     Given a graph of associations (i.e., whose edges represent the random
     starting material that people get as far as who they encounter), produce a
     graph of friendships, where each of a node's friendships are either chosen
     from their associates, or from the graph at large, depending on the
-    env_openness parameter passed.
+    accessibility parameter passed.
     The homophily parameter is used to control how likely a vertex is to form
     friendships with others of its own color. If 1, it will strongly prefer
     this. If 0, it will strongly prefer not to. If .5, it is indifferent to
@@ -48,7 +48,7 @@ def generate_friends_graph(associates_graph, env_openness=.5, homophily=.7,
             # Need to recalculate f_ids in this inner loop since we're adding
             # edges for this vertex, drr.
             f_ids = [ n.index for n in friends_graph.vs[vid].neighbors() ]
-            if random.random() < env_openness or set(a_ids) == set(f_ids):
+            if random.random() < accessibility or set(a_ids) == set(f_ids):
                 logging.debug('Choosing from pool at large...')
                 # If we randomly decided to choose from the pool at large (or
                 #   if we've already added all associates as friends)...
