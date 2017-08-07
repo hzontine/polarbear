@@ -1,2 +1,21 @@
 
-The results.
+To verify $H_{1a}$ and $H_{2a}$, we generate a large number of initial graphs
+according to the process described in section~\ref{sec:initialization}, using
+a range of values of $h$ and $a$, and measure their assortativity.
+Figure~\ref{fig:initialPolarization} shows a box plot of the results of
+generating 1000 such graphs for each combination of six accessibility values
+and six homophily values. (For these and all other results in this paper, $N$
+was set to 50 agents and $I$ to 3 ideologies.) As expected, the polarization
+of these initial graphs clearly increases with both $h$ and $a$, establishing
+$H_{1a}$ and $H_{2a}$.
+
+\begin{figure}
+\centering
+\includegraphics[width=1.0\columnwidth]{initialPolarization.png}
+\caption{Polarizations of initial graphs, defined as nominal assortativity on
+the ideology attribute, for varying levels of homophily $h$ and accessibility
+$a$. The box for each pair of values represents 1000 randomly generated
+starting graphs.}
+\label{fig:initialPolarization}
+\end{figure}
+
