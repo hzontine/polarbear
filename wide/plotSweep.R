@@ -30,12 +30,16 @@ n <- nrow(results %>% dplyr::filter(accessibility==first.accessibility,
 n.eo <- length(unique(results$accessibility))
 n.h <- length(unique(results$homophily))
 if (n.eo > 1 && n.h > 1) {
-    stop("Run plot2dSweep.R instead.")
-}
-if (n.eo > 1) {
     indep.var.name='accessibility'
+    num.dim <- 2
 } else {
-    indep.var.name='homophily'
+    if (n.eo > 1) {
+        indep.var.name='accessibility'
+        num.dim <- 1
+    } else {
+        indep.var.name='homophily'
+        num.dim <- 1
+    }
 }
 
 
@@ -62,25 +66,25 @@ final.results %>%
 
 
 plots <- list(
+    list(dep.var='orig.a',dep.label='Assortativity of initial graph',
+        prefix='orig_'),
     list(dep.var='mean.a',
          dep.label=paste('Mean assortativity',
-            ifelse(ITER.CUTOFF > 0,paste('\n(past',ITER.CUTOFF,'iterations)'),
+            ifelse(ITER.CUTOFF > 0,paste(' (>=',ITER.CUTOFF,'iterations)'),
                 '')),
          prefix=''),
     list(dep.var='normalized.mean.a',
          dep.label=paste('Normalized mean assortativity',
-            ifelse(ITER.CUTOFF > 0,paste('\n(past',ITER.CUTOFF,'iterations)'),
+            ifelse(ITER.CUTOFF > 0,paste(' (>=',ITER.CUTOFF,'iterations)'),
                 '')),
-        prefix='norm_'),
-    list(dep.var='orig.a',dep.label='Assortativity of initial graph',
-        prefix='orig_')
+        prefix='norm_')
 )
 
 eog.cmd <- "eog "
 for (plot in plots) {
     g <- ggplot(sum.each.run.results, 
         aes_string(x=indep.var.name, group=indep.var.name, fill=indep.var.name,
-        y=plot$dep.var)) +
+            y=plot$dep.var)) +
         scale_x_continuous(breaks=unique(results[[indep.var.name]])) +
         ggtitle(paste0('(n=',n,' sims for each param value)')) +
         ylab(plot$dep.label) +
@@ -89,6 +93,10 @@ for (plot in plots) {
         geom_boxplot(show.legend=FALSE) +
         geom_hline(yintercept=0, color="darkgrey") +
         theme(axis.text.x=element_text(size=8)) 
+
+    if (num.dim == 2) {
+        g <- g + facet_wrap(~homophily, labeller="label_both")
+    }
 
     image_name <- str_replace(filename, '.csv', '.png')
     image_name <- file.path(dirname(image_name),
