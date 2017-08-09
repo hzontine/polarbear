@@ -120,7 +120,7 @@ if any([ type(param_dict[x]) == str for x in sweepable_params ]):
         # If they want a sweep but didn't specify, use size-1 suites so that
         # we get data output (instead of just a single-run plot).
         param_dict['suite'] = 1
-    Sweep(sweep_params, param_dict).run()
+    Sweep(sweep_params, param_dict).run(seed)
     if plot_sweep in [True,'True']:
         os.system('./plotSweep.R')
 elif suite:
