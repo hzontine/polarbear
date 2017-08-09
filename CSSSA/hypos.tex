@@ -1,0 +1,54 @@
+
+\label{sec:hypos}
+
+We form the following hypotheses about the above model's behavior.
+
+\begin{description}
+
+\item{\textbf{Hypothesis 1a ($H_{1a}$):}} For a given level of accessibility
+$A$, the polarization $P$ \textit{of the initial graph} will increase with
+homophily $H$.
+
+\item{\textbf{Hypothesis 1b ($H_{1b}$):}} For a given $A$, $P$ will
+\textit{continue} to increase with $H$ as the BVM process takes place on the
+graph.
+
+\item{\textbf{Hypothesis 2a ($H_{2a}$):}} For a given $H>.5$, the $P$ \textit{of
+the initial graph} will increase with $A$.
+
+\item{\textbf{Hypothesis 2b ($H_{2b}$):}} For a given $H$, $P$ will
+\textit{continue} to increase with $A$ as the BVM process takes place on the
+graph.
+
+\item{\textbf{Hypothesis 3 ($H_3$):}} If the DynamicRebalancing policy is
+enabled, and $H>.5$, $P$ will increase more rapidly during the BVM process,
+and more rapidly with increasing $R$. This will be unaffected by $A$.
+
+\end{description}
+
+We expect $H_{1a}$ to hold simply because as $H$ increases, the preference for
+nodes to attach to others of the same ideology increases, which should
+increase assortativity. Less obviously, $H_{2a}$ should hold because when $A$
+increases nodes have greater freedom of choice in who they connect to. Low
+values of $A$ mean that as the graph is built, nodes will often be ``forced"
+to choose a friend from the limited number present in their LocalAssociates
+set, and will thus more often have no choice but to make a friend of a
+different ideology. Thus we expect more cross-ideology friendships when $A$ is
+low. (Obviously this only holds when the homophily is greater than .5,
+indicating a preference for same-ideology nodes.)
+
+The rationale behind $H_{1b}$ and $H_{2b}$ is as follows. When the initial
+graph is constructed so as to be more polarized, the BVM will have more raw
+material to work with in order to make it further polarized. We expect
+increasing returns as the structure of the network, already built to put
+like-minded nodes largely together, causes the remaining vestiges of local
+disagreement to be snuffed out.
+
+Finally, we predict $H_3$ because dynamically rebalancing should have a
+strictly positive impact on assortativity (when $H>.5$). New edges will be
+added to the graph, and old edges dropped, with preference to
+forming/maintaining friendships with likeminded nodes. This should accelerate
+the degree to which the graph becomes polarized, and the rate of acceleration
+should increase when we add/remove friendships more often. We have no
+\textit{a priori} reason to suspect that the $A$ used to form the initial
+graph will come into play.
