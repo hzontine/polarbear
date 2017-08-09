@@ -69,7 +69,7 @@ params = [
     ('plot_sweep',True),
     ('N',50),
     ('MIN_FRIENDS_PER_NEIGHBOR',3),
-    ('NUM_IDEOLOGIES',3),
+    ('NUM_IDEOLOGIES',2),
     ('log_level','INFO')]
 
 for arg in sys.argv[1:]:
