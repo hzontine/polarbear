@@ -1,20 +1,20 @@
 
 \subsection{Two sources of friendship}
 
-Consider for a moment the friendships you have had with others through which
-meaningful mutual influence takes place. In broad terms, these relationships
-can be thought of as coming from two different kinds of sources. In the first,
-you did not encounter the acquaintances by specifically seeking them out --
-they were rather thrust into your presence by circumstances. As a child, there
-were other children down the street, and fellow students in your 1st-grade
-classroom. When you were older, there were dormitory hall-mates, new neighbors
-in new neighborhoods, and co-workers. Some of these people who by happenstance
-wandered into your field of view, you formed meaningful friendships with.
-Others you did not. But the key point that distinguishes them from the second
-group is that you did not discover them by seeking out any of their
-attributes. Instead, a minuscule set of people (out of all the people in the
-world) simply fell into your lap. And from that set, you became meaningful
-friends with some.
+Consider for a moment the friendships you have had through which meaningful
+mutual influence has taken place. In broad terms, these relationships can be
+thought of as coming from two different kinds of sources. In the first kind,
+you did not originally encounter the acquaintances by specifically seeking
+them out -- they were rather thrust into your presence by circumstances. When
+you were a child, there were other children down the street, and fellow
+students in your 1st-grade classroom. When you were older, there were
+dormitory hall-mates, new neighbors in new neighborhoods, and co-workers. Some
+of these people who by happenstance wandered into your field of view, you
+formed meaningful friendships with. Others you did not. But the key point that
+distinguishes them from the second group is that you did not discover them by
+seeking them out based any of their attributes. Instead, a minuscule set of
+people (out of all the people in the world) simply fell into your lap. And
+from that set, you became meaningful friends with some.
 
 The second group consists of those you encountered \textit{because} you had
 something in common, and you discovered them because you deliberately sought
@@ -45,12 +45,13 @@ friends.
 
 Admittedly, these two sources of friendship are idealized points along a
 continuum. Any individual relationship may have been formed due to some blend
-of the two. Nevertheless, it is a useful abstraction, and implies the
-existence of a key model parameter: the relative strength of the two sources
-in leading to friendships. Put another way: on average, what fraction of a
-person's friendships develop as a result of geographical proximity and
-happenstance encounters, versus being due to more distant relationships where
-parties sought each other out based on some shared attribute? 
+of the two. Nevertheless, it is a useful abstraction, and suggests the
+existence of a key parameter in modeling social networks: the relative
+strength of the two sources in leading to friendships. Put another way: on
+average, what fraction of a person's friendships develop as a result of
+geographical proximity and happenstance encounters, versus being due to more
+distant relationships where parties sought each other out based on some shared
+attribute? 
 
 In the language of this paper, we use the term \textbf{local} to describe
 friendships of the first sort, and \textbf{global} for the second. In our
@@ -67,16 +68,16 @@ search for others based on their attributes, but with all geographic
 information hidden.
 
 For simplicity, we model $A$ as a constant value throughout a society, rather
-than having a different value for each agent (as it certainly has in reality).
-Presumably the $A$ of the western world in 2017 is lower than the $A$ of
-thirty years ago. The question of this paper is how this might bear on
-ideological polarization.
+than giving it a different value for each agent (as it certainly has in
+reality). Presumably the $A$ of the western world in 2017 is lower than the
+$A$ of thirty years ago. One question this paper tries to answer is how this
+might bear on ideological polarization.
 
 \subsection{The reality of homophily}
 
 One might expect that as the accessibility $A$ of a society increases, so
-would the diversity of viewpoints its citizens are exposed to. After all, a
-higher $A$ means that more of a person's friendships will be drawn from the
+would the diversity of viewpoints that its citizens are exposed to. After all,
+a higher $A$ means that more of a person's friendships will be drawn from the
 entire global field, giving them a much broader range of exposure to people
 with many different views and interests.
 
@@ -90,28 +91,61 @@ interests. Given the choice of forming ties with several individuals, people
 tend to choose the one(s) whom they perceive as being most like them. 
 
 A greater number of choices of friends, therefore, may well lead to
-\textit{less} diversity within one's social circle if the homophily factor is
-significant. As with accessibility, we model the homophily $H$ of a group of
-agents as a single value, $0 \leq H \leq 1$ that controls friendship choices.
-In this case, a $H$ of 0.5 is \textit{neutral}: agents in the model have no
-preference for or against friendships with similar agents. At the extreme of
-$H=1$, agents will always choose an agent similar to them, if possible, and at
-$H=0$, they will always choose a \textit{dis}similar agent. (This situation
-could be termed ``extreme anti-homophily," or simply ``extreme heterophily.")
+\textit{less} diversity within one's social circle. As with accessibility, we
+model the homophily $H$ of an entire society with a single value, $0 \leq H
+\leq 1$, that influences friendship choices. In this case, an $H$ of 0.5 is
+\textit{neutral}: agents in the model have no preference for or against
+forming friendships with similar agents. At the extreme of $H=1$, agents will
+always choose an agent similar to them, if possible, and at $H=0$, they will
+always choose a \textit{dis}similar agent. (This situation could be termed
+``extreme anti-homophily," or simply ``extreme heterophily.")
 
 The interplay of these two parameters $A$ and $H$ and their impact on the
-polarization of a society is the subject of this paper.
+ideological polarization of a society is the subject of this paper.
 
+\subsection{Defining a healthy society}
 
+The term ``polarization" -- often with the modifier ``political" -- abounds in
+recent discussion of the U.S. and other political
+environments.\cite{campbell_source_2016,french_were_2017,dimock_political_2014}
+It is nearly always used with a negative connotation. Claims that the degree
+of polarization is increasing have been substantiated in some ways by
+academics (\textit{e.g.}, \cite{baldassarri_partisans_2008,prior_media_2013})
+although with caveats
+(\cite{baldassarri_dynamics_2007,fiorina_political_2008}). Numerous studies
+have investigated how it takes root in social networking and other online
+environments
+\cite{mousavi_role_2014,conover_political_2011,adamic_political_2005,hargittai_cross-ideological_2008}.
 
-\subsection{A healthy society}
+Defining polarization, however, is somewhat tricky; one recent paper spelled
+out nine different possible definitions\cite{bramson_disambiguation_2016}.
+Most often, the term is associated with large \textit{differences} in views
+between subpopulations, especially when those views are perceived as
+\textit{extreme}. If, when responding to a question on a 6-point Likert scale,
+half the population answered ``1" and the other half answered ``6," this would
+typically be viewed as a ``polarized" population. If half answered ``3" and
+the other half ``4," on the other hand, or if equal numbers gave each of the
+six responses, that would be seen as less polarized.
 
+In this work, however, we look at a different form of ``polarization":
+\textit{the extent to which adherents of one viewpoint tend to form social
+connections only with others of that same viewpoint.} Whether the viewpoints
+are themselves ``extreme" on any objective scale is irrelevant, as is the
+percentage of individuals subscribing to each of the various viewpoints. What
+matters for our purposes is whether the adherents of various views form
+isolated pockets of communication, or ``echo chambers," rather than having
+broad social connections with people of a variety of different opinions.
 
+Under this interpretation, members of a society holding strong or even
+``extreme" views is not a negative outcome. What is important is that the
+members maintain fruitful dialogue with one another, and are continually
+exposed to views different from their own. Members sequestering themselves
+into ideological cliques is unhealthy. But members thoughtfully choosing
+to retain their opinion even in the constant and active presence of others
+articulating counterpoints to it is not.
 
-One might think that decreased cost and increased availability of diverse
-opinions would lead to broader accessibility and hence less echo-chamber thinking.
-
-
-In this work, we study assortativity as the key measure of polarization. We
-don't care how extreme someone's views are -- that's okay -- we just care
-whether they are only exposed to others of that sort.
+We therefore use the social network's \textit{assortativity}
+coefficient\cite{newman} as the key measure of polarization. If we model a
+social network as an undirected graph whose nodes each possess a nominal
+``ideology" attribute taken from a small set of possible ideologies, the
+assortativity is the fraction of edges 

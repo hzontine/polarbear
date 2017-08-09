@@ -68,6 +68,7 @@ the simulation.
 
 
 \subsection{Process Overview and Scheduling}
+\label{sec:BVM}
 
 Once the initial graph is built (see ``Initialization," below), we carry out
 the standard Binary Voter Model process on it, using the \textbf{selection
@@ -83,9 +84,24 @@ with replacement} and \textbf{neighbor influences node} variants (see
 \item If the \textbf{DynamicRebalancing} Policy is enabled, and its rate $R$
 is such that it should take place now, carry out the
 \textbf{DynamicallyRebalance} on agent $X$ (see below).
-\item Compute and store the graph's nominal assortativity with respect to
-Ideology (using the \texttt{igraph} package's \texttt{assortativity\_nominal}
-function\cite{csardi_igraph_2006}).
+ 
+\item Compute and store the graph's nominal assortativity coefficient with
+respect to Ideology (using the \texttt{assortativity\_nominal} function from
+the \texttt{igraph} R package\cite{csardi_igraph_2006}).\footnote{The
+assortativity coefficient of a graph is a value between -1 and 1 which is
+computed as follows. Let $e_{ij}$ be the fraction of all friendships in the
+graph which connect an agent with Ideology $i$ and an agent with Ideology $j$,
+where $i$ and $j$ range over all possible ideologies. Let \textbf{e} be the
+matrix whose elements are $e_{ij}$, $\textbf{x}^2$ indicate matrix
+multiplication, $\Tr \textbf{x}$ be the sum of the main diagonal elements of
+\textbf{x}, and $\norm{\textbf{x}}$ be the sum of the elements of the matrix
+\textbf{x}. The assortativity is then $\frac{\Tr \textbf{e} -
+\norm{\textbf{e}^2}}{1 - \norm{\textbf{e}^2}}$. It has the value 1 when there
+is perfect assortative mixing (\textit{i.e.}, all friendships are between
+nodes of the same Ideology), 0 when there is no assortative mixing (Ideology
+has no bearing on likelihood of friendship), and a negative value when nodes
+tend to connect to others of a different ideology.}
+
 \end{enumerate}
 
 
@@ -156,7 +172,6 @@ to be chosen than nodes with different ideologies.
 \end{enumerate}
 
 
-
 All of the numerical parameters are configurable. The simulation's default
-values for them are $T=500, I=2, N=50, p=.06, A=.5, H=.7, R=0,$ and
-\textbf{DynamicRebalancing} disabled.
+values for them are $T$=500, $I$=3, $N$=50, $p$=.06, $A$=.5, $H$=.7, $R$=0,
+and \textbf{DynamicRebalancing} disabled.
