@@ -1,4 +1,6 @@
 
+\subsection{$H_{1a}$ and $H_{2a}$}
+
 To verify $H_{1a}$ and $H_{2a}$, we generate a large number of initial graphs
 according to the process described in section~\ref{sec:initialization}, using
 a range of values of $H$ and $A$, and measure their assortativity.
@@ -22,6 +24,7 @@ starting graphs.}
 \label{fig:initialPolarization}
 \end{figure}
 
+\subsection{$H_{1b}$ and $H_{2b}$}
 
 Hypotheses $H_{1b}$ and $H_{2b}$ are a bit trickier to evaluate, since we seek
 to discover whether the polarization of ``the graph" increases as a result
@@ -62,11 +65,43 @@ the opposite is true.
 \includegraphics[width=1.0\columnwidth]{normPolarization.png}
 % Reproduce with: (see above)
 
-\caption{(1) Top: mean polarization of the graph at iterations 50 through 200
-of the BVM process. (2) Bottom: the ``normalized" polarization, defined as the
+\caption{(a) Top: mean polarization of the graph at iterations 50 through 200
+of the BVM process. (b) Bottom: the ``normalized" polarization, defined as the
 difference between the mean polarization (top) and the initial polarization
 (Figure~\ref{fig:initialPolarization}).}
 \label{fig:meanNormPolarization}
 \end{figure}
 
+\subsection{$H_{3}$}
+
+To evaluate $H_3$, we compare the normalized polarizations of simulations that
+have DynamicRebalancing enabled with those that don't. The results are presented
+in Figure~\ref{fig:rebalancing} (for clarity, we omit outliers from the plots
+and show DynamicRebalancing at only a single rate, $R$=1.) Interestingly,
+hypothesis $H_3$ is confirmed only for \textit{some} homphily values. When
+$H\leq.6$, dynamic rebalancing acts as a second moderating effect on
+polarization. Only for values of .7 and above does it increase the
+polarization relative to the initial graph, as predicted. 
+
+This effect can possibly be explained by the small size of the graph (only 50
+nodes). There are a fixed number of other nodes in the graph with the same
+ideology as a given node $X$. Therefore, the more likeminded friends a node
+has, the fewer additional nodes with that Ideology remain in the pool. If
+forced to dissolve friendships often and replace them with new friends (which
+happens for large values of $R$), there will be proportionately fewer
+similarly likeminded nodes to replace that broken friendship with. Only if the
+homophily is so high that $X$ aggressively cherry-picks likeminded neighbors
+with strong preference will it be able to overcome this tendency prevent the
+polarization from drifting lower. (Admittedly, this is only a conjecture about
+the reasons for this puzzling effect.)
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.9\textwidth]{rebalancing.png}
+\caption{Effect of the DynamicRebalancing policy on (normalized) mean
+polarization. The blue boxplots are identical to those in the bottom half of
+Figure~\ref{fig:meanNormPolarization}. The green boxplots use the same 
+starting graphs, but with dynamic rebalancing enabled at a rate of $R$=1.}
+\label{fig:rebalancing}
+\end{figure*}
 % Play with num ideologies?
