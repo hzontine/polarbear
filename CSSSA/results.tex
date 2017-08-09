@@ -1,21 +1,72 @@
 
 To verify $H_{1a}$ and $H_{2a}$, we generate a large number of initial graphs
 according to the process described in section~\ref{sec:initialization}, using
-a range of values of $h$ and $a$, and measure their assortativity.
+a range of values of $H$ and $A$, and measure their assortativity.
 Figure~\ref{fig:initialPolarization} shows a box plot of the results of
 generating 1000 such graphs for each combination of six accessibility values
 and six homophily values. (For these and all other results in this paper, $N$
-was set to 50 agents and $I$ to 3 ideologies.) As expected, the polarization
-of these initial graphs clearly increases with both $h$ and $a$, establishing
+was set to 50 agents and $I$ to 2 ideologies.) As expected, the polarization
+of these initial graphs clearly increases with both $H$ and $A$, establishing
 $H_{1a}$ and $H_{2a}$.
 
 \begin{figure}
 \centering
 \includegraphics[width=1.0\columnwidth]{initialPolarization.png}
+% Reproduce with:
+% main_wide.py accessibility=0-1-.2 homophily=.5-.99-.1 suite=1000 
+% seed=2959 num_iter=200 N=50 log_level=INFO
 \caption{Polarizations of initial graphs, defined as nominal assortativity on
-the ideology attribute, for varying levels of homophily $h$ and accessibility
-$a$. The box for each pair of values represents 1000 randomly generated
+the ideology attribute, for varying levels of homophily $H$ and accessibility
+$A$. The box for each pair of values represents 1000 randomly generated
 starting graphs.}
 \label{fig:initialPolarization}
 \end{figure}
 
+
+Hypotheses $H_{1b}$ and $H_{2b}$ are a bit trickier to evaluate, since we seek
+to discover whether the polarization of ``the graph" increases as a result
+of the BVM. But of course the BVM produces an entire time series of graphs.
+Several approaches are possible: we could take a snapshot of the graph at some
+fixed number of iterations, and measure the assortativity at that point; we
+could take the maximum (or minimum) assortativity anywhere in the sequence; we
+could compute the mean assortativity of all graphs produced during the
+process; \textit{etc.} We choose the last of these approaches here, but do not
+begin computing the mean until the $50^{\text{th}}$ iteration of 200. This
+admittedly arbitrary boundary point allows us to measure the assortativity
+only after the process has had a chance to emerge from a cold start. To
+summarize, then: we choose as our measure of ``the polarization that the BVM
+process induces" the mean assortativity of the graph at iterations 50 through
+200 of the BVM process.
+
+The result, quite surprising to us, is in the top half of
+Figure~\ref{fig:meanNormPolarization}. For high levels of homophily
+($H\geq.8$), additional accessibility does result in higher polarization. But
+this effect seems to be less than it was on the initial graph, and in fact for
+moderate levels of homophily ($.5 \leq H \leq .7$), higher accessibility
+actually \textit{lowers} the polarization. 
+
+To get a clearer view of the BVM's effect, we ``normalize" these
+iterations-50-through-200 polarization values by subtracting each
+\textit{initial} graph's polarization from them. In this manner, we isolate
+the effect of the BVM process (section~\ref{sec:BVM}) from the effect of the
+initial graph-construction process (section~\ref{sec:initialization}). The
+result is the bottom plot in Figure~\ref{fig:meanNormPolarization}. Clearly,
+for most values of homophily, the accessibility has a \textit{moderating}
+effect, rather than an amplifying effect, on the graph's polarization. We thus
+not only fail to verify $H_{1b}$ and $H_{2b}$, but we radically refute them:
+the opposite is true.
+
+\begin{figure}
+\centering
+\includegraphics[width=1.0\columnwidth]{meanPolarization.png}
+\includegraphics[width=1.0\columnwidth]{normPolarization.png}
+% Reproduce with: (see above)
+
+\caption{(1) Top: mean polarization of the graph at iterations 50 through 200
+of the BVM process. (2) Bottom: the ``normalized" polarization, defined as the
+difference between the mean polarization (top) and the initial polarization
+(Figure~\ref{fig:initialPolarization}).}
+\label{fig:meanNormPolarization}
+\end{figure}
+
+% Play with num ideologies?
