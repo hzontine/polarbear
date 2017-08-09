@@ -27,7 +27,9 @@ class Suite():
             graph = generate_friends_graph(associates_graph,
                 param_dict['accessibility'], param_dict['homophily'],
                 param_dict['MIN_FRIENDS_PER_NEIGHBOR'])
-            results = run_bvm(graph, param_dict['num_iter'])
+            results = run_bvm(graph, param_dict['num_iter'],
+                                     param_dict['update_graph_rate'],
+                                     param_dict['homophily'])
             suite_results[seed] = results
         return suite_results
 
