@@ -1,41 +1,88 @@
 
-Gargiulo and Gandica\cite{gargiulo_role_2017} recently explored the connection
-between homophily and polarization in the context of continuous-valued
-opinions under a bounded confidence dynamic. The bounded confidence model
-(originally in \cite{deffuant_mixing_2000,hegselmann_opinion_2002}) assumes
-that agents will be influenced only by the opinions of others that their own
-opinion is already sufficiently ``close" to (\textit{i.e.}, within some
-threshold $\epsilon$); other opinions are viewed as too extreme from one's
-own, and therefore untrustworthy. The result of such influence, when it does
-occur, is an averaging operation that pulls each agent's opinion closer to the
-other.
+Opinion Dynamics (OD) models have a robust tradition, often traced to the
+Binary Voter Model (BVM) of Holley and Liggett\cite{holley_ergodic_1975} and
+Clifford and Sudbury\cite{clifford_model_1973}. OD models seek to reproduce
+the phenomenon of individual agents forming opinions over time via mutual
+influence, and to draw conclusions about the overall pattern of opinions that
+may emerge in a society as a consequence of certain micro-behaviors.
 
-To build the initial graph for their simulation, Gargiulo and Gandica extend
-the well-known preferential attachment mechanism
+Axelrod's work in this area\cite{axelrod_dissemination_1997} represented
+agents with multiple discrete-valued attributes occupying a cellular grid.
+Agents were more likely to influence one another when they had more attribute
+values already in common, imitating what Axelrod called ``the fundamental
+principle of human communication": that influence occurs more frequently
+between people who perceive themselves as being already fairly alike. The
+effect of influence in the model was to copy one of the differing attributes
+from one agent to the other, further increasing their similarity. Among other
+results, Axelrod demonstrated that as the \textit{range} of influence
+increases (\textit{i.e.}, as agents are able to interact directly with other
+agents 2, 3, 4, $\dots$ squares away), the degree of overall homogeneity in
+the society increases. He measured homogeneity as the number of distinct
+opinion clusters that emerge in the population.
+
+Axelrod's result might lead us to predict that polarization would
+\textit{decrease} with accessibility, rather than increase. Shibani \textit{et
+al.}\cite{shibanai_effects_2001} and Grieg\cite{greig_end_2002} found that
+subtle changes to the model, however, can produce the opposite result. Too,
+Flache and Macy\cite{flache_why_2006} concluded that Axelrod's original result
+depended crucially on the opinions being discrete valued; when continuous
+opinions were used, and adjustments could be made to them gradually,
+polarization actually increased with range of influence.
+
+One popular approach to modeling \textit{continuous} opinion dynamics is the
+Bounded Confidence (BC) model (originally in
+\cite{deffuant_mixing_2000,hegselmann_opinion_2002}). This assumes that agents
+will be influenced only by the opinions of others that their own opinion is
+already sufficiently ``close" to (\textit{i.e.}, within some threshold
+$\epsilon$); other opinions are viewed as too extreme from one's own, and
+therefore untrustworthy. (This is similar in spirit to Axelrod's ``fundamental
+principle," but in the context of a single attribute, not an array of them.)
+The result of such influence, when it does occur, is an averaging operation
+that pulls each agent's opinion closer to the other. The BC mechanism is one
+way of preventing a graph of continuous opinions from converging to absolute
+homogeneity, as will happen if the averaging operation happens
+unconditionally.
+
+All of these studies inspired by Axelrod place agents on a rectangular grid.
+Work has been done, too, on agents connected via a more general network/graph
+structure, whether a complete graph, possibly with edge
+weights\cite{deffuant_how_2002,degroot_reaching_1974}, or a general
+graph\cite{dandekar_biased_2013}. Several of these studies have explored the
+interplay between homophily and (various definitions of) polarization in the
+context of continuous-valued opinions. Dandekar \textit{et
+al.}\cite{dandekar_biased_2013} in particular use a variant of the
+assortativity coefficient called the network degree index (for continuous
+attributes). However, their work was still based on continuous attributes, and
+they invoke a more complex opinion formation process than we do, incorporating
+confirmation bias.
+
+Recently, Gargiulo and Gandica\cite{gargiulo_role_2017} explored the
+connection between homophily and polarization in the context of
+continuous-valued opinions under a BC dynamic. To build the initial graph for
+their simulation, they extend the well-known preferential attachment mechanism
 \cite{barabasi_emergence_1999} to incorporate homophily: when a new node
 chooses which existing node to connect to in the graph, it incorporates
-information not only about the degree of existing nodes, but also about the
-similarity of their opinions to its own. In this way, not only are nodes with
-more neighbors more likely to be chosen for attachment (as in
+information not only about the degree of existing nodes, but also about
+the similarity of their opinions to its own. In this way, not only are
+nodes with more neighbors more likely to be chosen for attachment (as in
 \cite{barabasi_emergence_1999}, \cite{deffuant_mixing_2000}), but nodes with
-similar opinions to the new node are also more likely. Gargiulo's surprising
-discovery was that as homophily is increased (\textit{i.e.}, as the second of
-these two considerations is weighed more heavily), polarization -- measured as
-the number of distinct opinion clusters at equilibrium -- \textit{decreases}.
-This counterintuitive result can be explained as follows: when homophily is
-low, a node does not form as many initial connections to nodes with similar
-opinions (within the threshold $\epsilon$ of its own). Therefore, it is more
-likely that that node will get ``stuck" during the bounded confidence process:
-since it can't find many neighbors whose opinions seem plausible, it
-stubbornly sticks to its own. Increasing homophily equips each node with more
-neighbors whose opinions are close to its own, such that it can gradually be
-nudged towards the emerging consensus.
+similar opinions to the new node are also more likely. 
 
-Our work differs from Gargiulo's in that we use discrete opinions rather than
-continuous; we implement a Binary Voter Model
-process\cite{clifford_model_1973,holley_ergodic_1975} instead of Bounded
-Confidence; and we measure polarization as the graph's \textit{assortativity}
-rather than as the number of distinct opinion clusters. In this paper, we
-explore whether Gargiulo's surprising results also hold under these different
-assumptions.
+Gargiulo and Gandica discovered that under these assumptions, as homophily is
+increased (\textit{i.e.}, as similarity is weighed more heavily than degree
+when attaching new nodes), polarization -- measured as the number of distinct
+opinion clusters at equilibrium -- \textit{decreases}. This counterintuitive
+result can be explained as follows: when homophily is low, a node does not
+form as many initial connections to nodes with similar opinions (within the
+threshold $\epsilon$ of its own). Therefore, it is more likely that that node
+will get ``stuck" during the bounded confidence process: since it can't find
+many neighbors whose opinions seem plausible, it stubbornly sticks to its own.
+Increasing homophily equips each node with more neighbors whose opinions are
+close to its own, such that it can gradually be nudged towards the emerging
+consensus.
 
+Our work differs from these other studies in that we use a graph instead of a
+cellular grid; discrete opinions rather than continuous; we implement a BVM
+process instead of BC; and most importantly, we measure polarization as the
+graph's \textit{assortativity} rather than as the number of distinct opinion
+clusters or the extremity of views.

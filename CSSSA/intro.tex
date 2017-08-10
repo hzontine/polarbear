@@ -5,8 +5,8 @@ Consider for a moment the friendships you have had through which meaningful
 mutual influence has taken place. In broad terms, these relationships can be
 thought of as coming from two different kinds of sources. In the first kind,
 you did not originally encounter the acquaintances by specifically seeking
-them out -- they were rather thrust into your presence by circumstances. When
-you were a child, there were other children down the street, and fellow
+them out -- they rather made an appearance in your life due to circumstances.
+When you were a child, there were other children down the street, and fellow
 students in your 1st-grade classroom. When you were older, there were
 dormitory hall-mates, new neighbors in new neighborhoods, and co-workers. Some
 of these people who by happenstance wandered into your field of view, you
@@ -58,8 +58,8 @@ friendships of the first sort, and \textbf{global} for the second. In our
 model we are concerned with the relative likelihood of friendships developing
 from each of these two sources, and we denote as the society's
 \textbf{accessibility} $A$ ($0 \leq A \leq 1$) the fraction of relationships
-that have \textit{global} origination. A society with $A$ of 0 presents no way
-for its citizens to discover anyone outside the local social circle they
+that have \textit{global} origination. A society with an $A$ of 0 presents no
+way for its citizens to discover anyone outside the local social circle they
 happened to inherit. Persons in a society with $A=1$, by contrast, have no
 tendency to form friendships with those ``nearby" them any more than with
 anyone else in the world; it is as if their entire experience took place
@@ -98,7 +98,7 @@ model the homophily $H$ of an entire society with a single value, $0 \leq H
 forming friendships with similar agents. At the extreme of $H=1$, agents will
 always choose an agent similar to them, if possible, and at $H=0$, they will
 always choose a \textit{dis}similar agent. (This situation could be termed
-``extreme anti-homophily," or simply ``extreme heterophily.")
+``heterophily.")
 
 The interplay of these two parameters $A$ and $H$ and their impact on the
 ideological polarization of a society is the subject of this paper.
@@ -107,7 +107,7 @@ ideological polarization of a society is the subject of this paper.
 
 The term ``polarization" -- often with the modifier ``political" -- abounds in
 recent discussion of the U.S. and other political
-environments.\cite{campbell_source_2016,french_were_2017,dimock_political_2014}
+env\-ironments\cite{campbell_source_2016,french_were_2017,dimock_political_2014,mccarty_polarized_2016}.
 It is nearly always used with a negative connotation. Claims that the degree
 of polarization is increasing have been substantiated in some ways by
 academics (\textit{e.g.},
@@ -118,15 +118,16 @@ have investigated how it takes root in social networking and other online
 environments
 \cite{mousavi_role_2014,conover_political_2011,adamic_political_2005,hargittai_cross-ideological_2008}.
 
-Defining polarization, however, is somewhat tricky; one recent paper spelled
-out nine different possible definitions\cite{bramson_disambiguation_2016}.
-Most often, the term is associated with large \textit{differences} in views
-between subpopulations, especially when those views are perceived as
-\textit{extreme}. If, when responding to a question on a 6-point Likert scale,
-half the population answered ``1" and the other half answered ``6," this would
-typically be viewed as a ``polarized" population. If half answered ``3" and
-the other half ``4," on the other hand, or if equal numbers gave each of the
-six responses, that would be seen as less polarized.
+Defining polarization, however, is somewhat tricky; one recent paper, in fact,
+spelled out nine different possible
+definitions\cite{bramson_disambiguation_2016}. Most often, the term is
+associated with large \textit{differences} in views between subpopulations,
+especially when those views are perceived as \textit{extreme}. If, when
+responding to a question on a 6-point Likert scale, half the population
+answered ``1" and the other half answered ``6," this would typically be viewed
+as a ``polarized" population. If half answered ``3" and the other half ``4,"
+on the other hand, or if equal numbers gave each of the six responses, that
+would be seen as less polarized.
 
 In this work, however, we look at a different form of ``polarization":
 \textit{the extent to which adherents of one viewpoint tend to form social
@@ -146,7 +147,23 @@ to retain their opinion even in the constant and active presence of others
 articulating counterpoints to it is not.
 
 We therefore use the social network's \textit{assortativity}
-coefficient\cite{newman} as the key measure of polarization. If we model a
-social network as an undirected graph whose nodes each possess a nominal
-``ideology" attribute taken from a small set of possible ideologies, the
-assortativity is the fraction of edges 
+coefficient\cite{newman_mixing_2003} as the key measure of polarization. If we
+model a social network as an undirected graph whose nodes each possess a
+nominal ``ideology" attribute taken from a small set of possible ideologies,
+the assortativity gives a measure of how many edges are between likeminded
+nodes, compared to what we would expect if the edges were simply dispersed at
+random.\footnote{Formally, the assortativity coefficient of a graph is a value
+between -1 and 1 which is computed as follows. Let $e_{ij}$ be the fraction of
+all edges in the graph which connect an agent with ideology $i$ and an agent
+with ideology $j$, where $i$ and $j$ range over all pairs of possible
+ideologies. Let \textbf{e} be the matrix whose elements are $e_{ij}$,
+$\textbf{x}^2$ indicate matrix multiplication, $\Tr \textbf{x}$ be the sum of
+the main diagonal elements of \textbf{x}, and $\norm{\textbf{x}}$ be the sum
+of the elements of the matrix \textbf{x}. The assortativity is then $\frac{\Tr
+\textbf{e} - \norm{\textbf{e}^2}}{1 - \norm{\textbf{e}^2}}$. It has the value
+1 when there is perfect assortative mixing (\textit{i.e.}, \textit{all} edges
+are between nodes with the same ideology), 0 when there is no assortative
+mixing (the ideology of the nodes has no bearing on whether they will be
+connected), and a negative value when nodes tend to connect to others of a
+\textit{different} ideology.}
+

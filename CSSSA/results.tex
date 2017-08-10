@@ -34,8 +34,8 @@ fixed number of iterations, and measure the assortativity at that point; we
 could take the maximum (or minimum) assortativity anywhere in the sequence; we
 could compute the mean assortativity of all graphs produced during the
 process; \textit{etc.} We choose the last of these approaches here, but do not
-begin computing the mean until the $50^{\text{th}}$ iteration of 200. This
-admittedly arbitrary boundary point allows us to measure the assortativity
+begin computing the mean until the $50^{\text{th}}$ of 200 iterations. This
+admittedly arbitrary boundary point is an attempt to measure the assortativity
 only after the process has had a chance to emerge from a cold start. To
 summarize, then: we choose as our measure of ``the polarization that the BVM
 process induces" the mean assortativity of the graph at iterations 50 through
@@ -55,9 +55,10 @@ the effect of the BVM process (section~\ref{sec:BVM}) from the effect of the
 initial graph-construction process (section~\ref{sec:initialization}). The
 result is the bottom plot in Figure~\ref{fig:meanNormPolarization}. Clearly,
 for most values of homophily, the accessibility has a \textit{moderating}
-effect, rather than an amplifying effect, on the graph's polarization. We thus
-not only fail to verify $H_{1b}$ and $H_{2b}$, but we radically refute them:
-the opposite is true.
+effect, rather than an amplifying effect, on the graph's polarization. 
+
+We thus not only fail to verify $H_{1b}$ and $H_{2b}$, but we radically refute
+them. The opposite is true.
 
 \begin{figure}
 \centering
@@ -75,11 +76,11 @@ difference between the mean polarization (top) and the initial polarization
 \subsection{$H_{3}$}
 
 To evaluate $H_3$, we compare the normalized polarizations of simulations that
-have DynamicRebalancing enabled with those that don't. The results are presented
-in Figure~\ref{fig:rebalancing} (for clarity, we omit outliers from the plots
-and show DynamicRebalancing at only a single rate, $R$=1.) Interestingly,
-hypothesis $H_3$ is confirmed only for \textit{some} homphily values. When
-$H\leq.6$, dynamic rebalancing acts as a second moderating effect on
+have \textbf{DynamicRebalancing} enabled with those that don't. The results
+are presented in Figure~\ref{fig:rebalancing} (for clarity, we omit outliers
+from the plots and show DynamicRebalancing at only a single rate, $R$=1.)
+Interestingly, hypothesis $H_3$ is confirmed only for \textit{some} homphily
+values. When $H\leq.6$, dynamic rebalancing acts as a moderating effect on
 polarization. Only for values of .7 and above does it increase the
 polarization relative to the initial graph, as predicted. 
 
