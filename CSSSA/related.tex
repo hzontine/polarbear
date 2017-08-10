@@ -81,8 +81,14 @@ Increasing homophily equips each node with more neighbors whose opinions are
 close to its own, such that it can gradually be nudged towards the emerging
 consensus.
 
-Our work differs from these other studies in that we use a graph instead of a
-cellular grid; discrete opinions rather than continuous; we implement a BVM
-process instead of BC; and most importantly, we measure polarization as the
-graph's \textit{assortativity} rather than as the number of distinct opinion
-clusters or the extremity of views.
+Our work differs from these other studies most significantly in that we
+measure ``polarization" as the graph's assortativity, rather than as the
+number of distinct opinion clusters that emerge, or the extremity of views.
+Dandekar \textit{et al.}'s is the only work we are aware of that focuses on
+something akin to the assortativity coefficient, and their model is quite
+different: it uses continuous-valued attributes, weighted edges, confirmation
+bias, a starting graph based on a stochastic block model, and a BC-like
+process of repeated opinion averaging. Ours instead models a BVM process on
+discrete attributes, with the starting graph produced through a local/global
+morphogenesis process as previously described.
+
