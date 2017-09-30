@@ -7,34 +7,42 @@ We present the model using an abbreviated version of the ODD protocol
 \subsection{Purpose}
 
 This abstract agent-based model simulates an evolving social network of agents
-that each possess an ``ideology" attribute representing some opinion. As it
+that each possess an ``ideology'' attribute representing some opinion. As it
 evolves, nodes are randomly chosen to influence their neighbors by propagating
-their ideologies to them. The ``polarization" of the network, measured as the
+their ideologies to them. The ``polarization'' of the network, measured as the
 tendency of nodes to be connected to others with the same ideology, will
 change as this process takes place. 
 
-The purpose of the model is to investigate the effects on polarization of two
-parameters that affect how the initial graph is constructed. One,
-``\textbf{accessibility}," controls the set of possible neighbors that a node
-chooses from each time it adds a friendship. When accessibility is low,
-neighbors will more often be chosen from a small (random) pool that is
-initially available to a node. When it is high, neighbors will more often be
-chosen from the entire network at large. Accessibility thus models the extent
-to which a society's citizens form \textbf{local} friendships (\textit{e.g.},
-geographical neighbors) versus \textbf{global} ones (\textit{e.g.}, over the
-Internet).
+The purpose of the model is to investigate the effects on polarization of
+three parameters: two which affect how the initial graph is constructed, and
+one which affects the graph structure as it evolves. The first,
+``\textbf{accessibility},'' controls the set of possible neighbors that a node
+chooses from each time it adds a friendship during graph construction. When
+accessibility is low, neighbors will more often be chosen from a small
+(random) pool that is initially available to a node. When it is high,
+neighbors will more often be chosen from the entire network at large.
+Accessibility thus models the extent to which a society's citizens form
+\textbf{local} friendships (\textit{e.g.}, geographical neighbors) versus
+\textbf{global} ones (\textit{e.g.}, over the Internet).
 
-The second parameter, ``\textbf{homophily}," controls the strength of each
+The second parameter, ``\textbf{homophily},'' controls the strength of each
 node's preference to attach to other nodes with the same ideology. When it is
 high, nodes will almost always form connections to nodes that have the same
 ideology, if possible. This is true regardless of whether they are formed
 locally or globally. When low, nodes prefer to attach to nodes with
 \textit{different} ideologies, and when medium, they are indifferent.
 
+Finally, as the simulation progresses, nodes might make new friendships and
+dissolve old ones. This is to reflect the fact that not only do real-world
+persons' ideologies fluctuate over time, but so do their social connections.
+If this model variant is enabled, the ``\textbf{rebalancing rate}'' parameter
+controls the frequency with which a node re-evaluates its friendships in light
+of its tendency to homophily.
+
 With this model, we hope to gain general insight into how societies that
 provide different means of communication and discovery, and societies that
 encourage different levels of tolerance for opposing opinions, may differ in
-the prevalence of ``echo chambers" whereby dissenting views are rarely heard.
+the prevalence of ``echo chambers'' whereby dissenting views are rarely heard.
 
 \subsection{Entities, State Variables and Scales}
 
@@ -71,7 +79,7 @@ the simulation.
 \subsection{Process Overview and Scheduling}
 \label{sec:BVM}
 
-Once the initial graph is built (see ``Initialization," below), we carry out
+Once the initial graph is built (see ``Initialization,'' below), we carry out
 the standard Binary Voter Model (BVM) process on it, using the
 \textbf{selection with replacement} and \textbf{neighbor influences node}
 variants (see \cite{davies_computational_2016}.) At each of $T$ iterations:
@@ -79,9 +87,11 @@ variants (see \cite{davies_computational_2016}.) At each of $T$ iterations:
 \begin{enumerate}
 \itemsep.1em
 \item An agent $X$ is chosen at random from the entire graph.
+(This is the \textbf{selection with replacement} variant; see \cite{davies_computational_2016}.)
 \item One of its friends $Y$ is chosen at random from its set of Friendships.
 (If the agent has no Friendships, skip this iteration.)
 \item If $Y$'s current ideology is different than $X$'s, copy $Y$'s to $X$'s.
+(The \textbf{neighbor influences node} variant; see \cite{davies_computational_2016}.)
 \item If the \textbf{DynamicRebalancing} Policy is enabled, and its rate $R$
 is such that it should take place now, carry out the
 \textbf{DynamicallyRebalance} on agent $X$ (see below).
@@ -119,7 +129,7 @@ to other nodes, where $a_X$ is the degree of node $X$ in the
 already friends, skip the step.
 \end{enumerate}
 
-``Weighted by $H$" means that candidate nodes whose ideologies are the same as
+``Weighted by $H$'' means that candidate nodes whose ideologies are the same as
 node $X$'s are assigned an (unnormalized) probability of $H$ to be selected,
 and candidate nodes of different ideologies are assigned $1-H$. All
 probabilities are then normalized to sum to 1, and a node is chosen.\footnote{
@@ -134,7 +144,7 @@ is $\alpha (1-H)$, where $\alpha$ is the normalizing constant $\frac{1}{s_X H
 \subsection{Submodels}
 
 \textit{\textbf{DynamicRebalancing}.} If this optional Policy is enabled, a
-``rebalance rate" parameter $R$ ($0 \leq R \leq 1$) controls how frequently
+``rebalance rate'' parameter $R$ ($0 \leq R \leq 1$) controls how frequently
 the \textbf{DynamicallyRebalance} submodel is executed. $R$=1 means it will
 execute \textit{every} iteration of the main simulation loop (immediately
 after copying the neighbor's ideology.) $R$=0 means it will never execute, and

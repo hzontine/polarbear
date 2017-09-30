@@ -12,7 +12,7 @@ Axelrod's work in this area\cite{axelrod_dissemination_1997} represented
 agents with multiple discrete-valued attributes occupying a cellular grid.
 Agents were more likely to influence one another when they had more attribute
 values already in common, imitating what Axelrod called ``the fundamental
-principle of human communication": that influence occurs more frequently
+principle of human communication'': that influence occurs more frequently
 between people who perceive themselves as being already fairly alike. The
 effect of influence in the model was to copy one of the differing attributes
 from one agent to the other, further increasing their similarity. Among other
@@ -35,10 +35,10 @@ One popular approach to modeling \textit{continuous} opinion dynamics is the
 Bounded Confidence (BC) model (originally in
 \cite{deffuant_mixing_2000,hegselmann_opinion_2002}). This assumes that agents
 will be influenced only by the opinions of others that their own opinion is
-already sufficiently ``close" to (\textit{i.e.}, within some threshold
+already sufficiently ``close'' to (\textit{i.e.}, within some threshold
 $\epsilon$); other opinions are viewed as too extreme from one's own, and
 therefore untrustworthy. (This is similar in spirit to Axelrod's ``fundamental
-principle," but in the context of a single attribute, not an array of them.)
+principle,'' but in the context of a single attribute, not an array of them.)
 The result of such influence, when it does occur, is an averaging operation
 that pulls each agent's opinion closer to the other. The BC mechanism is one
 way of preventing a graph of continuous opinions from converging to absolute
@@ -77,14 +77,14 @@ opinion clusters at equilibrium -- \textit{decreases}. This counterintuitive
 result can be explained as follows: when homophily is low, a node does not
 form as many initial connections to nodes with similar opinions (within the
 threshold $\epsilon$ of its own). Therefore, it is more likely that that node
-will get ``stuck" during the bounded confidence process: since it can't find
+will get ``stuck'' during the bounded confidence process: since it can't find
 many neighbors whose opinions seem plausible, it stubbornly sticks to its own.
 Increasing homophily equips each node with more neighbors whose opinions are
 close to its own, such that it can gradually be nudged towards the emerging
 consensus.
 
 Our work differs from these other studies most significantly in that we
-measure ``polarization" as the graph's assortativity, rather than as the
+measure ``polarization'' as the graph's assortativity, rather than as the
 number of distinct opinion clusters that emerge, or the extremity of views.
 Dandekar \textit{et al.}'s is the only work we are aware of that focuses on
 something akin to the assortativity coefficient, and their model is quite
